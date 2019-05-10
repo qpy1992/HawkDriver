@@ -1,5 +1,7 @@
 package com.bt.smart.truck_broker.messageInfo;
 
+import java.math.BigDecimal;
+
 /**
  * @创建者 AndyYan
  * @创建时间 2018/8/28 8:58
@@ -122,7 +124,7 @@ public class LoginInfo {
             private String companyName;
             private String fcartype;
             private String checkReason;
-            private double faccount;
+            private BigDecimal faccount;
             private String fpassword;
             private String idNumber;
             private String fmobile;
@@ -199,11 +201,11 @@ public class LoginInfo {
                 this.checkReason = checkReason;
             }
 
-            public double getFaccount() {
+            public BigDecimal getFaccount() {
                 return faccount;
             }
 
-            public void setFaccount(double faccount) {
+            public void setFaccount(BigDecimal faccount) {
                 this.faccount = faccount;
             }
 

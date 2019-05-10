@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:sweet="http://schemas.android.com/apk/res-auto"
+     android:interpolator="@android:anim/linear_interpolator"
+     android:shareInterpolator="true">
+
+    <alpha
+        android:fromAlpha="0"
+        android:toAlpha="1"
+        android:duration="400"/>
+
+    <sweet:com.bt.smart.truck_broker.utils.Rotate3dAnimation
+        sweet:m_rollType="x"
+        sweet:m_fromDeg="100"
+        sweet:m_toDeg="0"
+        sweet:m_pivotX="50%"
+        sweet:m_pivotY="50%"
+        android:duration="400"/>
+</set>

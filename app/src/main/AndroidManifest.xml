@@ -20,7 +20,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.userAct.MDetailActivity"></activity>
+        <activity android:name=".activity.userAct.BCardActivity"></activity>
+        <activity android:name=".activity.userAct.WithdrawActivity" />
+        <activity android:name=".activity.userAct.RechargeActivity" />
+        <activity android:name=".activity.userAct.BankCardActivity" />
+        <activity android:name=".activity.userAct.MDetailActivity" />
         <activity android:name=".activity.userAct.MoneyActivity" />
         <activity android:name=".activity.FirstActivity">
             <intent-filter>

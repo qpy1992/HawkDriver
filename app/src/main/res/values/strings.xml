@@ -3,4 +3,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_bank_card">BankCardActivity</string>
+
+    <!--dialog相关-->
+    <string name="m_default_progressbar">Default Progressbar:</string>
+
+    <string name="m_dialog_default_title">Here\'s a message!</string>
+    <string name="m_dialog_ok">确定</string>
+    <string name="m_dialog_cancel">取消</string>
+    <string name="m_LOADING">Loading...</string>
 </resources>

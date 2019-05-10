@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:wheel="http://schemas.android.com/apk/com.bt.smart.truck_broker.utils"
+    android:id="@+id/loading"
+    android:layout_width="@dimen/m_alert_width"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:id="@+id/layout_dialog_def"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:paddingTop="10dp"
+        android:background="@drawable/dialog_background"
+        android:orientation="vertical"
+        >
+        <ImageView
+            android:id="@+id/custom_image"
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/app_name"
+            android:visibility="gone"
+            android:src="@drawable/ic_launcher_background"
+            android:scaleType="fitCenter" />
+
+        <FrameLayout
+            android:id="@+id/error_frame"
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/error_circle" />
+
+            <ImageView
+                android:id="@+id/error_x"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/error_center_x"
+                android:scaleType="center" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/success_frame"
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/success_bow" />
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/mask_right"
+                android:layout_width="35dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="-13dp"
+                android:layout_gravity="right"
+                android:background="@color/m_sweet_dialog_bg_color" />
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/mask_left"
+                android:layout_width="21dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="-3dp"
+                android:layout_gravity="left"
+                android:background="@color/m_sweet_dialog_bg_color" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/success_circle" />
+
+            <com.bt.smart.truck_broker.utils.SuccessTickView
+                android:id="@+id/success_tick"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/warning_frame"
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/warning_circle" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/warning_sigh"
+                android:scaleType="center" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/progress_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.bt.smart.truck_broker.utils.ProgressWheel
+                android:id="@+id/progressWheel"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                wheel:progressIndeterminate="true"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="19sp"
+            android:textColor="#575757"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:visibility="gone"
+            android:text="对话框标题" />
+
+        <TextView
+            android:id="@+id/content_text"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:text="对话框内容"
+            android:textColor="#797979"
+            android:visibility="gone" />
+
+
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginTop="0.1dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/cancel_button"
+            style="@style/dialog_blue_button"
+            android:background="@drawable/dialog_background_bntleft"
+            android:layout_marginRight="0.1dp"
+            android:visibility="gone"
+            android:textColor="#66BFD2"
+            android:text="@string/m_dialog_cancel" />
+
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/confirm_button"
+            style="@style/dialog_blue_button"
+            android:background="@drawable/dialog_background_onebnt"
+            android:textColor="#66BFD2"
+            android:text="@string/m_dialog_ok" />
+    </LinearLayout>
+</LinearLayout>

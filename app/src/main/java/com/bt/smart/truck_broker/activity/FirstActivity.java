@@ -16,6 +16,7 @@ import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
+import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.SpUtils;
@@ -117,6 +118,7 @@ public class FirstActivity extends Activity implements View.OnClickListener {
                     MyApplication.userPhone = loginInfo.getData().getRegisterDriver().getFmobile();
                     MyApplication.checkStatus = loginInfo.getData().getRegisterDriver().getCheckStatus();
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
+                    MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
                     startActivity(new Intent(FirstActivity.this, MainActivity.class));
                     finish();
                 }

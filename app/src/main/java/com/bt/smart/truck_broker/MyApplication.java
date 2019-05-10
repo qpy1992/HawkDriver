@@ -11,6 +11,7 @@ import com.bt.smart.truck_broker.utils.SoundPoolUtil;
 import com.bt.smart.truck_broker.utils.SpUtils;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -34,7 +35,7 @@ public class MyApplication extends Application {
     public static String  checkStatus;//审核状态
     public static String  userHeadPic;//头像
     public static String  userName;
-    public static double  money;//余额
+    public static BigDecimal money;//余额
     public static int     userOrderNum;//运单数
     public static boolean needLocationService;//是否需要定位服务
 

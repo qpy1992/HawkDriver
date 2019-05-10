@@ -1,0 +1,9 @@
+<resources>
+
+
+    <!-- dialog 相关-->
+    <dimen name="m_alert_width">290dp</dimen>
+    <dimen name="m_common_circle_width">3dp</dimen>
+    <dimen name="m_progress_circle_radius">34dp</dimen>
+    
+</resources>

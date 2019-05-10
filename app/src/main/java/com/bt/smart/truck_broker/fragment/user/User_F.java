@@ -94,6 +94,8 @@ public class User_F extends Fragment implements View.OnClickListener {
         rtv_about = mRootView.findViewById(R.id.rtv_about);
         rtv_exit = mRootView.findViewById(R.id.rtv_exit);
         rlt_allOrder = mRootView.findViewById(R.id.rlt_allOrder);
+        tv_orderNum.setText(MyApplication.userOrderNum + "单");
+        tv_money.setText(MyApplication.money+"元");
     }
 
     private void initData() {
@@ -225,6 +227,7 @@ public class User_F extends Fragment implements View.OnClickListener {
                     MyApplication.checkStatus = loginInfo.getData().getRegisterDriver().getCheckStatus();
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.userOrderNum = loginInfo.getData().getOrderno();
+                    MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
                     //更改界面UI
                     changeUFUI();
                 }

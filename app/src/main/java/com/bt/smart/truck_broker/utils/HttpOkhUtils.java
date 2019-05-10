@@ -392,6 +392,7 @@ public class HttpOkhUtils {
                             try {
                                 httpCallBack.onSuccess(code, buffer);
                             } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     });
