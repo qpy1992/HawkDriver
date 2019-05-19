@@ -11,8 +11,8 @@ package com.bt.smart.truck_broker;
 
 public class NetConfig {
     //服务器总地址
-//    public static String ROOT     = "http://116.62.171.244:8082/yingsu/rest/";
-        public static String ROOT     = "http://192.168.43.63:8080/rest/";
+    public static String ROOT     = "http://116.62.171.244:8082/yingsu/rest/";
+//        public static String ROOT     = "http://192.168.43.63:8080/rest/";
     //图片地址
     public static String IMG_HEAD = "http://116.62.171.244:8082/yingsu/";
     //    public static String IMG_HEAD = "http://205.168.1.100/yingsu_war_exploded/";
@@ -67,4 +67,12 @@ public class NetConfig {
 
     //绑定银行卡
     public static String BIND = ROOT + "registerDriverController/bind";
+
+    //微信支付统一下单
+    public static String WX = ROOT + "wxController/wxOrder";
+
+    public static String WX_APPID = "wxd97fbc0c709a9bed";
+
+    //支付宝参数拼接
+    public static String ALIPAY = ROOT + "alipayController/alipayOrder";
 }

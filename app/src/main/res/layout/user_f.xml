@@ -486,6 +486,12 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="60dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="柏田科技btzoon.com版权所有"
+                    android:gravity="center"/>
             </LinearLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
