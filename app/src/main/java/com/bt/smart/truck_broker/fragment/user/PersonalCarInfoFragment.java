@@ -192,6 +192,8 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
         RequestParamsFM headParam = new RequestParamsFM();
         headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
         RequestParamsFM params = new RequestParamsFM();
+        params.put("folder","Auth");
+        params.put("kind",kind);
         HttpOkhUtils.getInstance().upDateFile(NetConfig.PHOTO, headParam, params, "file", file, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {

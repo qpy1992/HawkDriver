@@ -5,6 +5,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,6 +22,7 @@ import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.messageInfo.BCardInfo;
 import com.bt.smart.truck_broker.messageInfo.UpPicInfo;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
@@ -53,6 +56,26 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
         tv_qx = findViewById(R.id.tv_qx);
         tv_khh = findViewById(R.id.tv_khh);
         btn_sub = findViewById(R.id.btn_sub);
+        et_cardno.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.del,0);
+        et_cardno.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        CommonUtil.bankCardInput(et_cardno);
+        et_fname.setText(MyApplication.userName);
+        et_fname.setSelection(et_fname.getText().length());
     }
 
     protected void setListeners(){
