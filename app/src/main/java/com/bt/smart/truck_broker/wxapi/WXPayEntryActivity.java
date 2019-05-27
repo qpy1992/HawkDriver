@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bt.smart.truck_broker.BaseActivity;
@@ -49,7 +50,7 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
     @SuppressLint("LongLogTag")
     @Override
     public void onResp(BaseResp resp) {
-        //        Log.d(TAG, "onPayFinish, errCode = " + resp.errCode);
+                Log.i(TAG, "onPayFinish, errCode = " + resp.errCode);
         Message msg = new Message();
         msg.what = SDK_WXPAY_FLAG;
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {

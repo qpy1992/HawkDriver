@@ -1,7 +1,6 @@
 package com.bt.smart.truck_broker.activity.userAct;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +19,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.alipay.sdk.app.PayTask;
 import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.NetConfig;
@@ -35,11 +33,9 @@ import com.google.gson.Gson;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
-
 import okhttp3.Request;
 
 public class RechargeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -290,6 +286,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                         Toast.makeText(RechargeActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
                         //支付成功后，关闭当前界面，修改前面的UI，显示剩余离场时间 paySuccessResult
                         changeUpFragmentUI();
+                        MyApplication.money = MyApplication.money.add(new BigDecimal(orderPrice));
                         //getActivity().finish();
                         // String tradeNo = resultInfo.split("trade_no\":\"")[1];
                         // tradeNo = tradeNo.substring(0, tradeNo.indexOf("\""));
@@ -303,8 +300,8 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                     String result = msg.obj.toString();
                     if ("支付成功".equals(result)) {
                         ToastUtils.showToast(RechargeActivity.this, "WX支付成功");
-                        changeUpFragmentUI();
-                        //getActivity().finish();
+                        MyApplication.money = MyApplication.money.add(new BigDecimal(orderPrice));
+                        finish();
                     } else {
                         ToastUtils.showToast(RechargeActivity.this, "WX支付失败");
                     }

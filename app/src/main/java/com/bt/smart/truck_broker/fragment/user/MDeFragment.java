@@ -33,12 +33,12 @@ public class MDeFragment extends Fragment {
         mde_title = view.findViewById(R.id.mde_title);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mde_jine.setText(bundle.getString("faccount"));
+            mde_jine.setText(bundle.getString("fmoney"));
             mde_type.setText(bundle.getString("ftype"));
-            mde_time.setText(bundle.getString("ftime"));
-            mde_orderno.setText(bundle.getString("forderno"));
-            mde_yue.setText(bundle.getString("famount"));
-            mde_title.setText(bundle.getString("ftitle"));
+            mde_time.setText(bundle.getString("addtime"));
+            mde_orderno.setText(bundle.getString("tradeno"));
+            mde_yue.setText(bundle.getString("fremain"));
+            mde_title.setText(bundle.getString("fnote"));
         }
     }
 

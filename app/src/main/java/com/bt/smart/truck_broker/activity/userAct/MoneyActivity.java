@@ -78,4 +78,9 @@ public class MoneyActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mon_number.setText("￥"+MyApplication.money);
+    }
 }

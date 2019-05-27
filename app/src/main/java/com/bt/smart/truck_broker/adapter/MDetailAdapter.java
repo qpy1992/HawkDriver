@@ -8,15 +8,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.messageInfo.MDetailInfo;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MDetailAdapter extends BaseAdapter {
     Context mContext;
-    List<MDetailInfo> list;
+    List<MDetailInfo.DataBean> list = new ArrayList<>();
 
-    public MDetailAdapter(Context context,List<MDetailInfo> list){
+    public MDetailAdapter(Context context, List<MDetailInfo.DataBean> list){
         this.mContext = context;
         this.list = list;
     }
@@ -49,9 +49,9 @@ public class MDetailAdapter extends BaseAdapter {
         }else{
             holder = (Holder)view.getTag();
         }
-        holder.md_title.setText(list.get(i).getFtitle());
-        holder.md_time.setText(list.get(i).getFtime());
-        holder.md_amount.setText(list.get(i).getFamount());
+        holder.md_title.setText(list.get(i).getFnote());
+        holder.md_time.setText(list.get(i).getAddtime());
+        holder.md_amount.setText(list.get(i).getFmoney()+"");
         return view;
     }
 

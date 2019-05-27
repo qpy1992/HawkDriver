@@ -10,17 +10,29 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.bt.smart.truck_broker.MyApplication;
+import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
+import com.bt.smart.truck_broker.activity.userAct.MDetailActivity;
 import com.bt.smart.truck_broker.adapter.MDetailAdapter;
 import com.bt.smart.truck_broker.messageInfo.MDetailInfo;
+import com.bt.smart.truck_broker.utils.HttpOkhUtils;
+import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
+import com.bt.smart.truck_broker.utils.RequestParamsFM;
+import com.bt.smart.truck_broker.utils.ToastUtils;
+import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Request;
 
 public class MDFragment extends Fragment {
     private View view;
     private ListView lv_de;
-    private List<MDetailInfo> list;
+    private List<MDetailInfo.DataBean> list;
     private MDetailAdapter adapter;
 
     @Override
@@ -36,16 +48,7 @@ public class MDFragment extends Fragment {
     protected void setViews(){
         lv_de = view.findViewById(R.id.lv_de);
         list = new ArrayList<>();
-        MDetailInfo info = new MDetailInfo();
-        info.setFaccount("5.00");
-        info.setFamount("375.00");
-        info.setForderno("sghjd128371647861312");
-        info.setFtime("2019-04-30 10:00:37");
-        info.setFtitle("扫码支付");
-        info.setFtype("支出");
-        list.add(info);
-        adapter = new MDetailAdapter(getActivity(),list);
-        lv_de.setAdapter(adapter);
+        getMDetail();
     }
 
     protected void setListeners(){
@@ -57,14 +60,52 @@ public class MDFragment extends Fragment {
                 FragmentTransaction ft = manager.beginTransaction();
                 ft.replace(R.id.md_ll,mDeFragment);
                 Bundle bundle = new Bundle();
-                bundle.putString("faccount", list.get(i).getFaccount());
-                bundle.putString("famount", list.get(i).getFamount());
-                bundle.putString("forderno", list.get(i).getForderno());
-                bundle.putString("ftime", list.get(i).getFtime());
-                bundle.putString("ftitle", list.get(i).getFtitle());
-                bundle.putString("ftype", list.get(i).getFtype());
+                try {
+                    MDetailInfo.DataBean data = list.get(i);
+                    Class cls = data.getClass();
+                    Field[] fields = cls.getDeclaredFields();
+                    for (int j = 0; j < fields.length; j++) {
+                        Field f = fields[j];
+                        f.setAccessible(true);
+                        System.out.println("属性名:" + f.getName() + " 属性值:" + f.get(data));
+                        bundle.putString(f.getName(),f.get(data).toString());
+                    }
+                }catch (IllegalAccessException e){
+                    e.printStackTrace();
+                }
                 mDeFragment.setArguments(bundle);
                 ft.commit();
+            }
+        });
+    }
+
+    private void getMDetail() {
+        ProgressDialogUtil.startShow(getContext(), "正在获取详情...");
+        RequestParamsFM headParams = new RequestParamsFM();
+        headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
+        HttpOkhUtils.getInstance().doGetWithOnlyHeader(NetConfig.PAYACCOUNTDRIVER_LIST + "/" + MyApplication.userID, headParams, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                ProgressDialogUtil.hideDialog();
+                ToastUtils.showToast(getContext(), "网络连接错误");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                ProgressDialogUtil.hideDialog();
+                if (code != 200) {
+                    ToastUtils.showToast(getContext(), "网络错误" + code);
+                    return;
+                }
+                Gson gson = new Gson();
+                System.out.println(resbody);
+                MDetailInfo info = gson.fromJson(resbody, MDetailInfo.class);
+                ToastUtils.showToast(getContext(), info.getMessage());
+                if (info.isOk()) {
+                    list = info.getData();
+                    adapter = new MDetailAdapter(getActivity(),list);
+                    lv_de.setAdapter(adapter);
+                }
             }
         });
     }
