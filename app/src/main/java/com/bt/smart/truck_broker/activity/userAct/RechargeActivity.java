@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
@@ -43,6 +44,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
     EditText re_et;
     Button btn_re;
     CheckBox cb_weixin,cb_alipay;
+    LinearLayout ll_wx,ll_ali;
     private int payKind = 0;
     private double orderPrice;//订单价格
 
@@ -60,12 +62,14 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
         cb_weixin = findViewById(R.id.cb_weixin);
         cb_alipay = findViewById(R.id.cb_alipay);
         btn_re = findViewById(R.id.btn_re);
+        ll_wx = findViewById(R.id.ll_wx);
+        ll_ali = findViewById(R.id.ll_ali);
     }
 
     protected void setListeners(){
         re_back.setOnClickListener(this);
-        cb_weixin.setOnClickListener(this);
-        cb_alipay.setOnClickListener(this);
+        ll_wx.setOnClickListener(this);
+        ll_ali.setOnClickListener(this);
         btn_re.setOnClickListener(this);
         re_et.setFilters(new InputFilter[]{lengthFilter});
     }
@@ -76,31 +80,41 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
             case R.id.re_back:
             finish();
             break;
-            case R.id.cb_weixin:
-                if(cb_alipay.isChecked()){
-                    cb_alipay.setChecked(false);
-                }
-                if(cb_weixin.isChecked()){
-                    payKind = 1;
-                }else {
-                    payKind = 0;
-                }
-                break;
-            case R.id.cb_alipay:
+            case R.id.ll_wx:
+                cb_alipay.setChecked(false);
                 if(cb_weixin.isChecked()){
                     cb_weixin.setChecked(false);
-                }
-                if(cb_alipay.isChecked()){
-                    payKind = 2;
-                }else {
                     payKind = 0;
+                }else {
+                    cb_weixin.setChecked(true);
+                    payKind = 1;
+                }
+                break;
+            case R.id.ll_ali:
+                cb_weixin.setChecked(false);
+                if(cb_alipay.isChecked()){
+                    cb_alipay.setChecked(false);
+                    payKind = 0;
+                }else {
+                    cb_alipay.setChecked(true);
+                    payKind = 2;
                 }
                 break;
             case R.id.btn_re:
             //跳转支付链接
                 RequestParamsFM headParams = new RequestParamsFM();
                 headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
-                orderPrice = Double.parseDouble(re_et.getText().toString());
+                String price = String.valueOf(re_et.getText());
+                if(price.length()==0){
+                    ToastUtils.showToast(this, "请输入充值金额");
+                    return;
+                }else{
+                    orderPrice = Double.parseDouble(re_et.getText().toString());
+                    if(orderPrice<0.01){
+                        ToastUtils.showToast(this, "最少充值0.01元");
+                        return;
+                    }
+                }
                 if (payKind == 0) {
                     ToastUtils.showToast(this, "请选择支付方式");
                     return;

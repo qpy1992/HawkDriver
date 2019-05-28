@@ -34,7 +34,12 @@ public class MDeFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             mde_jine.setText(bundle.getString("fmoney"));
-            mde_type.setText(bundle.getString("ftype"));
+            String type = bundle.getString("ftype");
+            if(type.equals("0")){
+                mde_type.setText("收入");
+            }else{
+                mde_type.setText("支出");
+            }
             mde_time.setText(bundle.getString("addtime"));
             mde_orderno.setText(bundle.getString("tradeno"));
             mde_yue.setText(bundle.getString("fremain"));

@@ -76,5 +76,5 @@ public class NetConfig {
     //支付宝参数拼接
     public static String ALIPAY = ROOT + "alipayController/alipayOrder";
 
-    public static String PAYACCOUNTDRIVER_LIST = ROOT + "payAccountDriverController/listbyid";
+    public static String PAYACCOUNTDRIVER_LIST = ROOT + "pADriverController/listbyid";
 }

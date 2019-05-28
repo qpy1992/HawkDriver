@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class MDFragment extends Fragment {
     private ListView lv_de;
     private List<MDetailInfo.DataBean> list;
     private MDetailAdapter adapter;
+    private String Tag = "MDFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +70,7 @@ public class MDFragment extends Fragment {
                         Field f = fields[j];
                         f.setAccessible(true);
                         System.out.println("属性名:" + f.getName() + " 属性值:" + f.get(data));
-                        bundle.putString(f.getName(),f.get(data).toString());
+                        bundle.putString(f.getName(),String.valueOf(f.get(data)));
                     }
                 }catch (IllegalAccessException e){
                     e.printStackTrace();
@@ -98,9 +100,9 @@ public class MDFragment extends Fragment {
                     return;
                 }
                 Gson gson = new Gson();
-                System.out.println(resbody);
+                Log.i(Tag,resbody);
                 MDetailInfo info = gson.fromJson(resbody, MDetailInfo.class);
-                ToastUtils.showToast(getContext(), info.getMessage());
+                Log.i(Tag,info.getMessage());
                 if (info.isOk()) {
                     list = info.getData();
                     adapter = new MDetailAdapter(getActivity(),list);
