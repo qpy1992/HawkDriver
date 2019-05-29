@@ -220,13 +220,16 @@
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_load"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:text="上传装货照片"/>
 
                     <LinearLayout
@@ -234,29 +237,40 @@
                         android:layout_height="wrap_content">
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:id="@+id/iv_l1"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:visibility="gone"
+                            android:layout_gravity="center"/>
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                        <ImageView
+                            android:id="@+id/iv_l2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:visibility="gone"/>
+                        <ImageView
+                            android:id="@+id/iv_l3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"/>
+                        <ImageView
+                            android:id="@+id/iv_load"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:src="@drawable/upload"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_rece"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:text="上传回单照片(无回单可直接确认)"/>
 
                     <LinearLayout
@@ -264,15 +278,22 @@
                         android:layout_height="wrap_content">
 
                         <ImageView
+                            android:id="@+id/iv_r1"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"/>
                         <ImageView
+                            android:id="@+id/iv_r2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"/>
                         <ImageView
+                            android:id="@+id/iv_r3"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"/>
                         <ImageView
+                            android:id="@+id/iv_rece"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/upload"/>
