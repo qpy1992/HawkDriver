@@ -23,6 +23,7 @@ public class NetConfig {
 
     //base64上传图片
     public static String PHOTO                 = ROOT + "registerDriverController/photo";
+    public static String PHOTO1                 = ROOT + "orderController/photo";
     //获取验证码
     public static String CHECKMESSAGE          = ROOT + "tokens/SMScode";
     //注册用户

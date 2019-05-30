@@ -10,9 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +22,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +41,7 @@ import com.bt.smart.truck_broker.activity.SaomiaoUIActivity;
 import com.bt.smart.truck_broker.messageInfo.BlueMacInfo;
 import com.bt.smart.truck_broker.messageInfo.OrderDetailInfo;
 import com.bt.smart.truck_broker.messageInfo.TakeOrderResultInfo;
+import com.bt.smart.truck_broker.messageInfo.UpPicInfo;
 import com.bt.smart.truck_broker.servicefile.SendLocationService;
 import com.bt.smart.truck_broker.utils.EditTextUtils;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
@@ -56,13 +54,10 @@ import com.bt.smart.truck_broker.utils.ShowCallUtil;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-
 import okhttp3.Request;
 
 /**
@@ -90,7 +85,12 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private Bitmap bitmap1 = null;
     // 记录文件保存位置
     private String mFilePath;
+    private File file;
     private FileInputStream is = null;
+    private int lcount = 0;
+    private int hcount = 0;
+    private String getloadUrl;//装车照片网络地址
+    private String getreceUrl;//回单照片网络地址
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -151,10 +151,18 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         int orderType = getActivity().getIntent().getIntExtra("orderType", -1);
         if (0 == orderType || 1 == orderType || 2 == orderType || 5 == orderType) {
             tv_take.setText("开锁");
-            ll_load.setVisibility(View.VISIBLE);
-            ll_rece.setVisibility(View.VISIBLE);
         } else if (3 == orderType || 4 == orderType || 6 == orderType) {
             tv_take.setVisibility(View.GONE);
+        }
+        if(0 == orderType){
+            ll_load.setVisibility(View.VISIBLE);
+        }
+        if(1 == orderType){
+            ll_rece.setVisibility(View.VISIBLE);
+        }
+        if(4 == orderType){
+            iv_load.setVisibility(View.GONE);
+            iv_rece.setVisibility(View.GONE);
         }
         //初始化定时刷新器
         initHandlerPost();
@@ -198,10 +206,11 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 Intent intent=new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 // 加载路径
                 Uri uri;
+                file = new File(mFilePath);
                 if (Build.VERSION.SDK_INT >= 24) {
-                    uri = FileProvider.getUriForFile(getActivity().getApplicationContext(), "com.bt.smart.truck_broker.fileprovider", new File(mFilePath));
+                    uri = FileProvider.getUriForFile(getActivity().getApplicationContext(), "com.bt.smart.truck_broker.fileprovider", file);
                 } else {
-                    uri = Uri.fromFile(new File(mFilePath));
+                    uri = Uri.fromFile(file);
                 }
                 // 指定存储路径，这样就可以保存原图了
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -282,6 +291,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                         // 设置图片
                         iv_l1.setVisibility(View.VISIBLE);
                         iv_l1.setImageBitmap(bitmap1);
+                        UpDataPic(file,1);
                     } catch (FileNotFoundException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -523,5 +533,53 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 builder.cancel();
             }
         });
+    }
+
+    private void UpDataPic(File file, final int kind) {
+        if (null == file || !file.exists()) {
+            ToastUtils.showToast(getContext(), "照片获取失败,请返回重新拍摄");
+            return;
+        }
+        RequestParamsFM headParam = new RequestParamsFM();
+        headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        params.put("folder","order");
+        params.put("kind",kind);
+        params.put("id",orderDetailInfo.getData().getId());
+        HttpOkhUtils.getInstance().upDateFile(NetConfig.PHOTO1, headParam, params, "file", file, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                ProgressDialogUtil.hideDialog();
+                if (1 == kind) {
+                    ToastUtils.showToast(getContext(), "装车照片上传失败");
+                } else if (2 == kind) {
+                    ToastUtils.showToast(getContext(), "回单照片上传失败");
+                }
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                if (code != 200) {
+                    ToastUtils.showToast(getContext(), "网络错误" + code);
+                    return;
+                }
+                /*{"message":"成功","data":"upload/files/1547108710666.png","ok":true,"respCode":"0"}*/
+                Gson gson = new Gson();
+                UpPicInfo upPicInfo = gson.fromJson(resbody, UpPicInfo.class);
+                ToastUtils.showToast(getContext(), upPicInfo.getMessage());
+                if (upPicInfo.isOk()) {
+                    if (1 == kind) {
+                        getloadUrl = upPicInfo.getData();
+                        ToastUtils.showToast(getContext(), "装车照片上传成功");
+                        iv_load.setVisibility(View.GONE);
+                    } else if (2 == kind) {
+                        getreceUrl = upPicInfo.getData();
+                        ToastUtils.showToast(getContext(), "回单照片上传成功");
+                        iv_rece.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+        return;
     }
 }

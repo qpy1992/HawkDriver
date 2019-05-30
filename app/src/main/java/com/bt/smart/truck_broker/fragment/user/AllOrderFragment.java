@@ -51,13 +51,13 @@ public class AllOrderFragment extends Fragment {
     private void initData() {
         tv_title.setText("订单列表");
         contsList = new ArrayList<>();
-        contsList.add("预接单");
-        contsList.add("未中标");
-        contsList.add("已接单");
-        contsList.add("运输单");
-        contsList.add("取消待确认单");
-        contsList.add("已取消");
-        contsList.add("完成单");
+        contsList.add("预接单");//5
+        contsList.add("未中标");//6
+        contsList.add("已接单");//0
+        contsList.add("运输中");//1
+        contsList.add("取消待确认");//2
+        contsList.add("已取消");//3
+        contsList.add("已结单");//4
         fragmentsList = new ArrayList<>();
         OrderListFragment orderListFgt5 = new OrderListFragment();
         orderListFgt5.setType(5);
