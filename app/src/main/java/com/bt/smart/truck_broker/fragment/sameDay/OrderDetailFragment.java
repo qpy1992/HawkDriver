@@ -17,12 +17,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +45,9 @@ import com.bt.smart.truck_broker.messageInfo.OrderDetailInfo;
 import com.bt.smart.truck_broker.messageInfo.TakeOrderResultInfo;
 import com.bt.smart.truck_broker.messageInfo.UpPicInfo;
 import com.bt.smart.truck_broker.servicefile.SendLocationService;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.EditTextUtils;
+import com.bt.smart.truck_broker.utils.GlideLoaderUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialogHelper;
 import com.bt.smart.truck_broker.utils.MyFragmentManagerUtil;
@@ -58,6 +62,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import okhttp3.Request;
 
 /**
@@ -89,8 +98,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private FileInputStream is = null;
     private int lcount = 0;
     private int hcount = 0;
-    private String getloadUrl;//装车照片网络地址
+//    private String getloadUrl;//装车照片网络地址
     private String getreceUrl;//回单照片网络地址
+//    private String fstatus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -166,6 +176,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         }
         //初始化定时刷新器
         initHandlerPost();
+//        loadpics(orderDetailInfo.getData().getFstatus(),orderDetailInfo.getData().getFloadpics());
         // 获取SD卡路径
         mFilePath = Environment.getExternalStorageDirectory().getPath();
         // 文件名
@@ -202,31 +213,39 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             //                //                startSendLanAlat();
             //                break;
             case R.id.iv_load:
-                //启动相机程序
-                Intent intent=new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                // 加载路径
-                Uri uri;
-                file = new File(mFilePath);
-                if (Build.VERSION.SDK_INT >= 24) {
-                    uri = FileProvider.getUriForFile(getActivity().getApplicationContext(), "com.bt.smart.truck_broker.fileprovider", file);
-                } else {
-                    uri = Uri.fromFile(file);
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    //权限还没有授予，需要在这里写申请权限的代码
+                    ToastUtils.showToast(getContext(), "请开启手机相机权限!");
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                            MY_PERMISSIONS_REQUEST_CALL_PHONE2);
+                }else {
+                    //启动相机程序
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    // 加载路径
+                    Uri uri;
+                    file = new File(mFilePath);
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uri = FileProvider.getUriForFile(getActivity().getApplicationContext(), "com.bt.smart.truck_broker.fileprovider", file);
+                    } else {
+                        uri = Uri.fromFile(file);
+                    }
+                    // 指定存储路径，这样就可以保存原图了
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    startActivityForResult(intent, TAKE_PHOTO);
                 }
-                // 指定存储路径，这样就可以保存原图了
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(intent,TAKE_PHOTO);
                 break;
             case R.id.iv_rece:
 
                 break;
             case R.id.iv_l1:
-                expandImg(bitmap1);
+                expandImg(iv_l1);
                 break;
             case R.id.iv_l2:
-
+                expandImg(iv_l2);
                 break;
             case R.id.iv_l3:
-
+                expandImg(iv_l3);
                 break;
             case R.id.iv_r1:
 
@@ -288,9 +307,23 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                         Matrix matrix = new Matrix();
                         matrix.postRotate(90);
                         bitmap1 = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
-                        // 设置图片
-                        iv_l1.setVisibility(View.VISIBLE);
-                        iv_l1.setImageBitmap(bitmap1);
+                        if(lcount==0) {
+                            // 设置图片
+                            iv_l1.setVisibility(View.VISIBLE);
+                            iv_l1.setImageBitmap(bitmap1);
+                            lcount++;
+                        }
+                        if(lcount==1){
+                            iv_l2.setVisibility(View.VISIBLE);
+                            iv_l2.setImageBitmap(bitmap1);
+                            lcount++;
+                        }
+                        if(lcount==2){
+                            iv_l3.setVisibility(View.VISIBLE);
+                            iv_l3.setImageBitmap(bitmap1);
+                            iv_load.setVisibility(View.GONE);
+                            lcount++;
+                        }
                         UpDataPic(file,1);
                     } catch (FileNotFoundException e) {
                         // TODO Auto-generated catch block
@@ -502,6 +535,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     return;
                 }
                 Gson gson = new Gson();
+                Log.i("orderDetailInfo",resbody);
                 orderDetailInfo = gson.fromJson(resbody, OrderDetailInfo.class);
                 ToastUtils.showToast(getContext(), orderDetailInfo.getMessage());
                 if (orderDetailInfo.isOk()) {
@@ -513,22 +547,77 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     tv_name.setText(orderDetailInfo.getData().getFh_name());
                     tv_fhPlace.setText(orderDetailInfo.getData().getFh_address());
                     tv_phone.setText(orderDetailInfo.getData().getFh_telephone());
+                    String getloadUrl = orderDetailInfo.getData().getFloadpics();
+                    if (CommonUtil.isNotEmpty(getloadUrl)) {
+                        String[] s = getloadUrl.split(",");
+                        switch (s.length) {
+                            case 1:
+                                GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + s[0], R.drawable.iman, R.drawable.iman, iv_l1);
+                                iv_l1.setVisibility(View.VISIBLE);
+                                break;
+                            case 2:
+                                GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + s[0], R.drawable.iman, R.drawable.iman, iv_l1);
+                                GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + s[1], R.drawable.iman, R.drawable.iman, iv_l2);
+                                iv_l1.setVisibility(View.VISIBLE);
+                                iv_l2.setVisibility(View.VISIBLE);
+                                break;
+                            case 3:
+                                GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + s[0], R.drawable.iman, R.drawable.iman, iv_l1);
+                                GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + s[1], R.drawable.iman, R.drawable.iman, iv_l2);
+                                GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + s[2], R.drawable.iman, R.drawable.iman, iv_l3);
+                                iv_l1.setVisibility(View.VISIBLE);
+                                iv_l2.setVisibility(View.VISIBLE);
+                                iv_l3.setVisibility(View.VISIBLE);
+                                iv_load.setVisibility(View.GONE);
+                                break;
+                        }
+                    }
                 }
             }
         });
     }
 
-    protected void expandImg(Bitmap bitmap){
-        ImageView iv = new ImageView(getActivity());
-        iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        iv.setImageBitmap(bitmap);
+    protected void loadpics(String fstatus,String getloadUrl){
+        try {
+            if (fstatus.equals("1") || fstatus.equals("3") || fstatus.equals("4") || fstatus.equals("7")) {
+                if (CommonUtil.isNotEmpty(getloadUrl)) {
+                    String[] s = getloadUrl.split(",");
+                    switch (s.length) {
+                        case 1:
+                            iv_l1.setImageBitmap(getBitmap(NetConfig.IMG_HEAD + s[0]));
+                            break;
+                        case 2:
+                            iv_l1.setImageBitmap(getBitmap(NetConfig.IMG_HEAD + s[0]));
+                            iv_l2.setImageBitmap(getBitmap(NetConfig.IMG_HEAD + s[1]));
+                            break;
+                        case 3:
+                            iv_l1.setImageBitmap(getBitmap(NetConfig.IMG_HEAD + s[0]));
+                            iv_l2.setImageBitmap(getBitmap(NetConfig.IMG_HEAD + s[1]));
+                            iv_l3.setImageBitmap(getBitmap(NetConfig.IMG_HEAD + s[2]));
+                            iv_load.setVisibility(View.GONE);
+                            break;
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    protected void expandImg(ImageView iv){
+        iv.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(iv.getDrawingCache());
+        iv.setDrawingCacheEnabled(false);
+        ImageView iv1 = new ImageView(getActivity());
+        iv1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        iv1.setImageBitmap(bitmap);
         final AlertDialog builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen).create();
         builder.show();
         Window window = builder.getWindow();
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        window.setContentView(iv);
-        iv.setOnClickListener(new View.OnClickListener() {
+        window.setContentView(iv1);
+        iv1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View paramView) {
                 builder.cancel();
             }
@@ -569,9 +658,8 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 ToastUtils.showToast(getContext(), upPicInfo.getMessage());
                 if (upPicInfo.isOk()) {
                     if (1 == kind) {
-                        getloadUrl = upPicInfo.getData();
+//                        getloadUrl = upPicInfo.getData();
                         ToastUtils.showToast(getContext(), "装车照片上传成功");
-                        iv_load.setVisibility(View.GONE);
                     } else if (2 == kind) {
                         getreceUrl = upPicInfo.getData();
                         ToastUtils.showToast(getContext(), "回单照片上传成功");
@@ -581,5 +669,27 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             }
         });
         return;
+    }
+
+    public static Bitmap getBitmap(String url) {
+        URL myFileUrl = null;
+        Bitmap bitmap = null;
+        try {
+            myFileUrl = new URL(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        try {
+            HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+            conn.setConnectTimeout(0);
+            conn.setDoInput(true);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 }

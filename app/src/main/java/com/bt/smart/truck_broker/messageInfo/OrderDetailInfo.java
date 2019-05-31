@@ -139,7 +139,11 @@ public class OrderDetailInfo {
         private String               origin_area_id;
         private String               destination_province_id;
         private String               destination_city_id;
-        private String               destination_area_id;
+        private String               destination_area_id;private String floadpics;
+        private String               floadtime;
+        private String               frecepics;
+        private String               frecetime;
+        private String               frece;
         private List<OrdergoodsBean> ordergoods;
 
         public String getId() {
@@ -412,6 +416,46 @@ public class OrderDetailInfo {
 
         public void setDestination_area_id(String destination_area_id) {
             this.destination_area_id = destination_area_id;
+        }
+
+        public String getFloadpics() {
+            return floadpics;
+        }
+
+        public void setFloadpics(String floadpics) {
+            this.floadpics = floadpics;
+        }
+
+        public String getFloadtime() {
+            return floadtime;
+        }
+
+        public void setFloadtime(String floadtime) {
+            this.floadtime = floadtime;
+        }
+
+        public String getFrecepics() {
+            return frecepics;
+        }
+
+        public void setFrecepics(String frecepics) {
+            this.frecepics = frecepics;
+        }
+
+        public String getFrecetime() {
+            return frecetime;
+        }
+
+        public void setFrecetime(String frecetime) {
+            this.frecetime = frecetime;
+        }
+
+        public String getFrece() {
+            return frece;
+        }
+
+        public void setFrece(String frece) {
+            this.frece = frece;
         }
 
         public List<OrdergoodsBean> getOrdergoods() {
