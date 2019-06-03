@@ -64,10 +64,16 @@ public class NetConfig {
     public static String ADDTRAIL = ROOT + "orderController/addTrail";
 
     //查询绑定的银行卡
-    public static String BANKCARD = ROOT + "registerDriverController/bindlist";
+    public static String BANKCARD = ROOT + "yqzlController/bindlist";
+
+    //提现到银行卡
+    public static String WITHDRAW = ROOT + "yqzlController/withdraw";
+
+    //银行卡三要素校验
+    public static String B_C_CHECK = ROOT + "yqzlController/";
 
     //绑定银行卡
-    public static String BIND = ROOT + "registerDriverController/bind";
+//    public static String BIND = ROOT + "yqzlController/bind";//未做校验的绑定
 
     //微信支付统一下单
     public static String WX = ROOT + "wxController/wxOrder";

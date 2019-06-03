@@ -64,14 +64,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:minHeight="45dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp">
 
         <TextView
             android:id="@+id/tv_xingming"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
+            android:gravity="left"
             android:text="持卡人:"
             android:layout_weight="1"
             android:textSize="18sp"/>
@@ -84,7 +85,8 @@
             android:layout_weight="4"
             android:layout_gravity="center"
             android:textSize="18sp"
-            android:background="@null"/>
+            android:background="@null"
+            android:enabled="false"/>
     </LinearLayout>
 
     <View
@@ -101,14 +103,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:minHeight="45dp"
-        >
+        android:layout_marginLeft="10dp">
 
         <TextView
             android:id="@+id/tv_kahao"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
+            android:gravity="left"
             android:text="卡号:"
             android:layout_weight="1"
             android:textSize="18sp"/>
@@ -126,6 +128,45 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/v4"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_5"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/lls4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:minHeight="45dp"
+        android:layout_marginLeft="10dp">
+
+        <TextView
+            android:id="@+id/tv_mobile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="left"
+            android:text="手机号:"
+            android:layout_weight="1"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/et_mobile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_weight="4"
+            android:inputType="number"
+            android:layout_gravity="center"
+            android:textSize="12sp"
+            android:background="@null"
+            android:hint="在银行预留的手机号"/>
+    </LinearLayout>
+
+    <View
         android:id="@+id/v2"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -138,14 +179,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:minHeight="45dp">
+        android:minHeight="45dp"
+        android:layout_marginLeft="10dp">
 
         <TextView
             android:id="@+id/tv_kaihuhang"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
+            android:gravity="left"
             android:text="开户行地区:"
             android:layout_weight="1"
             android:textSize="18sp"/>
@@ -166,7 +208,7 @@
         android:id="@+id/btn_sub"
         android:layout_width="240dp"
         android:layout_height="45dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/btn_shape"
         android:text="提交"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"

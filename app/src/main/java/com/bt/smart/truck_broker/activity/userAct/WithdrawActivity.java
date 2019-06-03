@@ -16,6 +16,7 @@ import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.adapter.BankCardAdapter;
 import com.bt.smart.truck_broker.messageInfo.BCardInfo;
+import com.bt.smart.truck_broker.messageInfo.UpPicInfo;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
@@ -98,7 +99,7 @@ public class WithdrawActivity extends AppCompatActivity implements View.OnClickL
                     return;
                 }
                 Gson gson = new Gson();
-                BCardInfo info = gson.fromJson(resbody, BCardInfo.class);
+                final BCardInfo info = gson.fromJson(resbody, BCardInfo.class);
 //                ToastUtils.showToast(WithdrawActivity.this, info.getMessage());
                 if (!info.isOk()) {
                     new MyAlertDialog(WithdrawActivity.this,MyAlertDialog.WARNING_TYPE_1)
@@ -117,17 +118,56 @@ public class WithdrawActivity extends AppCompatActivity implements View.OnClickL
                             .show();
                 }else {
                     //显示银行卡列表
-                    BankCardAdapter adapter = new BankCardAdapter(WithdrawActivity.this,info.getData());
-                    ListView lv = new ListView(WithdrawActivity.this);
-                    lv.setAdapter(adapter);
-                    final AlertDialog dialog = new AlertDialog.Builder(WithdrawActivity.this)
-                            .setView(lv).show();
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            dialog.dismiss();
-                        }
-                    });
+                    if(info.getData().size()==1){
+                        //只绑了一张银行卡，直接提现
+                        withdraw(info.getData().get(0).getId(),wd_et.getText().toString());
+                    }else {
+                        //绑了多张银行卡，选择一张提现
+                        BankCardAdapter adapter = new BankCardAdapter(WithdrawActivity.this, info.getData());
+                        ListView lv = new ListView(WithdrawActivity.this);
+                        lv.setAdapter(adapter);
+                        final AlertDialog dialog = new AlertDialog.Builder(WithdrawActivity.this)
+                                .setView(lv).show();
+                        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            //提现
+                            withdraw(info.getData().get(i).getId(),wd_et.getText().toString());
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    protected void withdraw(String id,String amount){
+        RequestParamsFM headParams = new RequestParamsFM();
+        headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        params.put("id", id);
+        params.put("amount",amount);
+        HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.WITHDRAW,headParams, params, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                ProgressDialogUtil.hideDialog();
+                ToastUtils.showToast(WithdrawActivity.this, "网络连接错误");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                ProgressDialogUtil.hideDialog();
+                if (code != 200) {
+                    ToastUtils.showToast(WithdrawActivity.this, "网络错误" + code);
+                    return;
+                }
+                Gson gson = new Gson();
+                UpPicInfo info = gson.fromJson(resbody,UpPicInfo.class);
+                if (info.isOk()) {
+                    ToastUtils.showToast(WithdrawActivity.this,"提现成功");
+                }else{
+                    ToastUtils.showToast(WithdrawActivity.this,"提现失败");
+
                 }
             }
         });

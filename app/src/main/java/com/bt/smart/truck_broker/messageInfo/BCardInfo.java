@@ -56,7 +56,9 @@ public class BCardInfo {
         private String fid;
         private String fcardno;
         private String fkhh;
-        private String fkhhno;
+        private String fprovince;
+        private String fcity;
+        private String fmobile;
         private String fname;
         private String fbindtime;
         private Integer fdeleted;
@@ -101,12 +103,28 @@ public class BCardInfo {
             this.fid = fid;
         }
 
-        public String getFkhhno() {
-            return fkhhno;
+        public String getFprovince() {
+            return fprovince;
         }
 
-        public void setFkhhno(String fkhhno) {
-            this.fkhhno = fkhhno;
+        public void setFprovince(String fprovince) {
+            this.fprovince = fprovince;
+        }
+
+        public String getFcity() {
+            return fcity;
+        }
+
+        public void setFcity(String fcity) {
+            this.fcity = fcity;
+        }
+
+        public String getFmobile() {
+            return fmobile;
+        }
+
+        public void setFmobile(String fmobile) {
+            this.fmobile = fmobile;
         }
 
         public String getFbindtime() {
