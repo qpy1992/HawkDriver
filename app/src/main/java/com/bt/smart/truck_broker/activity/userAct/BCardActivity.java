@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.adapter.BCardAdapter;
 import com.bt.smart.truck_broker.adapter.BankCardAdapter;
 import com.bt.smart.truck_broker.messageInfo.BCardInfo;
+import com.bt.smart.truck_broker.messageInfo.UpPicInfo;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
@@ -23,6 +25,7 @@ import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Request;
@@ -77,19 +80,17 @@ public class BCardActivity extends AppCompatActivity implements View.OnClickList
         HttpOkhUtils.getInstance().doGetWithHeadParams(NetConfig.BANKCARD, headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
-                ProgressDialogUtil.hideDialog();
                 ToastUtils.showToast(BCardActivity.this, "网络连接错误");
             }
 
             @Override
             public void onSuccess(int code, String resbody) {
-                ProgressDialogUtil.hideDialog();
                 if (code != 200) {
                     ToastUtils.showToast(BCardActivity.this, "网络错误" + code);
                     return;
                 }
                 Gson gson = new Gson();
-                BCardInfo info = gson.fromJson(resbody, BCardInfo.class);
+                final BCardInfo info = gson.fromJson(resbody, BCardInfo.class);
 //                ToastUtils.showToast(BCardActivity.this, info.getMessage());
                 if (!info.isOk()) {
                     new MyAlertDialog(BCardActivity.this, MyAlertDialog.WARNING_TYPE_1)
@@ -108,8 +109,55 @@ public class BCardActivity extends AppCompatActivity implements View.OnClickList
                             .show();
                 } else {
                     //显示银行卡列表
-                    BCardAdapter adapter = new BCardAdapter(BCardActivity.this, info.getData());
+                    final BCardAdapter adapter = new BCardAdapter(BCardActivity.this, info.getData());
                     lv_bcard.setAdapter(adapter);
+                    lv_bcard.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                            ListView lv = new ListView(BCardActivity.this);
+                            List<String> list = new ArrayList<>();
+                            list.add("删除");
+                            final ArrayAdapter adapter1 = new ArrayAdapter(BCardActivity.this,android.R.layout.simple_list_item_1,list);
+                            lv.setAdapter(adapter1);
+                            final AlertDialog dialog =  new AlertDialog.Builder(BCardActivity.this).setView(lv).show();
+                            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+                                    delCard(info.getData().get(position).getId());
+                                    info.getData().remove(position);
+                                    dialog.dismiss();
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                            return true;
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void delCard(String id){
+        RequestParamsFM headParams = new RequestParamsFM();
+        headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        params.put("id", id);
+        HttpOkhUtils.getInstance().doGetWithHeadParams(NetConfig.BCDEL, headParams, params, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                ToastUtils.showToast(BCardActivity.this, "网络连接错误");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                if (code != 200) {
+                    ToastUtils.showToast(BCardActivity.this, "网络错误" + code);
+                    return;
+                }
+                Gson gson = new Gson();
+                UpPicInfo info = gson.fromJson(resbody,UpPicInfo.class);
+                if(info.isOk()){
+                    ToastUtils.showToast(BCardActivity.this,"删除成功");
                 }
             }
         });

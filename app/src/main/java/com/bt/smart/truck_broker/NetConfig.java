@@ -70,7 +70,10 @@ public class NetConfig {
     public static String WITHDRAW = ROOT + "yqzlController/withdraw";
 
     //银行卡三要素校验
-    public static String B_C_CHECK = ROOT + "yqzlController/";
+    public static String B_C_CHECK = ROOT + "yqzlController/three";
+
+    //银行卡删除
+    public static String BCDEL = ROOT + "yqzlController/cancelBind";
 
     //绑定银行卡
 //    public static String BIND = ROOT + "yqzlController/bind";//未做校验的绑定

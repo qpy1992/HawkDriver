@@ -265,6 +265,7 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void Bind(BCardInfo.DataBean data) {
+        ProgressDialogUtil.startShow(BankCardActivity.this, "正在校验银行卡信息...");
         RequestParamsFM headParams = new RequestParamsFM();
         headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
         RequestParamsFM params = new RequestParamsFM();
@@ -272,7 +273,7 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
         params.put("fname", data.getFname());
         params.put("fprovince", data.getFprovince());
         params.put("fcity", data.getFcity());
-        params.put("fcardno", data.getFcardno());
+        params.put("fcardno", data.getFcardno().replaceAll(" ",""));
         params.put("fmobile",data.getFmobile());
         params.setUseJsonStreamer(true);
         HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.B_C_CHECK, headParams, params, new HttpOkhUtils.HttpCallBack() {
@@ -323,7 +324,7 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
                 }
                 Gson gson = new Gson();
                 ShengDataInfo shengDataInfo = gson.fromJson(resbody, ShengDataInfo.class);
-                ToastUtils.showToast(BankCardActivity.this, shengDataInfo.getMessage());
+//                ToastUtils.showToast(BankCardActivity.this, shengDataInfo.getMessage());
                 if (shengDataInfo.isOk()) {
                     tv_back.setVisibility(View.VISIBLE);
                     mSHIData.clear();
