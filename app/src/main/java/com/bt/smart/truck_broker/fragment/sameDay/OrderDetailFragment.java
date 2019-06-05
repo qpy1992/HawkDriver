@@ -40,6 +40,7 @@ import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.activity.OpenLockActivity;
 import com.bt.smart.truck_broker.activity.SaomiaoUIActivity;
+import com.bt.smart.truck_broker.activity.userAct.GetFacePhotoActivity;
 import com.bt.smart.truck_broker.messageInfo.BlueMacInfo;
 import com.bt.smart.truck_broker.messageInfo.OrderDetailInfo;
 import com.bt.smart.truck_broker.messageInfo.TakeOrderResultInfo;
@@ -80,7 +81,7 @@ import okhttp3.Request;
 
 public class OrderDetailFragment extends Fragment implements View.OnClickListener {
     private View            mRootView;
-    private ImageView       img_back,img_empty,iv_l1,iv_l2,iv_l3,iv_load,iv_r1,iv_r2,iv_r3,iv_rece;
+    private ImageView       img_back,img_empty,iv_l1,iv_l2,iv_l3,iv_load,iv_r1,iv_rece;
     private LinearLayout    ll_load,ll_rece;
     private TextView        tv_title,tv_place,tv_goodsname,tv_carType,tv_name,tv_fhPlace,tv_phone,tv_cont,tv_take;
     private String          orderID;//订单id
@@ -91,6 +92,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private Handler mProhandler;
     private Uri imageUri;
     private static final int TAKE_PHOTO = 1002;
+    private static final int TAKE_PHOTO_HD = 1004;
     private Bitmap bitmap1 = null;
     // 记录文件保存位置
     private String mFilePath;
@@ -99,8 +101,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private int lcount = 0;
     private int hcount = 0;
 //    private String getloadUrl;//装车照片网络地址
-    private String getreceUrl;//回单照片网络地址
+//    private String getreceUrl;//回单照片网络地址
 //    private String fstatus;
+    private final static String TAG = "OrderDetailFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -128,8 +131,6 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         iv_l3 = mRootView.findViewById(R.id.iv_l3);
         iv_load = mRootView.findViewById(R.id.iv_load);
         iv_r1 = mRootView.findViewById(R.id.iv_r1);
-        iv_r2 = mRootView.findViewById(R.id.iv_r2);
-        iv_r3 = mRootView.findViewById(R.id.iv_r3);
         iv_rece = mRootView.findViewById(R.id.iv_rece);
         ll_load = mRootView.findViewById(R.id.ll_load);
         ll_rece = mRootView.findViewById(R.id.ll_rece);
@@ -151,8 +152,6 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         iv_l2.setOnClickListener(this);
         iv_l3.setOnClickListener(this);
         iv_r1.setOnClickListener(this);
-        iv_r2.setOnClickListener(this);
-        iv_r3.setOnClickListener(this);
         //        tv_local.setOnClickListener(this);
         //        String touchKind = getActivity().getIntent().getStringExtra("touchKind");
         //        if (null != touchKind && "accepted".equals(touchKind)) {
@@ -203,7 +202,8 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     openLockDevice();
                 } else {
                     //弹出自定义的dailog让司机填写报价
-                    show2WriteMoney();
+//                    show2WriteMoney();
+                    toGetFacePic();
                 }
                 break;
             //            case R.id.tv_local:
@@ -236,7 +236,27 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case R.id.iv_rece:
-
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    //权限还没有授予，需要在这里写申请权限的代码
+                    ToastUtils.showToast(getContext(), "请开启手机相机权限!");
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                            MY_PERMISSIONS_REQUEST_CALL_PHONE2);
+                }else {
+                    //启动相机程序
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    // 加载路径
+                    Uri uri;
+                    file = new File(mFilePath);
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        uri = FileProvider.getUriForFile(getActivity().getApplicationContext(), "com.bt.smart.truck_broker.fileprovider", file);
+                    } else {
+                        uri = Uri.fromFile(file);
+                    }
+                    // 指定存储路径，这样就可以保存原图了
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    startActivityForResult(intent, TAKE_PHOTO_HD);
+                }
                 break;
             case R.id.iv_l1:
                 expandImg(iv_l1);
@@ -248,13 +268,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 expandImg(iv_l3);
                 break;
             case R.id.iv_r1:
-
-                break;
-            case R.id.iv_r2:
-
-                break;
-            case R.id.iv_r3:
-
+                expandImg(iv_r1);
                 break;
         }
     }
@@ -340,6 +354,63 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 }catch (NullPointerException e){
                     e.printStackTrace();
                 }
+                break;
+            case TAKE_PHOTO_HD:
+                try {
+                    try {
+                        // 获取输入流
+                        is = new FileInputStream(mFilePath);
+                        // 把流解析成bitmap
+                        bitmap1 = BitmapFactory.decodeStream(is);
+                        //*****旋转一下
+                        Matrix matrix = new Matrix();
+                        matrix.postRotate(90);
+                        bitmap1 = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
+                        iv_r1.setVisibility(View.VISIBLE);
+                        iv_r1.setImageBitmap(bitmap1);
+                        iv_rece.setVisibility(View.GONE);
+                        UpDataPic(file,2);
+                    } catch (FileNotFoundException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } finally {
+                        // 关闭流
+                        try {
+                            is.close();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+                break;
+            case FOR_FACE:
+                String mImageFaceFileUrl = data.getStringExtra("face_pic_url");
+                File file = new File(mImageFaceFileUrl);
+                RequestParamsFM headParam = new RequestParamsFM();
+                headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
+                RequestParamsFM params = new RequestParamsFM();
+                params.put("id",MyApplication.userID);
+                HttpOkhUtils.getInstance().upDateFile(NetConfig.FACE, headParam, params, "file", file, new HttpOkhUtils.HttpCallBack() {
+                    @Override
+                    public void onError(Request request, IOException e) {
+                        ToastUtils.showToast(getContext(), "网络连接错误");
+                    }
+
+                    @Override
+                    public void onSuccess(int code, String resbody) {
+                        if (code != 200) {
+                            ToastUtils.showToast(getContext(), "网络错误" + code);
+                            return;
+                        }
+                        Log.i(TAG,resbody);
+                        Gson gson = new Gson();
+                        UpPicInfo upPicInfo = gson.fromJson(resbody, UpPicInfo.class);
+                        ToastUtils.showToast(getContext(), upPicInfo.getMessage());
+                    }
+                });
                 break;
         }
     }
@@ -454,6 +525,22 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         startActivity(intent);
     }
 
+    private static final int FOR_FACE = 10086;
+
+    private void toGetFacePic() {
+        //第二个参数是需要申请的权限
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            //权限还没有授予，需要在这里写申请权限的代码
+            ToastUtils.showToast(getContext(), "面部认证功能，需要拍摄照片，请开启手机相机权限!");
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CALL_PHONE2);
+        } else {
+            Intent intent = new Intent(getContext(), GetFacePhotoActivity.class);
+            startActivityForResult(intent, FOR_FACE);
+        }
+    }
+
     private void show2WriteMoney() {
         final MyAlertDialogHelper dialogHelper = new MyAlertDialogHelper();
         View inflate = View.inflate(getContext(), R.layout.dailog_write_money, null);
@@ -542,12 +629,13 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     img_empty.setVisibility(View.GONE);
                     mOrder_no = orderDetailInfo.getData().getOrder_no();
                     tv_place.setText(orderDetailInfo.getData().getOrigin() + "  →  " + orderDetailInfo.getData().getDestination());
-                    tv_goodsname.setText(orderDetailInfo.getData().getCar_type());
-                    tv_carType.setText(orderDetailInfo.getData().getCar_type());
+                    tv_goodsname.setText(orderDetailInfo.getData().getGoods_name()+" "+orderDetailInfo.getData().getCar_type()+" "+orderDetailInfo.getData().getSh_address());
+                    tv_carType.setText(orderDetailInfo.getData().getFh_address());
                     tv_name.setText(orderDetailInfo.getData().getFh_name());
                     tv_fhPlace.setText(orderDetailInfo.getData().getFh_address());
                     tv_phone.setText(orderDetailInfo.getData().getFh_telephone());
                     String getloadUrl = orderDetailInfo.getData().getFloadpics();
+                    String getreceUrl = orderDetailInfo.getData().getFrecepics();
                     if (CommonUtil.isNotEmpty(getloadUrl)) {
                         String[] s = getloadUrl.split(",");
                         switch (s.length) {
@@ -571,6 +659,11 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                                 iv_load.setVisibility(View.GONE);
                                 break;
                         }
+                    }
+                    if(CommonUtil.isNotEmpty(getreceUrl)){
+                        GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + getreceUrl, R.drawable.iman, R.drawable.iman, iv_r1);
+                        iv_r1.setVisibility(View.VISIBLE);
+                        iv_rece.setVisibility(View.GONE);
                     }
                 }
             }
@@ -661,7 +754,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
 //                        getloadUrl = upPicInfo.getData();
                         ToastUtils.showToast(getContext(), "装车照片上传成功");
                     } else if (2 == kind) {
-                        getreceUrl = upPicInfo.getData();
+//                        getreceUrl = upPicInfo.getData();
                         ToastUtils.showToast(getContext(), "回单照片上传成功");
                         iv_rece.setVisibility(View.GONE);
                     }

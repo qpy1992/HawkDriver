@@ -19,25 +19,34 @@ public class AllOrderListInfo {
      * message : 查询成功！
      */
 
-    private int code;
-    private int                pageSize;
+    private String respCode;
+    private int                size;
     private String             message;
-    private List<PageListBean> pageList;
+    private List<PageListBean> data;
+    Boolean ok;
 
-    public int getCode() {
-        return code;
+    public Boolean getOk() {
+        return ok;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setOk(Boolean ok) {
+        this.ok = ok;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public String getRespCode() {
+        return respCode;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setRespCode(String respCode) {
+        this.respCode = respCode;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     public String getMessage() {
@@ -48,12 +57,12 @@ public class AllOrderListInfo {
         this.message = message;
     }
 
-    public List<PageListBean> getPageList() {
-        return pageList;
+    public List<PageListBean> getData() {
+        return data;
     }
 
-    public void setPageList(List<PageListBean> pageList) {
-        this.pageList = pageList;
+    public void setData(List<PageListBean> data) {
+        this.data = data;
     }
 
     public static class PageListBean {
@@ -88,7 +97,7 @@ public class AllOrderListInfo {
         private String                   fh;
         private String                   orderNo;
         private String                   isFapiao;
-        private ZhTimeBean               zhTime;
+        private String               zhTime;
         private String                   appointId;
         private String                   fsubId;
         private double                   ffee;
@@ -146,11 +155,11 @@ public class AllOrderListInfo {
             this.isFapiao = isFapiao;
         }
 
-        public ZhTimeBean getZhTime() {
+        public String getZhTime() {
             return zhTime;
         }
 
-        public void setZhTime(ZhTimeBean zhTime) {
+        public void setZhTime(String zhTime) {
             this.zhTime = zhTime;
         }
 

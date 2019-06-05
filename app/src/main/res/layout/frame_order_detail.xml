@@ -271,7 +271,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="回单照片(无回单可直接确认)"/>
+                        android:text="回单照片"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -279,16 +279,6 @@
 
                         <ImageView
                             android:id="@+id/iv_r1"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:visibility="gone"/>
-                        <ImageView
-                            android:id="@+id/iv_r2"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:visibility="gone"/>
-                        <ImageView
-                            android:id="@+id/iv_r3"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:visibility="gone"/>

@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,6 +76,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
     private int mOrderSize;//总条目
     private int mSumPageSize;//总共页数
     private int mWhichPage;//获取哪页数据
+    private static String TAG = "SameDay_F";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -252,10 +254,11 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                 }
                 Gson gson = new Gson();
                 AllOrderListInfo allOrderListInfo = gson.fromJson(resbody, AllOrderListInfo.class);
+                Log.i(TAG,resbody);
                 ToastUtils.showToast(getContext(), allOrderListInfo.getMessage());
-                if (1 == allOrderListInfo.getCode()) {
+                if (allOrderListInfo.getOk()) {
                     mWhichPage++;
-                    mData.addAll(allOrderListInfo.getPageList());
+                    mData.addAll(allOrderListInfo.getData());
                     orderAdapter.notifyDataSetChanged();
                 }
             }
@@ -286,18 +289,19 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                     ToastUtils.showToast(getContext(), "网络错误" + code);
                     return;
                 }
+                Log.i(TAG,resbody);
                 Gson gson = new Gson();
                 AllOrderListInfo allOrderListInfo = gson.fromJson(resbody, AllOrderListInfo.class);
                 ToastUtils.showToast(getContext(), allOrderListInfo.getMessage());
-                if (1 == allOrderListInfo.getCode()) {
+                if (allOrderListInfo.getOk()) {
                     mData.clear();
-                    mOrderSize = allOrderListInfo.getPageSize();
+                    mOrderSize = allOrderListInfo.getSize();
                     mSumPageSize = mOrderSize % 10 == 0 ? mOrderSize / 10 : mOrderSize / 10 + 1;
                     mWhichPage = 1;
-                    for (AllOrderListInfo.PageListBean bean : allOrderListInfo.getPageList()) {
-                        bean.setZh_time(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(bean.getZhTime().getTime())));
+                    for (AllOrderListInfo.PageListBean bean : allOrderListInfo.getData()) {
+                        bean.setZh_time(bean.getZhTime());
                     }
-                    mData.addAll(allOrderListInfo.getPageList());
+                    mData.addAll(allOrderListInfo.getData());
                     orderAdapter.notifyDataSetChanged();
                 }
             }

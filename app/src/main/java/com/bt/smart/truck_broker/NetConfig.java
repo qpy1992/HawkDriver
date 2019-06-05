@@ -23,6 +23,7 @@ public class NetConfig {
 
     //base64上传图片
     public static String PHOTO                 = ROOT + "registerDriverController/photo";
+    public static String FACE                 = ROOT + "orderController/face";
     public static String PHOTO1                 = ROOT + "orderController/photo";
     //获取验证码
     public static String CHECKMESSAGE          = ROOT + "tokens/SMScode";
@@ -44,7 +45,7 @@ public class NetConfig {
     public static String REGISTERDRIVERCONTROLLER = ROOT + "registerDriverController/{id}";
 
     //获取当天货源信息列表
-    public static String ALL_ORDER_LIST                  = ROOT + "orderController/list";
+    public static String ALL_ORDER_LIST                  = ROOT + "orderController/list1";
     //获取当天货源条目详情
     public static String ALL_ORDER_DETAIL                = ROOT + "orderController";
     //司机接单
