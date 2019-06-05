@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -34,6 +35,7 @@ public class WithdrawActivity extends AppCompatActivity implements View.OnClickL
     TextView wd_back,tv_now,tv_all;
     EditText wd_et;
     Button btn_wd;
+    private static String TAG = "WithdrawActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,13 +152,12 @@ public class WithdrawActivity extends AppCompatActivity implements View.OnClickL
         HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.WITHDRAW,headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
-                ProgressDialogUtil.hideDialog();
                 ToastUtils.showToast(WithdrawActivity.this, "网络连接错误");
             }
 
             @Override
             public void onSuccess(int code, String resbody) {
-                ProgressDialogUtil.hideDialog();
+                Log.i(TAG,resbody);
                 if (code != 200) {
                     ToastUtils.showToast(WithdrawActivity.this, "网络错误" + code);
                     return;
