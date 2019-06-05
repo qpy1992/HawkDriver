@@ -105,7 +105,12 @@ public class BCardActivity extends AppCompatActivity implements View.OnClickList
                                     sweetAlertDialog.dismiss();
                                 }
                             })
-                            .setCancelClickListener(null)
+                            .setCancelClickListener(new MyAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(MyAlertDialog sweetAlertDialog) {
+                                    finish();
+                                }
+                            })
                             .show();
                 } else {
                     //显示银行卡列表
