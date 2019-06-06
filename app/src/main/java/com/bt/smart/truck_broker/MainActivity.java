@@ -222,6 +222,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (null != mProhandler)
             mProhandler.removeCallbacksAndMessages(null);
         mProhandler = null;
+        unbindService(mServiceConnection);
     }
 
     @Override

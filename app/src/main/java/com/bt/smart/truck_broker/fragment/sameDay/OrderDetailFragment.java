@@ -42,6 +42,7 @@ import com.bt.smart.truck_broker.activity.OpenLockActivity;
 import com.bt.smart.truck_broker.activity.SaomiaoUIActivity;
 import com.bt.smart.truck_broker.activity.userAct.GetFacePhotoActivity;
 import com.bt.smart.truck_broker.messageInfo.BlueMacInfo;
+import com.bt.smart.truck_broker.messageInfo.ForTXAIFaceInfo;
 import com.bt.smart.truck_broker.messageInfo.OrderDetailInfo;
 import com.bt.smart.truck_broker.messageInfo.TakeOrderResultInfo;
 import com.bt.smart.truck_broker.messageInfo.UpPicInfo;
@@ -398,8 +399,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 RequestParamsFM headParam = new RequestParamsFM();
                 headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
                 RequestParamsFM params = new RequestParamsFM();
+                params.put("str",getImgStr(file));
                 params.put("id",MyApplication.userID);
-                HttpOkhUtils.getInstance().upDateFile(NetConfig.FACE, headParam, params, "file", file, new HttpOkhUtils.HttpCallBack() {
+                HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.FACE, headParam, params, new HttpOkhUtils.HttpCallBack() {
                     @Override
                     public void onError(Request request, IOException e) {
                         ToastUtils.showToast(getContext(), "网络连接错误");
@@ -414,7 +416,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                         Log.i(TAG,resbody);
                         Gson gson = new Gson();
                         UpPicInfo upPicInfo = gson.fromJson(resbody, UpPicInfo.class);
-                        ToastUtils.showToast(getContext(), upPicInfo.getMessage());
+                        ForTXAIFaceInfo info = gson.fromJson(upPicInfo.getData(), ForTXAIFaceInfo.class);
+                        ToastUtils.showToast(getContext(), info.getMsg());
+                        show2WriteMoney();
                     }
                 });
                 break;
@@ -734,6 +738,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         params.put("folder","order");
         params.put("kind",kind);
         params.put("id",orderDetailInfo.getData().getId());
+        params.put("driverId",MyApplication.userID);
         HttpOkhUtils.getInstance().upDateFile(NetConfig.PHOTO1, headParam, params, "file", file, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
@@ -871,5 +876,26 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 bm.recycle();
             }
         }
+    }
+
+    /**
+     * * 将图片转换成Base64编码
+     * * @param imgFile 待处理图片
+     * * @return
+     */
+    public static String getImgStr(File file) {
+        //将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+        InputStream in = null;
+        byte[] data = null;
+        //读取图片字节数组
+        try {
+            in = new FileInputStream(file);
+            data = new byte[in.available()];
+            in.read(data);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new String(org.apache.commons.codec.binary.Base64.encodeBase64(data));
     }
 }
