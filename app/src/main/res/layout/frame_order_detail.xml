@@ -56,6 +56,7 @@
                         android:textSize="14sp"/>
 
                     <TextView
+                        android:id="@+id/tv_inter"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"

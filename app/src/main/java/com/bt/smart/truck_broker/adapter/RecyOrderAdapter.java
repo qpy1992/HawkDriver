@@ -41,6 +41,13 @@ public class RecyOrderAdapter extends BaseQuickAdapter<AllOrderListInfo.PageList
 
         helper.setText(R.id.tv_loadtime, "装货时间：" + item.getZh_time());
         helper.setText(R.id.tv_name, item.getFhName());
+        helper.setText(R.id.tv_interval, item.getTime_interval());
+        helper.setText(R.id.tv_mark, item.getFnote());
+        if(item.getDistance().equals("")){
+            helper.setText(R.id.tv_distance, "");
+        }else {
+            helper.setText(R.id.tv_distance, "约" + item.getDistance()+"km");
+        }
         ImageView img_call = (ImageView) helper.getView(R.id.img_call);
         img_call.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +58,7 @@ public class RecyOrderAdapter extends BaseQuickAdapter<AllOrderListInfo.PageList
                     showCheckWarning();
                     return;
                 }
-                ShowCallUtil.showCallDialog(mContext, item.getFhTelephone());
+                ShowCallUtil.showCallDialog(mContext, item.getFhTele());
             }
         });
     }

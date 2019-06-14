@@ -89,7 +89,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private View            mRootView;
     private ImageView       img_back,img_empty,iv_l1,iv_l2,iv_l3,iv_load,iv_r1,iv_rece;
     private LinearLayout    ll_load,ll_rece;
-    private TextView        tv_title,tv_place,tv_goodsname,tv_carType,tv_name,tv_fhPlace,tv_phone,tv_cont,tv_take;
+    private TextView        tv_title,tv_place,tv_goodsname,tv_carType,tv_name,tv_fhPlace,tv_phone,tv_cont,tv_take,tv_inter;
     private String          orderID;//订单id
     private String          mOrder_no;//订单号
     //    private TextView        tv_local;//开始定位按钮
@@ -131,6 +131,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         tv_phone = mRootView.findViewById(R.id.tv_phone);
         tv_cont = mRootView.findViewById(R.id.tv_cont);
         tv_take = mRootView.findViewById(R.id.tv_take);
+        tv_inter = mRootView.findViewById(R.id.tv_inter);
         //        tv_local = mRootView.findViewById(R.id.tv_local);
         iv_l1 = mRootView.findViewById(R.id.iv_l1);
         iv_l2 = mRootView.findViewById(R.id.iv_l2);
@@ -394,33 +395,35 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case FOR_FACE:
-                String mImageFaceFileUrl = data.getStringExtra("face_pic_url");
-                File file = compressImage(mImageFaceFileUrl);
-                RequestParamsFM headParam = new RequestParamsFM();
-                headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
-                RequestParamsFM params = new RequestParamsFM();
-                params.put("str",getImgStr(file));
-                params.put("id",MyApplication.userID);
-                HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.FACE, headParam, params, new HttpOkhUtils.HttpCallBack() {
-                    @Override
-                    public void onError(Request request, IOException e) {
-                        ToastUtils.showToast(getContext(), "网络连接错误");
-                    }
-
-                    @Override
-                    public void onSuccess(int code, String resbody) {
-                        if (code != 200) {
-                            ToastUtils.showToast(getContext(), "网络错误" + code);
-                            return;
+                if(data!=null) {
+                    String mImageFaceFileUrl = data.getStringExtra("face_pic_url");
+                    File file = compressImage(mImageFaceFileUrl);
+                    RequestParamsFM headParam = new RequestParamsFM();
+                    headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
+                    RequestParamsFM params = new RequestParamsFM();
+                    params.put("str", getImgStr(file));
+                    params.put("id", MyApplication.userID);
+                    HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.FACE, headParam, params, new HttpOkhUtils.HttpCallBack() {
+                        @Override
+                        public void onError(Request request, IOException e) {
+                            ToastUtils.showToast(getContext(), "网络连接错误");
                         }
-                        Log.i(TAG,resbody);
-                        Gson gson = new Gson();
-                        UpPicInfo upPicInfo = gson.fromJson(resbody, UpPicInfo.class);
-                        ForTXAIFaceInfo info = gson.fromJson(upPicInfo.getData(), ForTXAIFaceInfo.class);
-                        ToastUtils.showToast(getContext(), info.getMsg());
-                        show2WriteMoney();
-                    }
-                });
+
+                        @Override
+                        public void onSuccess(int code, String resbody) {
+                            if (code != 200) {
+                                ToastUtils.showToast(getContext(), "网络错误" + code);
+                                return;
+                            }
+                            Log.i(TAG, resbody);
+                            Gson gson = new Gson();
+                            UpPicInfo upPicInfo = gson.fromJson(resbody, UpPicInfo.class);
+                            ForTXAIFaceInfo info = gson.fromJson(upPicInfo.getData(), ForTXAIFaceInfo.class);
+                            ToastUtils.showToast(getContext(), info.getMsg());
+                            show2WriteMoney();
+                        }
+                    });
+                }
                 break;
         }
     }
@@ -639,11 +642,12 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     img_empty.setVisibility(View.GONE);
                     mOrder_no = orderDetailInfo.getData().getOrder_no();
                     tv_place.setText(orderDetailInfo.getData().getOrigin() + "  →  " + orderDetailInfo.getData().getDestination());
-                    tv_goodsname.setText(orderDetailInfo.getData().getGoods_name()+" "+orderDetailInfo.getData().getCar_type()+" "+orderDetailInfo.getData().getSh_address());
+                    tv_goodsname.setText(orderDetailInfo.getData().getGoodsname()+" "+orderDetailInfo.getData().getCartype()+" "+orderDetailInfo.getData().getSh_address());
                     tv_carType.setText(orderDetailInfo.getData().getFh_address());
                     tv_name.setText(orderDetailInfo.getData().getFh_name());
                     tv_fhPlace.setText(orderDetailInfo.getData().getFh_address());
                     tv_phone.setText(orderDetailInfo.getData().getFh_telephone());
+                    tv_inter.setText(orderDetailInfo.getData().getTime_interval());
                     String getloadUrl = orderDetailInfo.getData().getFloadpics();
                     String getreceUrl = orderDetailInfo.getData().getFrecepics();
                     if (CommonUtil.isNotEmpty(getloadUrl)) {

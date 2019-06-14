@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -154,6 +155,13 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
             Intent intent = new Intent(getContext(), GetDrivingCardPhotoActivity.class);
             startActivityForResult(intent, REQUEST_FOR_DRIVING_CARD);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Intent intent = new Intent(getContext(), GetDrivingCardPhotoActivity.class);
+        startActivityForResult(intent, REQUEST_FOR_DRIVING_CARD);
     }
 
     private void submitDriveInfo() {

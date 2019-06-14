@@ -29,6 +29,7 @@ import com.bt.smart.truck_broker.messageInfo.AllOrderListInfo;
 import com.bt.smart.truck_broker.messageInfo.ChioceAdapterContentInfo;
 import com.bt.smart.truck_broker.messageInfo.ShengDataInfo;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
+import com.bt.smart.truck_broker.utils.LocationUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialogHelper;
 import com.bt.smart.truck_broker.utils.MyAnimationUtils;
 import com.bt.smart.truck_broker.utils.PopupOpenHelper;
@@ -77,6 +78,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
     private int mSumPageSize;//总共页数
     private int mWhichPage;//获取哪页数据
     private static String TAG = "SameDay_F";
+    private double lat,lng;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,6 +102,9 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         rec_order = mRootView.findViewById(R.id.rec_order);
         tv_start = mRootView.findViewById(R.id.tv_start);
         tv_end = mRootView.findViewById(R.id.tv_end);
+        Bundle bundle = getArguments();
+        lat = bundle.getDouble("lat");
+        lng = bundle.getDouble("lng");
     }
 
     private void initData() {
@@ -108,15 +113,16 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         initOrderList();
         //初始化起点线路
         initStartPlace();
+
         //获取订单列表信息
-        getOrderList(1, 10, 0, null);
+        getOrderList(1, 10, lat, lng);
 
         swiperefresh.setColorSchemeColors(getResources().getColor(R.color.blue_icon), getResources().getColor(R.color.yellow_40), getResources().getColor(R.color.red_160));
         swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 //获取订单列表信息
-                getOrderList(1, 10, 0, null);
+                getOrderList(1, 10, lat, lng);
             }
         });
         //设置rec_order滑动事件
@@ -161,7 +167,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (REQUEST_FOR_TAKE_ORDER == requestCode && RESULT_TAKE_ORDER == resultCode) {
             //刷新界面
-            getOrderList(1, 10, 0, null);
+            getOrderList(1, 10, lat, lng);
         }
     }
 
@@ -224,22 +230,18 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
 
     private void getMorePageInfo() {
         if (mSumPageSize > 1 && mWhichPage < mSumPageSize) {
-            getMoreOrderList(mWhichPage + 1, 10, 0, null);
+            getMoreOrderList(mWhichPage + 1, 10, lat, lng);
         } else {
             orderAdapter.disableLoadMoreIfNotFullPage();
             ToastUtils.showToast(getContext(), "没有更多数据了");
         }
     }
 
-    private void getMoreOrderList(int no, int size, int isAppoint, String id) {
+    private void getMoreOrderList(int no, int size, double lat, double lng) {
         RequestParamsFM headParams = new RequestParamsFM();
         headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
         String finalUrl;
-        if (null == id || "".equals(id)) {
-            finalUrl = NetConfig.ALL_ORDER_LIST + "/" + no + "/" + size + "/" + isAppoint + "/" + "{appointId}";
-        } else {
-            finalUrl = NetConfig.ALL_ORDER_LIST + "/" + no + "/" + size + "/" + isAppoint + "/" + "{appointId}?appointId=" + id;
-        }
+        finalUrl = NetConfig.ALL_ORDER_LIST + "/" + no + "/" + size +"/" + lat +"/" + lng;
         HttpOkhUtils.getInstance().doGetWithOnlyHeader(finalUrl, headParams, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
@@ -265,16 +267,12 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void getOrderList(int no, int size, int isAppoint, String id) {
+    private void getOrderList(int no, int size, double lat, double lng) {
         swiperefresh.setRefreshing(true);
         RequestParamsFM headParams = new RequestParamsFM();
         headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
         String finalUrl;
-        if (null == id || "".equals(id)) {
-            finalUrl = NetConfig.ALL_ORDER_LIST + "/" + no + "/" + size + "/" + isAppoint + "/" + "{appointId}";//TODO:
-        } else {
-            finalUrl = NetConfig.ALL_ORDER_LIST + "/" + no + "/" + size + "/" + isAppoint + "/" + "{appointId}?appointId=" + id;
-        }
+        finalUrl = NetConfig.ALL_ORDER_LIST + "/" + no + "/" + size + "/" + lat + "/" + lng;
         HttpOkhUtils.getInstance().doGetWithOnlyHeader(finalUrl, headParams, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
@@ -299,7 +297,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                     mSumPageSize = mOrderSize % 10 == 0 ? mOrderSize / 10 : mOrderSize / 10 + 1;
                     mWhichPage = 1;
                     for (AllOrderListInfo.PageListBean bean : allOrderListInfo.getData()) {
-                        bean.setZh_time(bean.getZhTime());
+                        bean.setZh_time(bean.getZh_time());
                     }
                     mData.addAll(allOrderListInfo.getData());
                     orderAdapter.notifyDataSetChanged();

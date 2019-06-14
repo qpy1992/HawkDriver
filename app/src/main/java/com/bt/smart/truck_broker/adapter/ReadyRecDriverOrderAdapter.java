@@ -38,6 +38,7 @@ public class ReadyRecDriverOrderAdapter extends BaseQuickAdapter<ReadyRecOrderIn
     protected void convert(BaseViewHolder helper, final ReadyRecOrderInfo.DataBean item) {
         //        (ImageView) helper.getView(R.id.img_call)
         helper.setText(R.id.tv_place, item.getOrigin() + "  →  " + item.getDestination());
+        helper.setText(R.id.tv_interval, item.getTime_interval());
         helper.setText(R.id.tv_goodsname, item.getGoods_name()+" "+item.getCar_type());
         helper.setText(R.id.tv_loadtime, "装货时间：" + item.getZh_time());
         helper.setText(R.id.tv_name, item.getFh_name() + "\n电话：" + item.getFh_telephone());

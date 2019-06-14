@@ -139,12 +139,40 @@ public class OrderDetailInfo {
         private String               origin_area_id;
         private String               destination_province_id;
         private String               destination_city_id;
-        private String               destination_area_id;private String floadpics;
+        private String               destination_area_id;
+        private String               floadpics;
         private String               floadtime;
         private String               frecepics;
         private String               frecetime;
         private String               frece;
+        private String               time_interval;
+        private String               goodsname;
+        private String               cartype;
         private List<OrdergoodsBean> ordergoods;
+
+        public String getGoodsname() {
+            return goodsname;
+        }
+
+        public void setGoodsname(String goodsname) {
+            this.goodsname = goodsname;
+        }
+
+        public String getCartype() {
+            return cartype;
+        }
+
+        public void setCartype(String cartype) {
+            this.cartype = cartype;
+        }
+
+        public String getTime_interval() {
+            return time_interval;
+        }
+
+        public void setTime_interval(String time_interval) {
+            this.time_interval = time_interval;
+        }
 
         public String getId() {
             return id;

@@ -1,16 +1,22 @@
 package com.bt.smart.truck_broker;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,17 +65,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private SameDay_F           sameDay_F;//当天货源
     private ServApply_F         servApply_F;//服务
     private User_F              user_F;//个人中心
-    private Handler             mProhandler;//定时播报经纬度
+    private Handler             mProhandler = null;//定时播报经纬度
     private SendLocationService service;//定位服务
     private boolean             isBinded;//是否已绑定服务
     private double              lonData;//经度
     private double              latData;//纬度
+    private String TAG = "MainActivity：";
+    private int MY_PERMISSIONS_REQUEST_LOCATION = 10086;
+
     //服务连接监听回调
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             isBinded = true;
             ToastUtils.showToast(MainActivity.this, "连上服务");
+            Log.i(TAG,"连上服务");
             SendLocationService.MyBinder myBinder = (SendLocationService.MyBinder) iBinder;
             service = myBinder.getService();
             service.startGetLoaction();
@@ -103,6 +113,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tv_menu_3 = findViewById(R.id.tv_menu_3);
         //获取最新的版本
         //        getNewApkInfo();
+        // 需要检查权限,否则编译报错。
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        }
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults.length>0) {
+            if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startSendLanAlat();
+            }
+        }
     }
 
     private void setData() {
@@ -131,11 +163,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         // 设置默认首页为点击时的图片
         bt_menu[0].setImageResource(select_on[0]);
-
+        MyApplication.needLocationService = true;
         startSendLanAlat();
         //初始化定时刷新器
-        //        initHandlerPost();
-        MyApplication.needLocationService = true;
+        initHandlerPost();
     }
 
     @Override
@@ -157,8 +188,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.linear1:// 好品界面
+                Bundle bundle = new Bundle();
+                bundle.putDouble("lng",service.getLocation().getLongitude());
+                bundle.putDouble("lat",service.getLocation().getLatitude());
                 if (sameDay_F == null) {
                     sameDay_F = new SameDay_F();
+                    sameDay_F.setArguments(bundle);
                     // 判断当前界面是否隐藏，如果隐藏就进行添加显示，false表示显示，true表示当前界面隐藏
                     addFragment(sameDay_F);
                     showFragment(sameDay_F);
@@ -166,6 +201,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 } else {
                     if (sameDay_F.isHidden()) {
                         showFragment(sameDay_F);
+                        sameDay_F.setArguments(bundle);
                         changeTVColor(1);
                     }
                 }
@@ -267,7 +303,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onSuccess(int code, String resbody) {
-
+                Log.i(TAG,"上传成功");
             }
         });
 

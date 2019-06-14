@@ -143,6 +143,7 @@ public class ReadyRecOrderInfo {
         private String frecepics;
         private String frecetime;
         private String frece;
+        private String time_interval;
 
         public String getId() {
             return id;
@@ -430,6 +431,14 @@ public class ReadyRecOrderInfo {
 
         public void setFrece(String frece) {
             this.frece = frece;
+        }
+
+        public String getTime_interval() {
+            return time_interval;
+        }
+
+        public void setTime_interval(String time_interval) {
+            this.time_interval = time_interval;
         }
     }
 }

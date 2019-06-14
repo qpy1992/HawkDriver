@@ -11,8 +11,9 @@ package com.bt.smart.truck_broker;
 
 public class NetConfig {
     //服务器总地址
-    public static String ROOT     = "http://116.62.171.244:8082/yingsu/rest/";
-//        public static String ROOT     = "http://172.16.52.63:8080/rest/";
+//    public static String ROOT     = "http://116.62.171.244:8082/yingsu/rest/";
+//        public static String ROOT     = "http://172.16.52.63/rest/";
+        public static String ROOT     = "http://2o1b417794.51mypc.cn:39437/rest/";
     //图片地址
     public static String IMG_HEAD = "http://116.62.171.244:8082/yingsu/";
     //    public static String IMG_HEAD = "http://205.168.1.100/yingsu_war_exploded/";

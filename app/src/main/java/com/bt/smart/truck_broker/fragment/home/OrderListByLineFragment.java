@@ -149,13 +149,13 @@ public class OrderListByLineFragment extends Fragment implements View.OnClickLis
                     }
                     for (LinesOrderInfo.DataBean bean : linesOrderInfo.getData()) {
                         AllOrderListInfo.PageListBean bean1 = new AllOrderListInfo.PageListBean();
-                        bean1.setFhAddress(bean.getFh_address());
-                        bean1.setShAddress(bean.getSh_address());
+//                        bean1.setFhAddress(bean.getFh_address());
+//                        bean1.setShAddress(bean.getSh_address());
                         bean1.setId(bean.getId());
                         bean1.setGoodsName(bean.getGoods_name());
                         bean1.setZh_time(bean.getZh_time());
                         bean1.setFhName(bean.getFh_name());
-                        bean1.setFhTelephone(bean.getFh_telephone());
+                        bean1.setFhTele(bean.getFh_telephone());
                         mData.add(bean1);
                     }
                     orderAdapter.notifyDataSetChanged();
@@ -225,13 +225,13 @@ public class OrderListByLineFragment extends Fragment implements View.OnClickLis
                     mWhichPage++;
                     for (LinesOrderInfo.DataBean bean : linesOrderInfo.getData()) {
                         AllOrderListInfo.PageListBean bean1 = new AllOrderListInfo.PageListBean();
-                        bean1.setFhAddress(bean.getFh_address());
-                        bean1.setShAddress(bean.getSh_address());
+//                        bean1.setFhAddress(bean.getFh_address());
+//                        bean1.setShAddress(bean.getSh_address());
                         bean1.setId(bean.getId());
                         bean1.setGoodsName(bean.getGoods_name());
                         bean1.setZh_time(bean.getZh_time());
                         bean1.setFhName(bean.getFh_name());
-                        bean1.setFhTelephone(bean.getFh_telephone());
+                        bean1.setFhTele(bean.getFh_telephone());
                         mData.add(bean1);
                     }
                     orderAdapter.notifyDataSetChanged();
