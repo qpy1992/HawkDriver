@@ -11,9 +11,8 @@ package com.bt.smart.truck_broker;
 
 public class NetConfig {
     //服务器总地址
-//    public static String ROOT     = "http://116.62.171.244:8082/yingsu/rest/";
-//        public static String ROOT     = "http://172.16.52.63/rest/";
-        public static String ROOT     = "http://2o1b417794.51mypc.cn:39437/rest/";
+    public static String ROOT = "http://116.62.171.244:8082/yingsu/rest/";
+    //        public static String ROOT     = "http://2o1b417794.51mypc.cn:39437/rest/";
     //图片地址
     public static String IMG_HEAD = "http://116.62.171.244:8082/yingsu/";
     //    public static String IMG_HEAD = "http://205.168.1.100/yingsu_war_exploded/";
@@ -23,36 +22,36 @@ public class NetConfig {
     public static String GETNEWAPPVERSION = ROOT + "getNewAppVersion";
 
     //base64上传图片
-    public static String PHOTO                 = ROOT + "registerDriverController/photo";
-    public static String FACE                 = ROOT + "orderController/face";
-    public static String PHOTO1                 = ROOT + "orderController/photo";
+    public static String PHOTO = ROOT + "registerDriverController/photo";
+    public static String FACE = ROOT + "orderController/face";
+    public static String PHOTO1 = ROOT + "orderController/photo";
     //获取验证码
-    public static String CHECKMESSAGE          = ROOT + "tokens/SMScode";
+    public static String CHECKMESSAGE = ROOT + "tokens/SMScode";
     //注册用户
-    public static String REGISTERDRIVER        = ROOT + "tokens/registerdriver/reg";
+    public static String REGISTERDRIVER = ROOT + "tokens/registerdriver/reg";
     //修改密码(记得原密码)
-    public static String BACKFPASSWORD         = ROOT + "backFpassword";
+    public static String BACKFPASSWORD = ROOT + "backFpassword";
     //修改密码(忘记原密码)
     public static String BACKFPASSWORDBYMOBILE = ROOT + "backFpasswordByMobile";
     //用户登录
-    public static String LOGINURL              = ROOT + "tokens/registerdriver";
+    public static String LOGINURL = ROOT + "tokens/registerdriver";
     //验证码登录
-    public static String CodeLOGINURL          = ROOT + "tokens/registerdriver/code";
+    public static String CodeLOGINURL = ROOT + "tokens/registerdriver/code";
     //获取用户信息
-    public static String REGISTERINFO          = ROOT + "registerInfo";
+    public static String REGISTERINFO = ROOT + "registerInfo";
 
     //提交司机认证信息
-    public static String DRIVERGDCONTROLLER       = ROOT + "driverGdController";
+    public static String DRIVERGDCONTROLLER = ROOT + "driverGdController";
     public static String REGISTERDRIVERCONTROLLER = ROOT + "registerDriverController/{id}";
 
     //获取当天货源信息列表
-    public static String ALL_ORDER_LIST                  = ROOT + "orderController/list1";
+    public static String ALL_ORDER_LIST = ROOT + "orderController/list1";
     //获取当天货源条目详情
-    public static String ALL_ORDER_DETAIL                = ROOT + "orderController";
+    public static String ALL_ORDER_DETAIL = ROOT + "orderController";
     //司机接单
-    public static String DRIVERORDERCONTROLLER           = ROOT + "driverOrderController";
+    public static String DRIVERORDERCONTROLLER = ROOT + "driverOrderController";
     //根据ID司机订单表信息
-    public static String DRIVERORDERCONTROLLER_ORDER     = ROOT + "driverOrderController/order";
+    public static String DRIVERORDERCONTROLLER_ORDER = ROOT + "driverOrderController/order";
     public static String DRIVERORDERCONTROLLER_ADDRECORD = ROOT + "driverOrderController/addRecord";
 
 

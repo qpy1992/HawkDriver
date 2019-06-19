@@ -1,7 +1,6 @@
 package com.bt.smart.truck_broker;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +25,7 @@ import android.widget.Toast;
 
 import com.bt.smart.truck_broker.fragment.home.Home_F;
 import com.bt.smart.truck_broker.fragment.sameDay.SameDay_F;
-import com.bt.smart.truck_broker.fragment.serviceApply.ServApply_F;
+import com.bt.smart.truck_broker.fragment.mineOrders.MyOrders_F;
 import com.bt.smart.truck_broker.fragment.user.User_F;
 import com.bt.smart.truck_broker.messageInfo.NewApkInfo;
 import com.bt.smart.truck_broker.servicefile.SendLocationService;
@@ -63,7 +62,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout        linear_mine;//个人中心
     private Home_F              home_F;//配送大厅
     private SameDay_F           sameDay_F;//当天货源
-    private ServApply_F         servApply_F;//服务
+    private MyOrders_F          myOrders_F;//我的订单
     private User_F              user_F;//个人中心
     private Handler             mProhandler = null;//定时播报经纬度
     private SendLocationService service;//定位服务
@@ -207,15 +206,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.linear2://适玩界面
-                if (servApply_F == null) {
-                    servApply_F = new ServApply_F();
+                if (myOrders_F == null) {
+                    myOrders_F = new MyOrders_F();
                     // 判断当前界面是否隐藏，如果隐藏就进行添加显示，false表示显示，true表示当前界面隐藏
-                    addFragment(servApply_F);
-                    showFragment(servApply_F);
+                    addFragment(myOrders_F);
+                    showFragment(myOrders_F);
                     changeTVColor(2);
                 } else {
-                    if (servApply_F.isHidden()) {
-                        showFragment(servApply_F);
+                    if (myOrders_F.isHidden()) {
+                        showFragment(myOrders_F);
                         changeTVColor(2);
                     }
                 }
@@ -434,8 +433,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (sameDay_F != null) {
             ft.hide(sameDay_F);
         }
-        if (servApply_F != null) {
-            ft.hide(servApply_F);
+        if (myOrders_F != null) {
+            ft.hide(myOrders_F);
         }
         if (user_F != null) {
             ft.hide(user_F);
