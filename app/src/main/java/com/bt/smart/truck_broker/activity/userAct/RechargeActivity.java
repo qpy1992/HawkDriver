@@ -21,10 +21,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
+import com.bt.smart.truck_broker.BaseActivity;
 import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.messageInfo.DownOrderResultInfo;
+import com.bt.smart.truck_broker.messageInfo.MessageEvent;
 import com.bt.smart.truck_broker.messageInfo.PayResult;
 import com.bt.smart.truck_broker.messageInfo.WXOrderResultInfo;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
@@ -34,12 +36,17 @@ import com.google.gson.Gson;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 import okhttp3.Request;
 
-public class RechargeActivity extends AppCompatActivity implements View.OnClickListener {
+public class RechargeActivity extends BaseActivity implements View.OnClickListener {
     TextView re_back;
     EditText re_et;
     Button btn_re;
@@ -72,6 +79,13 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
         ll_ali.setOnClickListener(this);
         btn_re.setOnClickListener(this);
         re_et.setFilters(new InputFilter[]{lengthFilter});
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -109,7 +123,7 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
                     ToastUtils.showToast(this, "请输入充值金额");
                     return;
                 }else{
-                    orderPrice = Double.parseDouble(re_et.getText().toString());
+                    orderPrice = Double.parseDouble(re_et.getText().toString().trim());
                     if(orderPrice<0.01){
                         ToastUtils.showToast(this, "最少充值0.01元");
                         return;
@@ -357,5 +371,17 @@ public class RechargeActivity extends AppCompatActivity implements View.OnClickL
 
     private void changeUpFragmentUI(){
         finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void wxPaySuccess(MessageEvent messageEvent) {
+        if ("WX支付成功".equals(messageEvent.getMessage())) {
+            //修改支付成功后的金额
+            System.out.println("前余额"+MyApplication.money);
+            System.out.println("加价"+orderPrice);
+            MyApplication.money = MyApplication.money.add(new BigDecimal(orderPrice));
+            System.out.println("现在"+MyApplication.money);
+            finish();
+        }
     }
 }

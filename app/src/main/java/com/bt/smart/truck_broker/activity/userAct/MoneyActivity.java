@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.bt.smart.truck_broker.BaseActivity;
 import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.utils.MyAlertDialog;
@@ -22,9 +24,9 @@ import com.bt.smart.truck_broker.utils.ToastUtils;
 
 import java.lang.reflect.Field;
 
-public class MoneyActivity extends AppCompatActivity implements View.OnClickListener {
-    private TextView mon_back,mon_detail,mon_number,mon_bind;
-    private Button mon_recharge,mon_withdraw;
+public class MoneyActivity extends BaseActivity implements View.OnClickListener {
+    private TextView mon_back, mon_detail, mon_number, mon_bind;
+    private Button mon_recharge, mon_withdraw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +36,17 @@ public class MoneyActivity extends AppCompatActivity implements View.OnClickList
         setListeners();
     }
 
-    protected void setViews(){
+    protected void setViews() {
         mon_back = findViewById(R.id.mon_back);
         mon_detail = findViewById(R.id.mon_detail);
         mon_number = findViewById(R.id.mon_number);
         mon_recharge = findViewById(R.id.mon_recharge);
         mon_withdraw = findViewById(R.id.mon_withdraw);
         mon_bind = findViewById(R.id.mon_bind);
-        mon_number.setText("￥"+MyApplication.money);
+        mon_number.setText("￥" + MyApplication.money);
     }
 
-    protected void setListeners(){
+    protected void setListeners() {
         mon_back.setOnClickListener(this);
         mon_detail.setOnClickListener(this);
         mon_recharge.setOnClickListener(this);
@@ -54,33 +56,33 @@ public class MoneyActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.mon_back:
                 //返回
                 this.finish();
                 break;
             case R.id.mon_detail:
                 //明细
-                startActivity(new Intent(this,MDetailActivity.class));
+                startActivity(new Intent(this, MDetailActivity.class));
                 break;
             case R.id.mon_recharge:
                 //充值
-                startActivity(new Intent(this,RechargeActivity.class));
+                startActivity(new Intent(this, RechargeActivity.class));
                 break;
             case R.id.mon_withdraw:
                 //提现
-                startActivity(new Intent(this,WithdrawActivity.class));
+                startActivity(new Intent(this, WithdrawActivity.class));
                 break;
             case R.id.mon_bind:
                 //绑定银行卡
-                startActivity(new Intent(this,BCardActivity.class));
+                startActivity(new Intent(this, BCardActivity.class));
                 break;
         }
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        mon_number.setText("￥"+MyApplication.money);
+    protected void onResume() {
+        super.onResume();
+        mon_number.setText("￥" + MyApplication.money);
     }
 }
