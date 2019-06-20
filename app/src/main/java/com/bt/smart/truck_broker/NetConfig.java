@@ -82,7 +82,8 @@ public class NetConfig {
     //微信支付统一下单
     public static String WX = ROOT + "wxController/wxOrder";
 
-    public static String WX_APPID = "wxd97fbc0c709a9bed";
+    //    public static String WX_APPID = "wxd97fbc0c709a9bed";
+    public static String WX_APPID = "wx6ae170b6547a71c4";
 
     //支付宝参数拼接
     public static String ALIPAY = ROOT + "alipayController/alipayOrder";
