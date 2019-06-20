@@ -42,33 +42,33 @@ import java.util.List;
 import okhttp3.Request;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
-    private long        exitTime   = 0;//记录点击物理返回键的时间
+    private long exitTime = 0;//记录点击物理返回键的时间
     // 界面底部的菜单按钮
-    private ImageView[] bt_menu    = new ImageView[4];
+    private ImageView[] bt_menu = new ImageView[4];
     // 界面底部的未选中菜单按钮资源
-    private int[]       select_off = {R.drawable.bt_menu_0_select, R.drawable.bt_menu_1_select, R.drawable.bt_menu_2_select, R.drawable.bt_menu_3_select};
+    private int[] select_off = {R.drawable.bt_menu_0_select, R.drawable.bt_menu_1_select, R.drawable.bt_menu_2_select, R.drawable.bt_menu_3_select};
     // 界面底部的选中菜单按钮资源
-    private int[]       select_on  = {R.drawable.icon_home_sel, R.drawable.icon_same_day_sel, R.drawable.icon_service_apply_sel, R.drawable.icon_me_sel};
+    private int[] select_on = {R.drawable.icon_home_sel, R.drawable.icon_same_day_sel, R.drawable.icon_service_apply_sel, R.drawable.icon_me_sel};
     // 界面底部的菜单按钮id
-    private int[]       bt_menu_id = {R.id.iv_menu_0, R.id.iv_menu_1, R.id.iv_menu_2, R.id.iv_menu_3};
+    private int[] bt_menu_id = {R.id.iv_menu_0, R.id.iv_menu_1, R.id.iv_menu_2, R.id.iv_menu_3};
     //底部布局按钮的id
-    private int[]       linear_id  = {R.id.linear0, R.id.linear1, R.id.linear2, R.id.linear3};
+    private int[] linear_id = {R.id.linear0, R.id.linear1, R.id.linear2, R.id.linear3};
     //底部字体
     private TextView tv_menu_0, tv_menu_1, tv_menu_2, tv_menu_3;
-    private List<TextView>      tv_menu;
-    private LinearLayout        linear_home;//配送大厅
-    private LinearLayout        linear_shopp;//当天货源
-    private LinearLayout        linear_play;//服务
-    private LinearLayout        linear_mine;//个人中心
-    private Home_F              home_F;//配送大厅
-    private SameDay_F           sameDay_F;//当天货源
-    private MyOrders_F          myOrders_F;//我的订单
-    private User_F              user_F;//个人中心
-    private Handler             mProhandler = null;//定时播报经纬度
+    private List<TextView> tv_menu;
+    private LinearLayout linear_home;//配送大厅
+    private LinearLayout linear_shopp;//当天货源
+    private LinearLayout linear_play;//服务
+    private LinearLayout linear_mine;//个人中心
+    private Home_F home_F;//配送大厅
+    private SameDay_F sameDay_F;//当天货源
+    private MyOrders_F myOrders_F;//我的订单
+    private User_F user_F;//个人中心
+    private Handler mProhandler = null;//定时播报经纬度
     private SendLocationService service;//定位服务
-    private boolean             isBinded;//是否已绑定服务
-    private double              lonData;//经度
-    private double              latData;//纬度
+    private boolean isBinded;//是否已绑定服务
+    private double lonData;//经度
+    private double latData;//纬度
     private String TAG = "MainActivity：";
     private int MY_PERMISSIONS_REQUEST_LOCATION = 10086;
 
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             isBinded = true;
             ToastUtils.showToast(MainActivity.this, "连上服务");
-            Log.i(TAG,"连上服务");
+            Log.i(TAG, "连上服务");
             SendLocationService.MyBinder myBinder = (SendLocationService.MyBinder) iBinder;
             service = myBinder.getService();
             service.startGetLoaction();
@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length>0) {
+        if (grantResults.length > 0) {
             if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startSendLanAlat();
             }
@@ -188,8 +188,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.linear1:// 好品界面
                 Bundle bundle = new Bundle();
-                bundle.putDouble("lng",service.getLocation().getLongitude());
-                bundle.putDouble("lat",service.getLocation().getLatitude());
+                bundle.putDouble("lng", service.getLocation().getLongitude());
+                bundle.putDouble("lat", service.getLocation().getLatitude());
                 if (sameDay_F == null) {
                     sameDay_F = new SameDay_F();
                     sameDay_F.setArguments(bundle);
@@ -267,6 +267,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             home_F.onActivityResult(requestCode, resultCode, data);
         if (null != sameDay_F)
             sameDay_F.onActivityResult(requestCode, resultCode, data);
+        if (null != user_F)
+            user_F.onActivityResult(requestCode, resultCode, data);
     }
 
     //上传经纬度
@@ -302,7 +304,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onSuccess(int code, String resbody) {
-                Log.i(TAG,"上传成功");
+                Log.i(TAG, "上传成功");
             }
         });
 

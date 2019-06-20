@@ -1,6 +1,21 @@
 apply plugin: 'com.android.application'
 
 android {
+//设置debug打包模式
+    signingConfigs {
+        debug {
+            storeFile file('../truckbroker.jks')
+            storePassword '123456'
+            keyAlias = 'truckbroker'
+            keyPassword '123456'
+        }
+        release {
+            keyAlias = 'truckbroker'
+            keyPassword '123456'
+            storeFile file('../truckbroker.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.bt.smart.truck_broker"
@@ -16,22 +31,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    //设置debug打包模式
-//    signingConfigs{
-//        debug{
-//            keyAlias 'culturecloud'
-//            keyPassword '123456'
-//            storeFile file('../zhihaoshi.jks')
-//            storePassword('123456')
-//        }
-//        release{
-//            keyAlias 'culturecloud'
-//            keyPassword '123456'
-//            storeFile file('../zhihaoshi.jks')
-//            storePassword('123456')
-//        }
-//    }
 }
 
 dependencies {
@@ -52,10 +51,8 @@ dependencies {
     implementation 'com.github:CircleProgress:1.0.1'//环形进度条
     implementation 'cn.yipianfengye.android:zxing-library:2.2'//二维码扫描
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    implementation (name: 'alipaySdk-15.6.2-20190416165100-noUtdid', ext: 'aar')
+    implementation(name: 'alipaySdk-15.6.2-20190416165100-noUtdid', ext: 'aar')
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.1'
 

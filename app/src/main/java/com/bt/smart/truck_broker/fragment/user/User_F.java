@@ -46,26 +46,27 @@ import okhttp3.Request;
  */
 
 public class User_F extends Fragment implements View.OnClickListener {
-    private View               mRootView;
-    private TextView           tv_title;
+    private View mRootView;
+    private TextView tv_title;
     private SwipeRefreshLayout swiperefresh;
-    private ImageView          img_head;//头像
-    private TextView           tv_phone;
-    private TextView           tv_isCheck;//认证进度
-    private TextView           tv_checked;//已认证
-    private TextView           tv_warn;//未通过认证前提示
-    private TextView           tv_submit;//认证
-    private TextView           tv_money;//余额
-    private LinearLayout       linear_money;
-    private LinearLayout       linear_order;
-    private TextView           tv_orderNum;//运单数
-    private RelativeLayout     rtv_address;
-    private RelativeLayout     rtv_phone;
-    private RelativeLayout     rtv_serv;
-    private RelativeLayout     rtv_about;
-    private RelativeLayout     rtv_exit;//退出登录
-    private RelativeLayout     rlt_allOrder;//更多订单
-
+    private ImageView img_head;//头像
+    private TextView tv_phone;
+    private TextView tv_isCheck;//认证进度
+    private TextView tv_checked;//已认证
+    private TextView tv_warn;//未通过认证前提示
+    private TextView tv_submit;//认证
+    private TextView tv_money;//余额
+    private LinearLayout linear_money;
+    private LinearLayout linear_order;
+    private TextView tv_orderNum;//运单数
+    private RelativeLayout rtv_address;
+    private RelativeLayout rtv_phone;
+    private RelativeLayout rtv_serv;
+    private RelativeLayout rtv_about;
+    private RelativeLayout rtv_exit;//退出登录
+    private RelativeLayout rlt_allOrder;//更多订单
+    private int REQUEST_MONEY_CODE = 10015;
+    private int RESULT_MONEY_CODE = 10016;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class User_F extends Fragment implements View.OnClickListener {
         rtv_exit = mRootView.findViewById(R.id.rtv_exit);
         rlt_allOrder = mRootView.findViewById(R.id.rlt_allOrder);
         tv_orderNum.setText(MyApplication.userOrderNum + "单");
-        tv_money.setText(MyApplication.money+"元");
+        tv_money.setText(MyApplication.money + "元");
     }
 
     private void initData() {
@@ -134,7 +135,7 @@ public class User_F extends Fragment implements View.OnClickListener {
                 break;
             case R.id.linear_money:
                 //跳转余额详情页
-                startActivity(new Intent(getContext(), MoneyActivity.class));
+                startActivityForResult(new Intent(getContext(), MoneyActivity.class), REQUEST_MONEY_CODE);
                 break;
             case R.id.linear_order://查看运输单列表
                 Intent intent = new Intent(getContext(), AcceptOrderListActivity.class);
@@ -173,6 +174,15 @@ public class User_F extends Fragment implements View.OnClickListener {
         tv_orderNum.setText(MyApplication.userOrderNum + "单");
         //根据认证状态判断
         checkCheckStatues();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (REQUEST_MONEY_CODE == requestCode && RESULT_MONEY_CODE == resultCode) {
+            //重新登录下获取最新的认证状态
+            getNewCheckStatue();
+        }
     }
 
     private void checkCheckStatues() {
@@ -245,7 +255,7 @@ public class User_F extends Fragment implements View.OnClickListener {
         }
         GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + MyApplication.userHeadPic, R.drawable.iman, R.drawable.iman, img_head);
         tv_orderNum.setText(MyApplication.userOrderNum + "单");
-        tv_money.setText(MyApplication.money+"元");
+        tv_money.setText(MyApplication.money + "元");
     }
 
     private void exitLogin() {

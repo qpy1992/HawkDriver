@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.alipay.sdk.app.PayTask;
 import com.bt.smart.truck_broker.BaseActivity;
 import com.bt.smart.truck_broker.MyApplication;
@@ -44,16 +45,18 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
+
 import okhttp3.Request;
 
 public class RechargeActivity extends BaseActivity implements View.OnClickListener {
     TextView re_back;
     EditText re_et;
     Button btn_re;
-    CheckBox cb_weixin,cb_alipay;
-    LinearLayout ll_wx,ll_ali;
+    CheckBox cb_weixin, cb_alipay;
+    LinearLayout ll_wx, ll_ali;
     private int payKind = 0;
     private double orderPrice;//订单价格
+    private int RESULT_CHARGE_CODE = 10026;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         setListeners();
     }
 
-    protected void setViews(){
+    protected void setViews() {
         re_back = findViewById(R.id.re_back);
         re_et = findViewById(R.id.re_et);
         cb_weixin = findViewById(R.id.cb_weixin);
@@ -73,7 +76,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         ll_ali = findViewById(R.id.ll_ali);
     }
 
-    protected void setListeners(){
+    protected void setListeners() {
         re_back.setOnClickListener(this);
         ll_wx.setOnClickListener(this);
         ll_ali.setOnClickListener(this);
@@ -90,41 +93,41 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.re_back:
-            finish();
-            break;
+                finish();
+                break;
             case R.id.ll_wx:
                 cb_alipay.setChecked(false);
-                if(cb_weixin.isChecked()){
+                if (cb_weixin.isChecked()) {
                     cb_weixin.setChecked(false);
                     payKind = 0;
-                }else {
+                } else {
                     cb_weixin.setChecked(true);
                     payKind = 1;
                 }
                 break;
             case R.id.ll_ali:
                 cb_weixin.setChecked(false);
-                if(cb_alipay.isChecked()){
+                if (cb_alipay.isChecked()) {
                     cb_alipay.setChecked(false);
                     payKind = 0;
-                }else {
+                } else {
                     cb_alipay.setChecked(true);
                     payKind = 2;
                 }
                 break;
             case R.id.btn_re:
-            //跳转支付链接
+                //跳转支付链接
                 RequestParamsFM headParams = new RequestParamsFM();
                 headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
                 String price = String.valueOf(re_et.getText());
-                if(price.length()==0){
+                if (price.length() == 0) {
                     ToastUtils.showToast(this, "请输入充值金额");
                     return;
-                }else{
+                } else {
                     orderPrice = Double.parseDouble(re_et.getText().toString().trim());
-                    if(orderPrice<0.01){
+                    if (orderPrice < 0.01) {
                         ToastUtils.showToast(this, "最少充值0.01元");
                         return;
                     }
@@ -145,7 +148,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
                     RequestParamsFM params = new RequestParamsFM();
                     params.put("userid", MyApplication.userID);
                     params.put("ip", "205.168.1.102");
-                    params.put("fee", orderPrice+"");
+                    params.put("fee", orderPrice + "");
                     params.setUseJsonStreamer(true);
                     HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.WX, headParams, params, new HttpOkhUtils.HttpCallBack() {
                         @Override
@@ -159,7 +162,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
                                 ToastUtils.showToast(RechargeActivity.this, "下单失败");
                                 return;
                             }
-                            Log.i("WXRESBODY",resbody);
+                            Log.i("WXRESBODY", resbody);
                             Gson gson = new Gson();
                             WXOrderResultInfo orderResInfo = gson.fromJson(resbody, WXOrderResultInfo.class);
                             String return_code = orderResInfo.getReturn_code();
@@ -189,7 +192,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
 //                    params.put("device_id", payInfo.getParkid());
 //                    params.put("paycode", "1");
 //                    params.put("ip", "205.168.1.102");
-                    Log.i("FEE",orderPrice+"");
+                    Log.i("FEE", orderPrice + "");
                     params.put("fee", orderPrice);
 //                    params.put("plateno", mPlateNo);
                     HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.ALIPAY, headParams, params, new HttpOkhUtils.HttpCallBack() {
@@ -205,7 +208,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
                                 ToastUtils.showToast(RechargeActivity.this, "下单失败");
                                 return;
                             }
-                            Log.i("ALIPAYRESBODY",resbody);
+                            Log.i("ALIPAYRESBODY", resbody);
                             Gson gson = new Gson();
                             DownOrderResultInfo downOrderResultInfo = gson.fromJson(resbody, DownOrderResultInfo.class);
                             int result = downOrderResultInfo.getResult();
@@ -230,7 +233,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
                         }
                     });
                 }
-            break;
+                break;
         }
     }
 
@@ -254,7 +257,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
 //                if (dotValue.length() == 2) {//输入框小数的位数是2的情况，整个输入框都不允许输入
 //                    return "";
 //                }
-                if (dotValue.length() == 2 && dest.length() - dstart < 3){ //输入框小数的位数是2的情况时小数位不可以输入，整数位可以正常输入
+                if (dotValue.length() == 2 && dest.length() - dstart < 3) { //输入框小数的位数是2的情况时小数位不可以输入，整数位可以正常输入
                     return "";
                 }
             }
@@ -293,9 +296,9 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         return componentName != null;
     }
 
-    private static final int    SDK_ALPAY_FLAG = 1001;
-    private static final int    SDK_WXPAY_FLAG = 1000;
-    private              String orderStr       = "";//记录订单id
+    private static final int SDK_ALPAY_FLAG = 1001;
+    private static final int SDK_WXPAY_FLAG = 1000;
+    private String orderStr = "";//记录订单id
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -369,7 +372,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         payThread.start();
     }
 
-    private void changeUpFragmentUI(){
+    private void changeUpFragmentUI() {
         finish();
     }
 
@@ -377,10 +380,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
     public void wxPaySuccess(MessageEvent messageEvent) {
         if ("WX支付成功".equals(messageEvent.getMessage())) {
             //修改支付成功后的金额
-            System.out.println("前余额"+MyApplication.money);
-            System.out.println("加价"+orderPrice);
-            MyApplication.money = MyApplication.money.add(new BigDecimal(orderPrice));
-            System.out.println("现在"+MyApplication.money);
+            setResult(RESULT_CHARGE_CODE);
             finish();
         }
     }

@@ -27,6 +27,9 @@ import java.lang.reflect.Field;
 public class MoneyActivity extends BaseActivity implements View.OnClickListener {
     private TextView mon_back, mon_detail, mon_number, mon_bind;
     private Button mon_recharge, mon_withdraw;
+    private int REQUEST_CHARGE_CODE = 10025;
+    private int RESULT_CHARGE_CODE = 10026;
+    private int RESULT_MONEY_CODE = 10016;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class MoneyActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.mon_recharge:
                 //充值
-                startActivity(new Intent(this, RechargeActivity.class));
+                startActivityForResult(new Intent(this, RechargeActivity.class), REQUEST_CHARGE_CODE);
                 break;
             case R.id.mon_withdraw:
                 //提现
@@ -84,5 +87,15 @@ public class MoneyActivity extends BaseActivity implements View.OnClickListener 
     protected void onResume() {
         super.onResume();
         mon_number.setText("￥" + MyApplication.money);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (REQUEST_CHARGE_CODE == requestCode && RESULT_CHARGE_CODE == resultCode) {
+            //刷新数据
+            setResult(RESULT_MONEY_CODE);
+            finish();
+        }
     }
 }
