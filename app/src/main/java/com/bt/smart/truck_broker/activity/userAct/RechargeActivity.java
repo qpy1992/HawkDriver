@@ -301,7 +301,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
     private String orderStr = "";//记录订单id
 
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    public Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);

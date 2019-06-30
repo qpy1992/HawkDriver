@@ -44,7 +44,6 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
 
     }
 
-    Handler mHandler = new Handler();
     private static final int SDK_WXPAY_FLAG = 1000;
 
     @SuppressLint("LongLogTag")
@@ -66,8 +65,6 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
                 msg.obj = "支付失败";
                 Toast.makeText(this, "用户取消支付", Toast.LENGTH_LONG).show();
             }
-            mHandler.sendMessage(msg);
-            finish();
         }
     }
 

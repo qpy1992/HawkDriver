@@ -181,7 +181,7 @@ public class GetFacePhotoActivity extends BaseActivity implements View.OnClickLi
             //将bitmap保存，记录照片本地地址，留待之后上传
             boolean b = saveBitmap(mBmp);
             if (b) {
-                ToastUtils.showToast(this, "人脸保存成功");
+//                ToastUtils.showToast(this, "人脸保存成功");
                 Intent intent = getIntent().putExtra("face_pic_url", fileUrl);
                 setResult(RESULT_FOR_FACE, intent);
                 finish();

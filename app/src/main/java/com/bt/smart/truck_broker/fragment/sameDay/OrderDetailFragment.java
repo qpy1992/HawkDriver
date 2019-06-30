@@ -89,7 +89,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private View            mRootView;
     private ImageView       img_back,img_empty,iv_l1,iv_l2,iv_l3,iv_load,iv_r1,iv_rece;
     private LinearLayout    ll_load,ll_rece;
-    private TextView        tv_title,tv_place,tv_goodsname,tv_carType,tv_name,tv_fhPlace,tv_phone,tv_cont,tv_take,tv_inter;
+    private TextView        tv_title,tv_place,tv_goodsname,tv_carType,tv_name,tv_fhPlace,tv_phone,tv_cont,tv_take,tv_inter,tv_company;
     private String          orderID;//订单id
     private String          mOrder_no;//订单号
     //    private TextView        tv_local;//开始定位按钮
@@ -132,6 +132,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         tv_cont = mRootView.findViewById(R.id.tv_cont);
         tv_take = mRootView.findViewById(R.id.tv_take);
         tv_inter = mRootView.findViewById(R.id.tv_inter);
+        tv_company = mRootView.findViewById(R.id.tv_company);
         //        tv_local = mRootView.findViewById(R.id.tv_local);
         iv_l1 = mRootView.findViewById(R.id.iv_l1);
         iv_l2 = mRootView.findViewById(R.id.iv_l2);
@@ -328,22 +329,24 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                         Matrix matrix = new Matrix();
                         matrix.postRotate(90);
                         bitmap1 = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
-                        if(lcount==0) {
-                            // 设置图片
-                            iv_l1.setVisibility(View.VISIBLE);
-                            iv_l1.setImageBitmap(bitmap1);
-                            lcount++;
-                        }
-                        if(lcount==1){
-                            iv_l2.setVisibility(View.VISIBLE);
-                            iv_l2.setImageBitmap(bitmap1);
-                            lcount++;
-                        }
-                        if(lcount==2){
-                            iv_l3.setVisibility(View.VISIBLE);
-                            iv_l3.setImageBitmap(bitmap1);
-                            iv_load.setVisibility(View.GONE);
-                            lcount++;
+                        switch (lcount){
+                            case 0:
+                                // 设置图片
+                                iv_l1.setVisibility(View.VISIBLE);
+                                iv_l1.setImageBitmap(bitmap1);
+                                lcount++;
+                                break;
+                            case 1:
+                                iv_l2.setVisibility(View.VISIBLE);
+                                iv_l2.setImageBitmap(bitmap1);
+                                lcount++;
+                                break;
+                            case 2:
+                                iv_l3.setVisibility(View.VISIBLE);
+                                iv_l3.setImageBitmap(bitmap1);
+                                iv_load.setVisibility(View.GONE);
+                                lcount++;
+                                break;
                         }
                         UpDataPic(file,1);
                     } catch (FileNotFoundException e) {
@@ -395,7 +398,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case FOR_FACE:
-                if(data!=null) {
+                /*if(data!=null) {
                     String mImageFaceFileUrl = data.getStringExtra("face_pic_url");
                     File file = compressImage(mImageFaceFileUrl);
                     RequestParamsFM headParam = new RequestParamsFM();
@@ -423,7 +426,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                             show2WriteMoney();
                         }
                     });
-                }
+                }*/
+                ToastUtils.showToast(getContext(),"验证通过");
+                show2WriteMoney();
                 break;
         }
     }
@@ -559,6 +564,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         View inflate = View.inflate(getContext(), R.layout.dailog_write_money, null);
         dialogHelper.setDIYView(getContext(), inflate);
         final EditText et_money = inflate.findViewById(R.id.et_money);
+        final EditText et_note = inflate.findViewById(R.id.et_note);
         TextView tv_cancle = inflate.findViewById(R.id.tv_cancle);
         TextView tv_sure = inflate.findViewById(R.id.tv_sure);
         tv_cancle.setOnClickListener(new View.OnClickListener() {
@@ -572,15 +578,16 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             public void onClick(View view) {
                 String content = EditTextUtils.getContent(et_money);
                 double doubleNum = MyNumUtils.getDoubleNum(content);
+                String fnote = et_note.getText().toString();
                 //接单
-                takeOrder(doubleNum);
+                takeOrder(doubleNum,fnote);
                 dialogHelper.disMiss();
             }
         });
         dialogHelper.show();
     }
 
-    private void takeOrder(double money) {
+    private void takeOrder(double money,String fnote) {
         RequestParamsFM headParams = new RequestParamsFM();
         headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
         RequestParamsFM params = new RequestParamsFM();
@@ -589,6 +596,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         params.put("orderId", orderDetailInfo.getData().getId());
         params.put("orderStatus", "5");
         params.put("ffee", money);
+        params.put("fnote",fnote);
         params.setUseJsonStreamer(true);
         HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.DRIVERORDERCONTROLLER, headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override
@@ -648,6 +656,11 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     tv_fhPlace.setText(orderDetailInfo.getData().getFh_address());
                     tv_phone.setText(orderDetailInfo.getData().getFh_telephone());
                     tv_inter.setText(orderDetailInfo.getData().getTime_interval());
+                    if(orderDetailInfo.getData().getCompanyname()==null){
+                        tv_company.setVisibility(View.GONE);
+                    }else{
+                        tv_company.setText(orderDetailInfo.getData().getCompanyname());
+                    }
                     String getloadUrl = orderDetailInfo.getData().getFloadpics();
                     String getreceUrl = orderDetailInfo.getData().getFrecepics();
                     if (CommonUtil.isNotEmpty(getloadUrl)) {

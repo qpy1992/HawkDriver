@@ -202,6 +202,7 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
         RequestParamsFM params = new RequestParamsFM();
         params.put("folder","Auth");
         params.put("kind",kind);
+        params.put("type",1);
         HttpOkhUtils.getInstance().upDateFile(NetConfig.PHOTO, headParam, params, "file", file, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {

@@ -148,7 +148,17 @@ public class OrderDetailInfo {
         private String               time_interval;
         private String               goodsname;
         private String               cartype;
+        private String               companyname;
         private List<OrdergoodsBean> ordergoods;
+
+
+        public String getCompanyname() {
+            return companyname;
+        }
+
+        public void setCompanyname(String companyname) {
+            this.companyname = companyname;
+        }
 
         public String getGoodsname() {
             return goodsname;

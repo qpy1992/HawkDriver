@@ -1,5 +1,6 @@
 package com.bt.smart.truck_broker.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,7 +17,6 @@ import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
-import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.SpUtils;
@@ -39,6 +39,8 @@ import okhttp3.Request;
 public class FirstActivity extends Activity implements View.OnClickListener {
     private TextView tv_new;
     private TextView tv_old;
+    private int MY_PERMISSIONS_REQUEST_LOCATION = 10086;
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 1001;//申请照相机权限结果
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,17 @@ public class FirstActivity extends Activity implements View.OnClickListener {
     private void getView() {
         tv_new = (TextView) findViewById(R.id.tv_new);
         tv_old = (TextView) findViewById(R.id.tv_old);
+        if (ActivityCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(FirstActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        }
+        if (ActivityCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            //权限还没有授予，需要在这里写申请权限的代码
+            ActivityCompat.requestPermissions(FirstActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CALL_PHONE2);
+        }
     }
 
     private void setData() {
