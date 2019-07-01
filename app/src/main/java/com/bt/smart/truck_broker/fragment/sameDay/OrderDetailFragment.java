@@ -33,13 +33,16 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.activity.OpenLockActivity;
 import com.bt.smart.truck_broker.activity.SaomiaoUIActivity;
+import com.bt.smart.truck_broker.activity.samedayAct.ShowMapActivity;
 import com.bt.smart.truck_broker.activity.userAct.GetFacePhotoActivity;
 import com.bt.smart.truck_broker.messageInfo.BlueMacInfo;
 import com.bt.smart.truck_broker.messageInfo.ForTXAIFaceInfo;
@@ -86,12 +89,13 @@ import okhttp3.Request;
  */
 
 public class OrderDetailFragment extends Fragment implements View.OnClickListener {
-    private View            mRootView;
-    private ImageView       img_back,img_empty,iv_l1,iv_l2,iv_l3,iv_load,iv_r1,iv_rece;
-    private LinearLayout    ll_load,ll_rece;
-    private TextView        tv_title,tv_place,tv_goodsname,tv_carType,tv_name,tv_fhPlace,tv_phone,tv_cont,tv_take,tv_inter,tv_company;
-    private String          orderID;//订单id
-    private String          mOrder_no;//订单号
+    private View mRootView;
+    private ImageView img_back, img_empty, iv_l1, iv_l2, iv_l3, iv_load, iv_r1, iv_rece;
+    private LinearLayout ll_load, ll_rece;
+    private RelativeLayout rlt_tomap;
+    private TextView tv_title, tv_place, tv_goodsname, tv_carType, tv_name, tv_fhPlace, tv_phone, tv_cont, tv_take, tv_inter;
+    private String orderID;//订单id
+    private String mOrder_no;//订单号
     //    private TextView        tv_local;//开始定位按钮
     private OrderDetailInfo orderDetailInfo;//订单详情
     private int RESULT_TAKE_ORDER = 12088;//接单成功响应值
@@ -106,7 +110,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private FileInputStream is = null;
     private int lcount = 0;
     private int hcount = 0;
-//    private String getloadUrl;//装车照片网络地址
+    //    private String getloadUrl;//装车照片网络地址
 //    private String getreceUrl;//回单照片网络地址
 //    private String fstatus;
     private final static String TAG = "OrderDetailFragment";
@@ -124,6 +128,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         img_empty = mRootView.findViewById(R.id.img_empty);
         tv_title = mRootView.findViewById(R.id.tv_title);
         tv_place = mRootView.findViewById(R.id.tv_place);
+        rlt_tomap = mRootView.findViewById(R.id.rlt_tomap);
         tv_goodsname = mRootView.findViewById(R.id.tv_goodsname);
         tv_carType = mRootView.findViewById(R.id.tv_carType);
         tv_name = mRootView.findViewById(R.id.tv_name);
@@ -132,7 +137,6 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         tv_cont = mRootView.findViewById(R.id.tv_cont);
         tv_take = mRootView.findViewById(R.id.tv_take);
         tv_inter = mRootView.findViewById(R.id.tv_inter);
-        tv_company = mRootView.findViewById(R.id.tv_company);
         //        tv_local = mRootView.findViewById(R.id.tv_local);
         iv_l1 = mRootView.findViewById(R.id.iv_l1);
         iv_l2 = mRootView.findViewById(R.id.iv_l2);
@@ -151,6 +155,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         //获取货源详情
         getOrderDetail();
         img_back.setOnClickListener(this);
+        rlt_tomap.setOnClickListener(this);
         tv_cont.setOnClickListener(this);
         tv_take.setOnClickListener(this);
         img_empty.setOnClickListener(this);
@@ -171,13 +176,13 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         } else if (3 == orderType || 4 == orderType || 6 == orderType) {
             tv_take.setVisibility(View.GONE);
         }
-        if(0 == orderType){
+        if (0 == orderType) {
             ll_load.setVisibility(View.VISIBLE);
         }
-        if(1 == orderType){
+        if (1 == orderType) {
             ll_rece.setVisibility(View.VISIBLE);
         }
-        if(4 == orderType){
+        if (4 == orderType) {
             iv_load.setVisibility(View.GONE);
             iv_rece.setVisibility(View.GONE);
         }
@@ -200,6 +205,10 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             case R.id.img_back:
                 MyFragmentManagerUtil.closeFragmentOnAct(this);
                 break;
+            case R.id.rlt_tomap://跳转地图
+                Intent mapIntent=new Intent(getActivity(), ShowMapActivity.class);
+                startActivity(mapIntent);
+                break;
             case R.id.tv_cont://联系货主
                 ShowCallUtil.showCallDialog(getContext(), orderDetailInfo.getData().getFh_telephone());
                 break;
@@ -210,8 +219,8 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     openLockDevice();
                 } else {
                     //弹出自定义的dailog让司机填写报价
-//                    show2WriteMoney();
-                    toGetFacePic();
+                    show2WriteMoney();
+//                    toGetFacePic();
                 }
                 break;
             //            case R.id.tv_local:
@@ -227,7 +236,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     ToastUtils.showToast(getContext(), "请开启手机相机权限!");
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                             MY_PERMISSIONS_REQUEST_CALL_PHONE2);
-                }else {
+                } else {
                     //启动相机程序
                     Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     // 加载路径
@@ -250,7 +259,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     ToastUtils.showToast(getContext(), "请开启手机相机权限!");
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                             MY_PERMISSIONS_REQUEST_CALL_PHONE2);
-                }else {
+                } else {
                     //启动相机程序
                     Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     // 加载路径
@@ -293,7 +302,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_CODE:
                 //处理扫描结果，将扫描获取到的编码上传给服务器
                 if (null != data) {
@@ -318,7 +327,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case TAKE_PHOTO:
-                    //将拍摄的照片显示出来
+                //将拍摄的照片显示出来
                 try {
                     try {
                         // 获取输入流
@@ -329,26 +338,24 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                         Matrix matrix = new Matrix();
                         matrix.postRotate(90);
                         bitmap1 = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
-                        switch (lcount){
-                            case 0:
-                                // 设置图片
-                                iv_l1.setVisibility(View.VISIBLE);
-                                iv_l1.setImageBitmap(bitmap1);
-                                lcount++;
-                                break;
-                            case 1:
-                                iv_l2.setVisibility(View.VISIBLE);
-                                iv_l2.setImageBitmap(bitmap1);
-                                lcount++;
-                                break;
-                            case 2:
-                                iv_l3.setVisibility(View.VISIBLE);
-                                iv_l3.setImageBitmap(bitmap1);
-                                iv_load.setVisibility(View.GONE);
-                                lcount++;
-                                break;
+                        if (lcount == 0) {
+                            // 设置图片
+                            iv_l1.setVisibility(View.VISIBLE);
+                            iv_l1.setImageBitmap(bitmap1);
+                            lcount++;
                         }
-                        UpDataPic(file,1);
+                        if (lcount == 1) {
+                            iv_l2.setVisibility(View.VISIBLE);
+                            iv_l2.setImageBitmap(bitmap1);
+                            lcount++;
+                        }
+                        if (lcount == 2) {
+                            iv_l3.setVisibility(View.VISIBLE);
+                            iv_l3.setImageBitmap(bitmap1);
+                            iv_load.setVisibility(View.GONE);
+                            lcount++;
+                        }
+                        UpDataPic(file, 1);
                     } catch (FileNotFoundException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -361,7 +368,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                             e.printStackTrace();
                         }
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
                 break;
@@ -380,7 +387,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                         iv_r1.setVisibility(View.VISIBLE);
                         iv_r1.setImageBitmap(bitmap1);
                         iv_rece.setVisibility(View.GONE);
-                        UpDataPic(file,2);
+                        UpDataPic(file, 2);
                     } catch (FileNotFoundException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -393,12 +400,12 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                             e.printStackTrace();
                         }
                     }
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
                 break;
             case FOR_FACE:
-                /*if(data!=null) {
+                if (data != null) {
                     String mImageFaceFileUrl = data.getStringExtra("face_pic_url");
                     File file = compressImage(mImageFaceFileUrl);
                     RequestParamsFM headParam = new RequestParamsFM();
@@ -426,9 +433,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                             show2WriteMoney();
                         }
                     });
-                }*/
-                ToastUtils.showToast(getContext(),"验证通过");
-                show2WriteMoney();
+                }
                 break;
         }
     }
@@ -446,7 +451,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     }
 
     private SendLocationService service;
-    private boolean             isBinded;
+    private boolean isBinded;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -477,7 +482,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     }
 
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 1001;//申请照相机权限结果
-    private static final int REQUEST_CODE                       = 1003;//接收扫描结果
+    private static final int REQUEST_CODE = 1003;//接收扫描结果
     private String mBlueMac;
     private String mBlueXlh;
 
@@ -564,7 +569,6 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         View inflate = View.inflate(getContext(), R.layout.dailog_write_money, null);
         dialogHelper.setDIYView(getContext(), inflate);
         final EditText et_money = inflate.findViewById(R.id.et_money);
-        final EditText et_note = inflate.findViewById(R.id.et_note);
         TextView tv_cancle = inflate.findViewById(R.id.tv_cancle);
         TextView tv_sure = inflate.findViewById(R.id.tv_sure);
         tv_cancle.setOnClickListener(new View.OnClickListener() {
@@ -578,16 +582,15 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             public void onClick(View view) {
                 String content = EditTextUtils.getContent(et_money);
                 double doubleNum = MyNumUtils.getDoubleNum(content);
-                String fnote = et_note.getText().toString();
                 //接单
-                takeOrder(doubleNum,fnote);
+                takeOrder(doubleNum);
                 dialogHelper.disMiss();
             }
         });
         dialogHelper.show();
     }
 
-    private void takeOrder(double money,String fnote) {
+    private void takeOrder(double money) {
         RequestParamsFM headParams = new RequestParamsFM();
         headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
         RequestParamsFM params = new RequestParamsFM();
@@ -596,7 +599,6 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         params.put("orderId", orderDetailInfo.getData().getId());
         params.put("orderStatus", "5");
         params.put("ffee", money);
-        params.put("fnote",fnote);
         params.setUseJsonStreamer(true);
         HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.DRIVERORDERCONTROLLER, headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override
@@ -643,24 +645,19 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     return;
                 }
                 Gson gson = new Gson();
-                Log.i("orderDetailInfo",resbody);
+                Log.i("orderDetailInfo", resbody);
                 orderDetailInfo = gson.fromJson(resbody, OrderDetailInfo.class);
                 ToastUtils.showToast(getContext(), orderDetailInfo.getMessage());
                 if (orderDetailInfo.isOk()) {
                     img_empty.setVisibility(View.GONE);
                     mOrder_no = orderDetailInfo.getData().getOrder_no();
                     tv_place.setText(orderDetailInfo.getData().getOrigin() + "  →  " + orderDetailInfo.getData().getDestination());
-                    tv_goodsname.setText(orderDetailInfo.getData().getGoodsname()+" "+orderDetailInfo.getData().getCartype()+" "+orderDetailInfo.getData().getSh_address());
+                    tv_goodsname.setText(orderDetailInfo.getData().getGoodsname() + " " + orderDetailInfo.getData().getCartype() + " " + orderDetailInfo.getData().getSh_address());
                     tv_carType.setText(orderDetailInfo.getData().getFh_address());
                     tv_name.setText(orderDetailInfo.getData().getFh_name());
                     tv_fhPlace.setText(orderDetailInfo.getData().getFh_address());
                     tv_phone.setText(orderDetailInfo.getData().getFh_telephone());
                     tv_inter.setText(orderDetailInfo.getData().getTime_interval());
-                    if(orderDetailInfo.getData().getCompanyname()==null){
-                        tv_company.setVisibility(View.GONE);
-                    }else{
-                        tv_company.setText(orderDetailInfo.getData().getCompanyname());
-                    }
                     String getloadUrl = orderDetailInfo.getData().getFloadpics();
                     String getreceUrl = orderDetailInfo.getData().getFrecepics();
                     if (CommonUtil.isNotEmpty(getloadUrl)) {
@@ -687,7 +684,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                                 break;
                         }
                     }
-                    if(CommonUtil.isNotEmpty(getreceUrl)){
+                    if (CommonUtil.isNotEmpty(getreceUrl)) {
                         GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + getreceUrl, R.drawable.iman, R.drawable.iman, iv_r1);
                         iv_r1.setVisibility(View.VISIBLE);
                         iv_rece.setVisibility(View.GONE);
@@ -697,7 +694,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         });
     }
 
-    protected void loadpics(String fstatus,String getloadUrl){
+    protected void loadpics(String fstatus, String getloadUrl) {
         try {
             if (fstatus.equals("1") || fstatus.equals("3") || fstatus.equals("4") || fstatus.equals("7")) {
                 if (CommonUtil.isNotEmpty(getloadUrl)) {
@@ -719,12 +716,12 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    protected void expandImg(ImageView iv){
+    protected void expandImg(ImageView iv) {
         iv.setDrawingCacheEnabled(true);
         Bitmap bitmap = Bitmap.createBitmap(iv.getDrawingCache());
         iv.setDrawingCacheEnabled(false);
@@ -752,10 +749,10 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         RequestParamsFM headParam = new RequestParamsFM();
         headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
         RequestParamsFM params = new RequestParamsFM();
-        params.put("folder","order");
-        params.put("kind",kind);
-        params.put("id",orderDetailInfo.getData().getId());
-        params.put("driverId",MyApplication.userID);
+        params.put("folder", "order");
+        params.put("kind", kind);
+        params.put("id", orderDetailInfo.getData().getId());
+        params.put("driverId", MyApplication.userID);
         HttpOkhUtils.getInstance().upDateFile(NetConfig.PHOTO1, headParam, params, "file", file, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
@@ -826,7 +823,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
      * @return
      */
     public Bitmap zoomImage(Bitmap bgimage, double newWidth,
-                                   double newHeight) {
+                            double newHeight) {
         // 获取这个图片的宽和高
         float width = bgimage.getWidth();
         float height = bgimage.getHeight();
@@ -844,6 +841,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
 
     /**
      * 压缩图片（质量压缩）
+     *
      * @param path
      */
     public File compressImage(String path) {
@@ -852,12 +850,12 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         options.inJustDecodeBounds = true; // 只获取图片的大小信息，而不是将整张图片载入在内存中，避免内存溢出
         BitmapFactory.decodeFile(path, options);
         int height = options.outHeight;
-        int width= options.outWidth;
+        int width = options.outWidth;
         int inSampleSize = 2; // 默认像素压缩比例，压缩为原图的1/2
         int minLen = Math.min(height, width); // 原图的最小边长
-        if(minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
-            float ratio = (float)minLen / 100.0f; // 计算像素压缩比例
-            inSampleSize = (int)ratio;
+        if (minLen > 100) { // 如果原始图像的最小边长大于100dp（此处单位我认为是dp，而非px）
+            float ratio = (float) minLen / 100.0f; // 计算像素压缩比例
+            inSampleSize = (int) ratio;
         }
         options.inJustDecodeBounds = false; // 计算好压缩比例后，这次可以去加载原图了
         options.inSampleSize = inSampleSize; // 设置为刚才计算的压缩比例
@@ -867,7 +865,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         Date date = new Date(System.currentTimeMillis());
         String filename = format.format(date);
-        File file = new File(Environment.getExternalStorageDirectory(),filename+".png");
+        File file = new File(Environment.getExternalStorageDirectory(), filename + ".png");
         try {
             FileOutputStream fos = new FileOutputStream(file);
             try {
@@ -885,7 +883,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
 
 
     public void recycleBitmap(Bitmap... bitmaps) {
-        if (bitmaps==null) {
+        if (bitmaps == null) {
             return;
         }
         for (Bitmap bm : bitmaps) {
