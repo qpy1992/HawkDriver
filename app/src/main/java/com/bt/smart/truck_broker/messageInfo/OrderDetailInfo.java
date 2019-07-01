@@ -150,6 +150,13 @@ public class OrderDetailInfo {
         private String               cartype;
         private String               companyname;
         private List<OrdergoodsBean> ordergoods;
+        /**
+         * lng : 116.307806
+         * lat : 40.133894
+         */
+
+        private double lng;
+        private double lat;
 
 
         public String getCompanyname() {
@@ -502,6 +509,22 @@ public class OrderDetailInfo {
 
         public void setOrdergoods(List<OrdergoodsBean> ordergoods) {
             this.ordergoods = ordergoods;
+        }
+
+        public double getLng() {
+            return lng;
+        }
+
+        public void setLng(double lng) {
+            this.lng = lng;
+        }
+
+        public double getLat() {
+            return lat;
+        }
+
+        public void setLat(double lat) {
+            this.lat = lat;
         }
 
         public static class ZhTimeBean {

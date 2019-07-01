@@ -91,7 +91,7 @@ public class BCardActivity extends AppCompatActivity implements View.OnClickList
                 }
                 Gson gson = new Gson();
                 final BCardInfo info = gson.fromJson(resbody, BCardInfo.class);
-//                ToastUtils.showToast(BCardActivity.this, info.getMessage());
+//              ToastUtils.showToast(BCardActivity.this, info.getMessage());
                 if (!info.isOk()) {
                     new MyAlertDialog(BCardActivity.this, MyAlertDialog.WARNING_TYPE_1)
                             .setContentText("您还未提交任何银行卡，现在绑定？")

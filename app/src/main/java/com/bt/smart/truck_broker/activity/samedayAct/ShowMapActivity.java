@@ -80,7 +80,8 @@ public class ShowMapActivity extends BaseActivity implements View.OnClickListene
         if (aMap == null) {
             aMap = mMapView.getMap();
         }
-
+        lngTarg = getIntent().getDoubleExtra("orderLng", 108.940174);
+        latTarg = getIntent().getDoubleExtra("orderLat", 34.341568);
         //显示定位蓝点
         showSelfLocation();
         tv_nav.setOnClickListener(this);
@@ -367,16 +368,16 @@ public class ShowMapActivity extends BaseActivity implements View.OnClickListene
 
     private void showOrderDetail() {
         //绘制默认 Marker
-        LatLng latLng = new LatLng(39.906901, 116.397972);
-        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("北京").snippet("DefaultMarker"));
+//        LatLng latLng = new LatLng(39.906901, 116.397972);
+//        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("北京").snippet("DefaultMarker"));
 
-        LatLng latLng2 = new LatLng(34.341568, 108.940174);
+        LatLng latLng2 = new LatLng(latTarg, lngTarg);
         //绘制自定义 Marker
         MarkerOptions markerOption = new MarkerOptions();
         markerOption.position(latLng2);
-        markerOption.title("西安市").snippet("西安市：34.341568, 108.940174");
+        markerOption.title("目的地").snippet("收货地：" + latTarg + ", " + lngTarg);
         markerOption.draggable(true);//设置Marker可拖动
-        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_totop)));
+        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_map_marj)));
         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
         markerOption.setFlat(true);//设置marker平贴地图效果
         aMap.addMarker(markerOption);

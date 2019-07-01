@@ -114,6 +114,8 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
 //    private String getreceUrl;//回单照片网络地址
 //    private String fstatus;
     private final static String TAG = "OrderDetailFragment";
+    private double orderLng;
+    private double orderLat;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -206,7 +208,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 MyFragmentManagerUtil.closeFragmentOnAct(this);
                 break;
             case R.id.rlt_tomap://跳转地图
-                Intent mapIntent=new Intent(getActivity(), ShowMapActivity.class);
+                Intent mapIntent = new Intent(getActivity(), ShowMapActivity.class);
+                mapIntent.putExtra("orderLng", orderLng);
+                mapIntent.putExtra("orderLat", orderLat);
                 startActivity(mapIntent);
                 break;
             case R.id.tv_cont://联系货主
@@ -652,6 +656,8 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     img_empty.setVisibility(View.GONE);
                     mOrder_no = orderDetailInfo.getData().getOrder_no();
                     tv_place.setText(orderDetailInfo.getData().getOrigin() + "  →  " + orderDetailInfo.getData().getDestination());
+                    orderLng = orderDetailInfo.getData().getLng();
+                    orderLat = orderDetailInfo.getData().getLat();
                     tv_goodsname.setText(orderDetailInfo.getData().getGoodsname() + " " + orderDetailInfo.getData().getCartype() + " " + orderDetailInfo.getData().getSh_address());
                     tv_carType.setText(orderDetailInfo.getData().getFh_address());
                     tv_name.setText(orderDetailInfo.getData().getFh_name());

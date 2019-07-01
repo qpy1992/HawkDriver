@@ -22,6 +22,7 @@ import com.bt.smart.truck_broker.activity.LoginActivity;
 import com.bt.smart.truck_broker.activity.userAct.AcceptOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AllOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AuthenticationActivity;
+import com.bt.smart.truck_broker.activity.userAct.BCardActivity;
 import com.bt.smart.truck_broker.activity.userAct.MoneyActivity;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
 import com.bt.smart.truck_broker.utils.GlideLoaderUtil;
@@ -135,7 +136,8 @@ public class User_F extends Fragment implements View.OnClickListener {
                 break;
             case R.id.linear_money:
                 //跳转余额详情页
-                startActivityForResult(new Intent(getContext(), MoneyActivity.class), REQUEST_MONEY_CODE);
+//              startActivityForResult(new Intent(getContext(), MoneyActivity.class), REQUEST_MONEY_CODE);
+                startActivity(new Intent(getContext(), BCardActivity.class));
                 break;
             case R.id.linear_order://查看运输单列表
                 Intent intent = new Intent(getContext(), AcceptOrderListActivity.class);
