@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
@@ -23,26 +24,30 @@ import com.bt.smart.truck_broker.messageInfo.UpPicInfo;
 import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialog;
+import com.bt.smart.truck_broker.utils.MyAlertDialogHelper;
+import com.bt.smart.truck_broker.utils.MyTextUtils;
 import com.bt.smart.truck_broker.utils.PopupOpenHelper;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.Request;
 
 public class BankCardActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText et_cardno,et_fname,et_mobile;
-    private TextView tv_qx,tv_khh;
+    private EditText et_cardno, et_fname, et_mobile;
+    private TextView tv_qx, tv_khh;
     private Button btn_sub;
     private List<ChioceAdapterContentInfo> mDataPopEd;
-    private List<ShengDataInfo.DataBean>   mSHEData;
-    private int                            stCityLevel;
-    private PopupOpenHelper                openHelper;
-    private List<ShengDataInfo.DataBean>   mSHIData;
+    private List<ShengDataInfo.DataBean> mSHEData;
+    private int stCityLevel;
+    private PopupOpenHelper openHelper;
+    private List<ShengDataInfo.DataBean> mSHIData;
     private String province = "";
 
     @Override
@@ -53,7 +58,7 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
         setListeners();
     }
 
-    protected void setViews(){
+    protected void setViews() {
         et_cardno = findViewById(R.id.et_cardno);
         et_fname = findViewById(R.id.et_fname);
         et_mobile = findViewById(R.id.et_mobile);
@@ -87,7 +92,7 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
         getProvince();
     }
 
-    protected void setListeners(){
+    protected void setListeners() {
         tv_khh.setOnClickListener(this);
         tv_qx.setOnClickListener(this);
         btn_sub.setOnClickListener(this);
@@ -107,12 +112,12 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
                     }
                 })
                 .setCancelClickListener(null)
-        .show();
+                .show();
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_khh:
                 selectStartPlace();
                 break;
@@ -124,20 +129,20 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
                 String fname = et_fname.getText().toString();
                 String fmobile = et_mobile.getText().toString();
                 String khh = tv_khh.getText().toString();
-                if(cardno.equals("")){
-                    ToastUtils.showToast(BankCardActivity.this,"请输入卡号");
+                if (cardno.equals("")) {
+                    ToastUtils.showToast(BankCardActivity.this, "请输入卡号");
                     return;
                 }
-                if(fname.equals("")){
-                    ToastUtils.showToast(BankCardActivity.this,"请输入姓名");
+                if (fname.equals("")) {
+                    ToastUtils.showToast(BankCardActivity.this, "请输入姓名");
                     return;
                 }
-                if(fmobile.equals("")){
-                    ToastUtils.showToast(BankCardActivity.this,"请输入手机号");
+                if (fmobile.equals("")) {
+                    ToastUtils.showToast(BankCardActivity.this, "请输入手机号");
                     return;
                 }
-                if(khh.equals("")){
-                    ToastUtils.showToast(BankCardActivity.this,"请选择开户行地区");
+                if (khh.equals("")) {
+                    ToastUtils.showToast(BankCardActivity.this, "请选择开户行地区");
                     return;
                 }
                 BCardInfo.DataBean data = new BCardInfo.DataBean();
@@ -153,45 +158,45 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    protected void getProvince(){
-            RequestParamsFM headParam = new RequestParamsFM();
-            headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
-            RequestParamsFM params = new RequestParamsFM();
-            params.put("pid", "1");
-            HttpOkhUtils.getInstance().doGetWithHeadParams(NetConfig.REGIONSELECT, headParam, params, new HttpOkhUtils.HttpCallBack() {
-                @Override
-                public void onError(Request request, IOException e) {
-                    ProgressDialogUtil.hideDialog();
-                    ToastUtils.showToast(BankCardActivity.this, "网络连接错误");
-                }
+    protected void getProvince() {
+        RequestParamsFM headParam = new RequestParamsFM();
+        headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        params.put("pid", "1");
+        HttpOkhUtils.getInstance().doGetWithHeadParams(NetConfig.REGIONSELECT, headParam, params, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                ProgressDialogUtil.hideDialog();
+                ToastUtils.showToast(BankCardActivity.this, "网络连接错误");
+            }
 
-                @Override
-                public void onSuccess(int code, String resbody) {
-                    ProgressDialogUtil.hideDialog();
-                    if (code != 200) {
-                        ToastUtils.showToast(BankCardActivity.this, "网络错误" + code);
-                        return;
+            @Override
+            public void onSuccess(int code, String resbody) {
+                ProgressDialogUtil.hideDialog();
+                if (code != 200) {
+                    ToastUtils.showToast(BankCardActivity.this, "网络错误" + code);
+                    return;
+                }
+                Gson gson = new Gson();
+                ShengDataInfo shengDataInfo = gson.fromJson(resbody, ShengDataInfo.class);
+                ToastUtils.showToast(BankCardActivity.this, shengDataInfo.getMessage());
+                if (shengDataInfo.isOk()) {
+                    mSHEData.clear();
+                    mSHEData.addAll(shengDataInfo.getData());
+                    if (null == mDataPopEd) {
+                        mDataPopEd = new ArrayList<>();
+                    } else {
+                        mDataPopEd.clear();
                     }
-                    Gson gson = new Gson();
-                    ShengDataInfo shengDataInfo = gson.fromJson(resbody, ShengDataInfo.class);
-                    ToastUtils.showToast(BankCardActivity.this, shengDataInfo.getMessage());
-                    if (shengDataInfo.isOk()) {
-                        mSHEData.clear();
-                        mSHEData.addAll(shengDataInfo.getData());
-                        if (null == mDataPopEd) {
-                            mDataPopEd = new ArrayList<>();
-                        } else {
-                            mDataPopEd.clear();
-                        }
-                        for (ShengDataInfo.DataBean bean : mSHEData) {
-                            ChioceAdapterContentInfo contentInfo = new ChioceAdapterContentInfo();
-                            contentInfo.setCont(bean.getName());
-                            contentInfo.setId(bean.getId());
-                            mDataPopEd.add(contentInfo);
-                        }
+                    for (ShengDataInfo.DataBean bean : mSHEData) {
+                        ChioceAdapterContentInfo contentInfo = new ChioceAdapterContentInfo();
+                        contentInfo.setCont(bean.getName());
+                        contentInfo.setId(bean.getId());
+                        mDataPopEd.add(contentInfo);
                     }
                 }
-            });
+            }
+        });
     }
 
     private void selectStartPlace() {
@@ -219,8 +224,8 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
                             province = mDataPopEd.get(position).getCont();
                             stCityLevel++;
                         } else {
-                                tv_khh.setText(province+" "+mDataPopEd.get(position).getCont());
-                                openHelper.dismiss();
+                            tv_khh.setText(province + " " + mDataPopEd.get(position).getCont());
+                            openHelper.dismiss();
                         }
                     }
                 });
@@ -273,8 +278,8 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
         params.put("fname", data.getFname());
         params.put("fprovince", data.getFprovince());
         params.put("fcity", data.getFcity());
-        params.put("fcardno", data.getFcardno().replaceAll(" ",""));
-        params.put("fmobile",data.getFmobile());
+        params.put("fcardno", data.getFcardno().replaceAll(" ", ""));
+        params.put("fmobile", data.getFmobile());
         params.setUseJsonStreamer(true);
         HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.B_C_CHECK, headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override
@@ -294,10 +299,61 @@ public class BankCardActivity extends AppCompatActivity implements View.OnClickL
                 UpPicInfo info = gson.fromJson(resbody, UpPicInfo.class);
                 ToastUtils.showToast(BankCardActivity.this, info.getMessage());
                 if (info.isOk()) {
-                    ToastUtils.showToast(BankCardActivity.this,info.getMessage());
+                    //弹出v验证码的框，再次验证
+                    showAlertView(info.getData());
+                }
+            }
+        });
+    }
+
+    private void showAlertView(final String serviceId) {
+        final MyAlertDialogHelper dialogHelper = new MyAlertDialogHelper();
+        final View inflate = View.inflate(this, R.layout.dialog_et_code, null);
+        dialogHelper.setDIYView(this, inflate);
+        dialogHelper.setDialogClicker("确定", "取消", new MyAlertDialogHelper.DialogClickListener() {
+            @Override
+            public void onPositive() {
+                EditText et_code = inflate.findViewById(R.id.et_code);
+                String code = MyTextUtils.getEditTextContent(et_code);
+                //银行卡绑定手机验证
+                bindBankWithPhone(code, serviceId);
+            }
+
+            @Override
+            public void onNegative() {
+                dialogHelper.disMiss();
+            }
+        });
+        dialogHelper.show();
+    }
+
+    private void bindBankWithPhone(String code, String serviceId) {
+        RequestParamsFM headParams = new RequestParamsFM();
+        headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        params.put("code", code);
+        params.put("serviceId", serviceId);
+        params.setUseJsonStreamer(true);
+        ProgressDialogUtil.startShow(this, "正在提交...");
+        HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.CODEVALID, headParams, params, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                ProgressDialogUtil.hideDialog();
+                ToastUtils.showToast(BankCardActivity.this, "网络连接错误");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                ProgressDialogUtil.hideDialog();
+                if (code != 200) {
+                    ToastUtils.showToast(BankCardActivity.this, "网络错误" + code);
+                    return;
+                }
+                Gson gson = new Gson();
+                UpPicInfo info = gson.fromJson(resbody, UpPicInfo.class);
+                ToastUtils.showToast(BankCardActivity.this, info.getMessage());
+                if (info.isOk()) {
                     finish();
-                }else {
-                    ToastUtils.showToast(BankCardActivity.this,info.getMessage());
                 }
             }
         });

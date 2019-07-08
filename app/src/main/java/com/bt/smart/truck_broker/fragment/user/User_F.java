@@ -240,6 +240,7 @@ public class User_F extends Fragment implements View.OnClickListener {
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.userOrderNum = loginInfo.getData().getOrderno();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
+                    MyApplication.faccountid = loginInfo.getData().getRegisterDriver().getFaccountid();
                     //更改界面UI
                     changeUFUI();
                 }

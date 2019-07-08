@@ -13,11 +13,10 @@ public class NetConfig {
     //服务器总地址
 //    public static String ROOT = "http://116.62.171.244:8082/yingsu/rest/";
     public static String ROOT = "http://120.27.3.205/rest/";
-//    public static String ROOT = "http://172.16.52.63/rest/";
     //    public static String ROOT = "http://2o1b417794.51mypc.cn:39437/rest/";
     //图片地址
-//    public static String IMG_HEAD = "http://120.27.3.205/yingsu/";
-    public static String IMG_HEAD = "http://205.168.1.100/yingsu_war_exploded/";
+    public static String IMG_HEAD = "http://120.27.3.205/yingsu/";
+//    public static String IMG_HEAD = "http://205.168.1.100/yingsu_war_exploded/";
 
 
     //获取最新版本apk信息
@@ -44,6 +43,7 @@ public class NetConfig {
 
     //提交司机认证信息
     public static String DRIVERGDCONTROLLER = ROOT + "driverGdController";
+    public static String PERSONAUTH = ROOT + "eSignController/personAuth";
     public static String REGISTERDRIVERCONTROLLER = ROOT + "registerDriverController/{id}";
 
     //获取当天货源信息列表
@@ -52,6 +52,8 @@ public class NetConfig {
     public static String ALL_ORDER_DETAIL = ROOT + "orderController";
     //司机接单
     public static String DRIVERORDERCONTROLLER = ROOT + "driverOrderController";
+    //司机签署协议
+    public static String DRIVER = ROOT + "eSignController/driver";
     //根据ID司机订单表信息
     public static String DRIVERORDERCONTROLLER_ORDER = ROOT + "driverOrderController/order";
     public static String DRIVERORDERCONTROLLER_ADDRECORD = ROOT + "driverOrderController/addRecord";
@@ -73,13 +75,13 @@ public class NetConfig {
     public static String WITHDRAW = ROOT + "yqzlController/withdraw";
 
     //银行卡三要素校验
-    public static String B_C_CHECK = ROOT + "yqzlController/three";
+    public static String B_C_CHECK = ROOT + "yqzlController/bind";
 
     //银行卡删除
     public static String BCDEL = ROOT + "yqzlController/cancelBind";
 
-    //绑定银行卡
-//    public static String BIND = ROOT + "yqzlController/bind";//未做校验的绑定
+    //银行卡绑定手机验证
+    public static String CODEVALID = ROOT + "yqzlController/codevalid";//未做校验的绑定
 
     //微信支付统一下单
     public static String WX = ROOT + "wxController/wxOrder";
@@ -91,4 +93,8 @@ public class NetConfig {
     public static String ALIPAY = ROOT + "alipayController/alipayOrder";
 
     public static String PAYACCOUNTDRIVER_LIST = ROOT + "pADriverController/listbyid";
+
+    //获取认证uri
+    public static String URI = ROOT + "eSignController/uri";
+
 }

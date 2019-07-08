@@ -94,8 +94,6 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
                 toPhotoDriveCard();
                 break;
             case R.id.tv_submit:
-
-
                 //下一步，填写车辆信息
                 toWriteCarInfo();
                 break;

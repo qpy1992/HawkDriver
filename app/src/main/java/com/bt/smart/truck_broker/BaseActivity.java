@@ -6,7 +6,11 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
+
 import com.bt.smart.truck_broker.activity.FirstActivity;
+import com.bt.smart.truck_broker.servicefile.GeTuiIntentService;
+import com.bt.smart.truck_broker.servicefile.GeTuiPushService;
+import com.igexin.sdk.PushManager;
 
 /**
  * @创建者 AndyYan
@@ -42,5 +46,14 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         MyApplication.listActivity.remove(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PushManager.getInstance().initialize(this.getApplicationContext(), GeTuiPushService.class);
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), GeTuiIntentService.class);
+        PushManager.getInstance().bindAlias(this, MyApplication.userID);
+        PushManager.getInstance().turnOnPush(this);
     }
 }

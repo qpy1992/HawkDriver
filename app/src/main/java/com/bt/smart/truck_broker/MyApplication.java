@@ -25,25 +25,24 @@ import java.util.ArrayList;
 
 public class MyApplication extends Application {
     public static MyApplication application;
-    public static boolean             isRelease    = false;//判断程序是否异常
+    public static boolean isRelease = false;//判断程序是否异常
     public static ArrayList<Activity> listActivity = new ArrayList<Activity>();//用来装载activity
-    public static int                 flag         = -1;//判断是否被回收
-    public static int                 isLogin      = 0;//判断是否登录
-    public static String  userID;
-    public static String  userPhone;
-    public static String  userToken;
-    public static String  checkStatus;//审核状态
-    public static String  userHeadPic;//头像
-    public static String  userName;
+    public static int flag = -1;//判断是否被回收
+    public static int isLogin = 0;//判断是否登录
+    public static String userID;
+    public static String userPhone;
+    public static String faccountid;
+    public static String userToken;
+    public static String checkStatus;//审核状态
+    public static String userHeadPic;//头像
+    public static String userName;
     public static BigDecimal money;//余额
-    public static int     userOrderNum;//运单数
+    public static int userOrderNum;//运单数
     public static boolean needLocationService;//是否需要定位服务
 
     @Override
     public void onCreate() {
         super.onCreate();
-        //        JPushInterface.setDebugMode(true);
-        //        JPushInterface.init(this);
         application = this;
         ZXingLibrary.initDisplayOpinion(this);
         openVoice();

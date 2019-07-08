@@ -28,12 +28,16 @@ import com.bt.smart.truck_broker.fragment.sameDay.SameDay_F;
 import com.bt.smart.truck_broker.fragment.mineOrders.MyOrders_F;
 import com.bt.smart.truck_broker.fragment.user.User_F;
 import com.bt.smart.truck_broker.messageInfo.NewApkInfo;
+import com.bt.smart.truck_broker.servicefile.GeTuiIntentService;
+import com.bt.smart.truck_broker.servicefile.GeTuiPushService;
 import com.bt.smart.truck_broker.servicefile.SendLocationService;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialogHelper;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.google.gson.Gson;
+import com.igexin.sdk.PushManager;
+import com.igexin.sdk.Tag;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -242,6 +246,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         }
     }
+
+
+
 
     @Override
     protected void onResume() {

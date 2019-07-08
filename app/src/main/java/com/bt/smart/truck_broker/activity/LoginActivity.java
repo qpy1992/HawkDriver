@@ -274,6 +274,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.userOrderNum = loginInfo.getData().getOrderno();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
+                    MyApplication.faccountid = loginInfo.getData().getRegisterDriver().getFaccountid();
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }
@@ -312,6 +313,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.userOrderNum = loginInfo.getData().getOrderno();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
+                    MyApplication.faccountid = loginInfo.getData().getRegisterDriver().getFaccountid();
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }

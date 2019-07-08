@@ -70,23 +70,52 @@ public class MyOrders_F extends Fragment {
 //        banner.start();
         tv_title.setText("订单列表");
         contsList = new ArrayList<>();
-        contsList.add("预接单");//5
-        contsList.add("未中标");//6
-        contsList.add("已接单");//0
-        contsList.add("运输中");//1
-        contsList.add("取消待确认");//2
-        contsList.add("已取消");//3
-        contsList.add("已结单");//4
+//        contsList.add("预接单");//5
+//        contsList.add("未中标");//6
+//        contsList.add("已接单");//0
+//        contsList.add("运输中");//1
+//        contsList.add("取消待确认");//2
+//        contsList.add("已取消");//3
+//        contsList.add("已结单");//4
+
+//        contsList.add("已发布");//0
+        contsList.add("已报价");//1
+        contsList.add("已发协议");//2
+        contsList.add("已签署");//3
+        contsList.add("运输中");//4
+        contsList.add("已签收");//5
+        contsList.add("待确认");//6
+        contsList.add("已取消");//7
+        contsList.add("待支付");//8
+        contsList.add("已结单");//9
+
         fragmentsList = new ArrayList<>();
-        OrderListFragment orderListFgt5 = new OrderListFragment();
-        orderListFgt5.setType(5);
-        fragmentsList.add(orderListFgt5);
-        OrderListFragment orderListFgt6 = new OrderListFragment();
-        orderListFgt6.setType(6);
-        fragmentsList.add(orderListFgt6);
-        OrderListFragment orderListFgt0 = new OrderListFragment();
-        orderListFgt0.setType(0);
-        fragmentsList.add(orderListFgt0);
+
+//        OrderListFragment orderListFgt5 = new OrderListFragment();
+//        orderListFgt5.setType(5);
+//        fragmentsList.add(orderListFgt5);
+//        OrderListFragment orderListFgt6 = new OrderListFragment();
+//        orderListFgt6.setType(6);
+//        fragmentsList.add(orderListFgt6);
+//        OrderListFragment orderListFgt0 = new OrderListFragment();
+//        orderListFgt0.setType(0);
+//        fragmentsList.add(orderListFgt0);
+//        OrderListFragment orderListFgt1 = new OrderListFragment();
+//        orderListFgt1.setType(1);
+//        fragmentsList.add(orderListFgt1);
+//        OrderListFragment orderListFgt2 = new OrderListFragment();
+//        orderListFgt2.setType(2);
+//        fragmentsList.add(orderListFgt2);
+//        OrderListFragment orderListFgt3 = new OrderListFragment();
+//        orderListFgt3.setType(3);
+//        fragmentsList.add(orderListFgt3);
+//        OrderListFragment orderListFgt4 = new OrderListFragment();
+//        orderListFgt4.setType(4);
+//        fragmentsList.add(orderListFgt4);
+
+//        OrderListFragment orderListFgt0 = new OrderListFragment();
+//        orderListFgt0.setType(0);
+//        fragmentsList.add(orderListFgt0);
         OrderListFragment orderListFgt1 = new OrderListFragment();
         orderListFgt1.setType(1);
         fragmentsList.add(orderListFgt1);
@@ -99,6 +128,21 @@ public class MyOrders_F extends Fragment {
         OrderListFragment orderListFgt4 = new OrderListFragment();
         orderListFgt4.setType(4);
         fragmentsList.add(orderListFgt4);
+        OrderListFragment orderListFgt5 = new OrderListFragment();
+        orderListFgt5.setType(5);
+        fragmentsList.add(orderListFgt5);
+        OrderListFragment orderListFgt6 = new OrderListFragment();
+        orderListFgt6.setType(6);
+        fragmentsList.add(orderListFgt6);
+        OrderListFragment orderListFgt7 = new OrderListFragment();
+        orderListFgt6.setType(7);
+        fragmentsList.add(orderListFgt7);
+        OrderListFragment orderListFgt8 = new OrderListFragment();
+        orderListFgt6.setType(8);
+        fragmentsList.add(orderListFgt8);
+        OrderListFragment orderListFgt9 = new OrderListFragment();
+        orderListFgt6.setType(9);
+        fragmentsList.add(orderListFgt9);
         // 创建ViewPager适配器
         myPagerAdapter = new MyPagerAdapter(getFragmentManager());//getChildFragmentManager()
         myPagerAdapter.setFragments((ArrayList<OrderListFragment>) fragmentsList);

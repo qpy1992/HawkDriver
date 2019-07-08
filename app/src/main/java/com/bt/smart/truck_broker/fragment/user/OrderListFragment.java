@@ -38,12 +38,13 @@ import okhttp3.Request;
  */
 
 public class OrderListFragment extends Fragment {
-    private View                             mRootView;
-    private SwipeRefreshLayout               swiperefresh;
-    private RecyclerView                     recyview;
-    private ReadyRecDriverOrderAdapter       orderAdapter;
+    private View mRootView;
+    private SwipeRefreshLayout swiperefresh;
+    private RecyclerView recyview;
+    private ReadyRecDriverOrderAdapter orderAdapter;
     private List<ReadyRecOrderInfo.DataBean> mData;
-    private int                              mType;//fragment需要展示的订单种类//0接单、1运输、2待确认、3已取消、4签收、5预接单、6未中标
+    private int mType;//fragment需要展示的订单种类//0接单、1运输、2待确认、3已取消、4签收、5预接单、6未中标
+//    0已发布、1已报价、2已发协议、3已签署、4运输中、5已签收、6待确认、7已取消、8待支付、9已结单
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

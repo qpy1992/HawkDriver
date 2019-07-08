@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.Window;
@@ -16,12 +18,15 @@ import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
+import com.bt.smart.truck_broker.servicefile.GeTuiIntentService;
+import com.bt.smart.truck_broker.servicefile.GeTuiPushService;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.SpUtils;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.google.gson.Gson;
+import com.igexin.sdk.PushManager;
 
 import java.io.IOException;
 
@@ -84,8 +89,24 @@ public class FirstActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    // DemoPushService.class 自定义服务名称, 核心服务
+    private Class userPushService = GeTuiPushService.class;
+
+    private boolean isGetPermission() {
+        PackageManager pkgManager = getPackageManager();
+        // 读写 sd card 权限非常重要, android6.0默认禁止的, 建议初始化之前就弹窗让用户赋予该权限
+        boolean sdCardWritePermission = pkgManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName()) == PackageManager.PERMISSION_GRANTED;
+        // read phone state用于获取 imei 设备信息
+        boolean phoneSatePermission = pkgManager.checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName()) == PackageManager.PERMISSION_GRANTED;
+        return (sdCardWritePermission & phoneSatePermission);
+    }
+
     @Override
     public void onClick(View view) {
+        if (!isGetPermission()) {
+            requestPermission();
+            return;
+        }
         switch (view.getId()) {
             case R.id.tv_new:
                 //跳转注册界面
@@ -99,6 +120,32 @@ public class FirstActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
                 finish();
                 break;
+        }
+    }
+
+    private static final int REQUEST_PERMISSION = 0;
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE},
+                REQUEST_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION) {
+            if ((grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                PushManager.getInstance().initialize(this.getApplicationContext(), userPushService);
+                PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), GeTuiIntentService.class);
+                PushManager.getInstance().bindAlias(this, MyApplication.userID);
+            } else {
+                PushManager.getInstance().initialize(this.getApplicationContext(), userPushService);
+                PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), GeTuiIntentService.class);
+                PushManager.getInstance().bindAlias(this, MyApplication.userID);
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -132,6 +179,7 @@ public class FirstActivity extends Activity implements View.OnClickListener {
                     MyApplication.checkStatus = loginInfo.getData().getRegisterDriver().getCheckStatus();
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
+                    MyApplication.faccountid = loginInfo.getData().getRegisterDriver().getFaccountid();
                     startActivity(new Intent(FirstActivity.this, MainActivity.class));
                     finish();
                 }
@@ -139,8 +187,8 @@ public class FirstActivity extends Activity implements View.OnClickListener {
         });
     }
 
-    private static final int      REQUEST_EXTERNAL_STORAGE = 1;
-    private static       String[] PERMISSIONS_STORAGE      = {
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
             "android.permission.READ_EXTERNAL_STORAGE",
             "android.permission.WRITE_EXTERNAL_STORAGE"};
 

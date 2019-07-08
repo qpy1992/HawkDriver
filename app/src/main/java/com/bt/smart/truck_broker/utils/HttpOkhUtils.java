@@ -35,7 +35,7 @@ public class HttpOkhUtils {
     // 网络请求超时时间值(s)
     private static final int DEFAULT_TIMEOUT = 30;
     private static HttpOkhUtils okhUtils;
-    private        OkHttpClient client;
+    private OkHttpClient client;
 
     private HttpOkhUtils() {
         client = new OkHttpClient.Builder()
@@ -224,6 +224,32 @@ public class HttpOkhUtils {
         client.newCall(request).enqueue(new StringCallBack(request, httpCallBack));
     }
 
+    public void doPostByUrl(String url, RequestParamsFM headeBean, String key, RequestParamsFM bean, HttpCallBack httpCallBack) {
+        Request.Builder builder1 = new Request.Builder();
+        if (null != headeBean) {
+            Set<String> set1 = headeBean.keySet();
+            for (String keyHead : set1) {
+                builder1.addHeader(keyHead, headeBean.get(keyHead).toString());
+            }
+        }
+        JSONObject jsonObject = new JSONObject();
+        Set<String> set1 = bean.keySet();
+        for (Iterator<String> it = set1.iterator(); it.hasNext(); ) {
+            String paramKey = it.next();
+            try {
+                jsonObject.put(paramKey, bean.get(paramKey));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        String json = jsonObject.toString();
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add(key, json);
+        RequestBody requestBody = builder.build();
+        Request request = builder1.url(url).post(requestBody).build();
+        client.newCall(request).enqueue(new StringCallBack(request, httpCallBack));
+    }
+
     public void doPut(String url, RequestParamsFM bean, HttpCallBack httpCallBack) {
         RequestBody requestBody;
         boolean toJson = bean.getIsUseJsonStreamer();
@@ -363,7 +389,7 @@ public class HttpOkhUtils {
 
     private static class StringCallBack implements Callback {
         private HttpCallBack httpCallBack;
-        private Request      request;
+        private Request request;
 
         public StringCallBack(Request request, HttpCallBack httpCallBack) {
             this.request = request;

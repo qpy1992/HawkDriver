@@ -1,6 +1,7 @@
 package com.bt.smart.truck_broker.activity.userAct;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,8 +32,11 @@ import java.util.List;
 import okhttp3.Request;
 
 public class BCardActivity extends AppCompatActivity implements View.OnClickListener {
-    TextView bc_back,bc_add;
-    ListView lv_bcard;
+    private TextView bc_back, bc_add;
+    private SwipeRefreshLayout swiperefresh;
+    private ListView lv_bcard;
+    private List<BCardInfo.DataBean> bankList;
+    private BCardAdapter bankAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +46,49 @@ public class BCardActivity extends AppCompatActivity implements View.OnClickList
         setListeners();
     }
 
-    protected void setViews(){
+    protected void setViews() {
         bc_back = findViewById(R.id.bc_back);
         bc_add = findViewById(R.id.bc_add);
+        swiperefresh = findViewById(R.id.swiperefresh);
         lv_bcard = findViewById(R.id.lv_bcard);
         BankCard(MyApplication.userID);
     }
 
-    protected void setListeners(){
+    protected void setListeners() {
         bc_back.setOnClickListener(this);
         bc_add.setOnClickListener(this);
+        swiperefresh.setColorSchemeColors(getResources().getColor(R.color.blue_icon), getResources().getColor(R.color.yellow_40), getResources().getColor(R.color.red_160));
+        swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //获取最新银行卡信息
+                BankCard(MyApplication.userID);
+            }
+        });
+        bankList = new ArrayList<>();
+        bankAdapter = new BCardAdapter(BCardActivity.this, bankList);
+        lv_bcard.setAdapter(bankAdapter);
+        lv_bcard.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                ListView lv = new ListView(BCardActivity.this);
+                List<String> list = new ArrayList<>();
+                list.add("删除");
+                final ArrayAdapter adapter1 = new ArrayAdapter(BCardActivity.this, android.R.layout.simple_list_item_1, list);
+                lv.setAdapter(adapter1);
+                final AlertDialog dialog = new AlertDialog.Builder(BCardActivity.this).setView(lv).show();
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+                        delCard(bankList.get(position).getId());
+                        bankList.remove(position);
+                        dialog.dismiss();
+                        bankAdapter.notifyDataSetChanged();
+                    }
+                });
+                return true;
+            }
+        });
         lv_bcard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -62,12 +99,12 @@ public class BCardActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.bc_back:
                 finish();
                 break;
             case R.id.bc_add:
-                startActivity(new Intent(this,BankCardActivity.class));
+                startActivity(new Intent(this, BankCardActivity.class));
                 break;
         }
     }
@@ -114,35 +151,15 @@ public class BCardActivity extends AppCompatActivity implements View.OnClickList
                             .show();
                 } else {
                     //显示银行卡列表
-                    final BCardAdapter adapter = new BCardAdapter(BCardActivity.this, info.getData());
-                    lv_bcard.setAdapter(adapter);
-                    lv_bcard.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                            ListView lv = new ListView(BCardActivity.this);
-                            List<String> list = new ArrayList<>();
-                            list.add("删除");
-                            final ArrayAdapter adapter1 = new ArrayAdapter(BCardActivity.this,android.R.layout.simple_list_item_1,list);
-                            lv.setAdapter(adapter1);
-                            final AlertDialog dialog =  new AlertDialog.Builder(BCardActivity.this).setView(lv).show();
-                            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                                    delCard(info.getData().get(position).getId());
-                                    info.getData().remove(position);
-                                    dialog.dismiss();
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                            return true;
-                        }
-                    });
+                    bankList.clear();
+                    bankList.addAll(info.getData());
+                    bankAdapter.notifyDataSetChanged();
                 }
             }
         });
     }
 
-    private void delCard(String id){
+    private void delCard(String id) {
         RequestParamsFM headParams = new RequestParamsFM();
         headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
         RequestParamsFM params = new RequestParamsFM();
@@ -160,12 +177,12 @@ public class BCardActivity extends AppCompatActivity implements View.OnClickList
                     return;
                 }
                 Gson gson = new Gson();
-                UpPicInfo info = gson.fromJson(resbody,UpPicInfo.class);
-                if(info.isOk()){
-                    ToastUtils.showToast(BCardActivity.this,"删除成功");
+                UpPicInfo info = gson.fromJson(resbody, UpPicInfo.class);
+                if (info.isOk()) {
+                    ToastUtils.showToast(BCardActivity.this, "删除成功");
                 }
             }
         });
     }
-    
+
 }

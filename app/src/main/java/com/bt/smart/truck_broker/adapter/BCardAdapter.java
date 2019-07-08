@@ -13,10 +13,10 @@ import com.bt.smart.truck_broker.messageInfo.BCardInfo;
 import java.util.List;
 
 public class BCardAdapter extends BaseAdapter {
-    Context mContext;
-    List<BCardInfo.DataBean> list;
+    private Context mContext;
+    private List<BCardInfo.DataBean> list;
 
-    public BCardAdapter(Context context, List<BCardInfo.DataBean> list){
+    public BCardAdapter(Context context, List<BCardInfo.DataBean> list) {
         this.mContext = context;
         this.list = list;
     }
@@ -39,15 +39,15 @@ public class BCardAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         Holder holder;
-        if(view==null){
+        if (view == null) {
             holder = new Holder();
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_bcard,null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_bcard, null);
             holder.bc_khh1 = view.findViewById(R.id.bc_khh1);
             holder.bc_kh = view.findViewById(R.id.bc_kh);
             holder.bc_ckr = view.findViewById(R.id.bc_ckr);
             view.setTag(holder);
-        }else{
-            holder = (Holder)view.getTag();
+        } else {
+            holder = (Holder) view.getTag();
         }
         holder.bc_khh1.setText(list.get(i).getFkhh());
         String kh = list.get(i).getFcardno();
@@ -56,7 +56,7 @@ public class BCardAdapter extends BaseAdapter {
         return view;
     }
 
-    class Holder{
-        TextView bc_khh1,bc_kh,bc_ckr;
+    class Holder {
+        TextView bc_khh1, bc_kh, bc_ckr;
     }
 }

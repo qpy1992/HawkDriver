@@ -1,6 +1,7 @@
 package com.bt.smart.truck_broker.fragment.sameDay;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -116,6 +118,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private final static String TAG = "OrderDetailFragment";
     private double orderLng;
     private double orderLat;
+    private int orderType;//0已发布、1已报价、2已发协议、3已签署、4运输中、5已签收、6待确认、7已取消、8待支付、9已结单
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -172,19 +175,21 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         //        if (null != touchKind && "accepted".equals(touchKind)) {
         //            tv_take.setVisibility(View.GONE);
         //        }
-        int orderType = getActivity().getIntent().getIntExtra("orderType", -1);
-        if (0 == orderType || 1 == orderType || 2 == orderType || 5 == orderType) {
-            tv_take.setText("开锁");
-        } else if (3 == orderType || 4 == orderType || 6 == orderType) {
+        orderType = getActivity().getIntent().getIntExtra("orderType", -1);
+        if (0 == orderType || 1 == orderType) {
             tv_take.setVisibility(View.GONE);
+        } else if (3 == orderType || 4 == orderType || 5 == orderType || 6 == orderType) {
+            tv_take.setText("开锁");
+        } else if (2 == orderType) {
+            tv_take.setText("签署");
         }
-        if (0 == orderType) {
+        if (3 == orderType || 4 == orderType || 5 == orderType || 6 == orderType) {
             ll_load.setVisibility(View.VISIBLE);
         }
-        if (1 == orderType) {
+        if (5 == orderType || 6 == orderType || 8 == orderType || 9 == orderType) {
             ll_rece.setVisibility(View.VISIBLE);
         }
-        if (4 == orderType) {
+        if (0 == orderType || 1 == orderType || 2 == orderType) {
             iv_load.setVisibility(View.GONE);
             iv_rece.setVisibility(View.GONE);
         }
@@ -221,6 +226,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 if ("开锁".equals(cont)) {
                     //跳转开锁页面
                     openLockDevice();
+                } else if ("签署".equals(cont)) {
+                    //司机签署协议
+                    signOrder();
                 } else {
                     //弹出自定义的dailog让司机填写报价
                     show2WriteMoney();
@@ -292,6 +300,14 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 expandImg(iv_r1);
                 break;
         }
+    }
+
+    private void signOrder() {
+        SignOrderFragment orderDetailFt = new SignOrderFragment();
+        orderDetailFt.setDataList(orderDetailInfo);
+        FragmentTransaction ftt = getActivity().getSupportFragmentManager().beginTransaction();
+        ftt.add(R.id.frame, orderDetailFt, "orderDetailFt");
+        ftt.commit();
     }
 
     @Override
@@ -573,6 +589,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         View inflate = View.inflate(getContext(), R.layout.dailog_write_money, null);
         dialogHelper.setDIYView(getContext(), inflate);
         final EditText et_money = inflate.findViewById(R.id.et_money);
+        final EditText et_note = inflate.findViewById(R.id.et_note);
         TextView tv_cancle = inflate.findViewById(R.id.tv_cancle);
         TextView tv_sure = inflate.findViewById(R.id.tv_sure);
         tv_cancle.setOnClickListener(new View.OnClickListener() {
@@ -586,23 +603,25 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             public void onClick(View view) {
                 String content = EditTextUtils.getContent(et_money);
                 double doubleNum = MyNumUtils.getDoubleNum(content);
+                String note = EditTextUtils.getContent(et_note);
                 //接单
-                takeOrder(doubleNum);
+                takeOrder(doubleNum, note);
                 dialogHelper.disMiss();
             }
         });
         dialogHelper.show();
     }
 
-    private void takeOrder(double money) {
+    private void takeOrder(double money, String note) {
         RequestParamsFM headParams = new RequestParamsFM();
         headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
         RequestParamsFM params = new RequestParamsFM();
         params.put("driverId", MyApplication.userID);
         params.put("id", MyApplication.userID);
         params.put("orderId", orderDetailInfo.getData().getId());
-        params.put("orderStatus", "5");
+        params.put("orderStatus", "0");
         params.put("ffee", money);
+        params.put("fnote", note);
         params.setUseJsonStreamer(true);
         HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.DRIVERORDERCONTROLLER, headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override

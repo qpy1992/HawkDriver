@@ -136,6 +136,11 @@ public class LoginInfo {
             private String idCard2;
             private String driverLicense;
             private String id;
+            /**
+             * faccountid : 2626
+             */
+
+            private String faccountid;
 
             public String getFcarno() {
                 return fcarno;
@@ -295,6 +300,14 @@ public class LoginInfo {
 
             public void setId(String id) {
                 this.id = id;
+            }
+
+            public String getFaccountid() {
+                return faccountid;
+            }
+
+            public void setFaccountid(String faccountid) {
+                this.faccountid = faccountid;
             }
         }
     }
