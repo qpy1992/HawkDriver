@@ -157,13 +157,7 @@ public class GetDriveCardPhotoActivity extends BaseActivity implements View.OnCl
             mCamera = Camera.open(0);//后置
         }
         mCamera.setDisplayOrientation(90);
-        Camera.Parameters parameters = mCamera.getParameters();
-        parameters.setPreviewFormat(ImageFormat.NV21);//default默认为21，所有手机均支持NV21
-        List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
-        parameters.setPreviewSize(supportedPreviewSizes.get(0).width, supportedPreviewSizes.get(0).height);//设置预览分辨率
-        parameters.setPictureSize(supportedPreviewSizes.get(0).width, supportedPreviewSizes.get(0).height);
-        parameters.setPreviewFrameRate(25);
-        //后置需要自动对焦，否则人脸采集照片模糊
+        Camera.Parameters parameters = mCamera.getParameters();// 得到摄像头的参数
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         mCamera.setParameters(parameters);
         mCamera.startPreview();//开启预览

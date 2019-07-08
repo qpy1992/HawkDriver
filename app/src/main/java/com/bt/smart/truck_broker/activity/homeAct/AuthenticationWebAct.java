@@ -1,10 +1,20 @@
 package com.bt.smart.truck_broker.activity.homeAct;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.ConsoleMessage;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -14,6 +24,7 @@ import android.widget.Toast;
 
 import com.bt.smart.truck_broker.BaseActivity;
 import com.bt.smart.truck_broker.R;
+import com.bt.smart.truck_broker.util.checkFaceFile.WBH5FaceVerifySDK;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -45,59 +56,6 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
         initWebView();
     }
 
-    private void initWebView() {
-        //启用支持javascript
-        WebSettings settings = web_show.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);//打开本地缓存提供JS调用,至关重要
-        settings.setAllowFileAccess(true);
-        // 设置允许JS弹窗
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        //设置webview的uri
-        webUri = getIntent().getStringExtra("uri");
-        if (null != webUri && !"".equals(webUri)) {
-            web_show.loadUrl(webUri);
-        } else {
-            Uri uri = getIntent().getData();
-            if (uri != null) {
-                String realNameUrl = uri.getQueryParameter("realnameUrl");
-                if (!TextUtils.isEmpty(realNameUrl)) {
-                    try {
-                        web_show.loadUrl(URLDecoder.decode(realNameUrl, "utf-8"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        web_show.canGoBack();
-        web_show.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Uri uri = Uri.parse(url);
-                if (uri.toString().contains("alipay")) {
-                    try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        startActivity(intent);
-                        return true;
-                    } catch (Exception e) {
-                        return false;
-                    }
-                }
-                if (uri.getScheme().equals("js")) {
-                    if (uri.getAuthority().equals("tsignRealBack")) {
-                        // 实名认证结束 返回按钮/倒计时返回/暂不认证
-                        Toast.makeText(AuthenticationWebAct.this, "实名认证结束", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                }
-                return super.shouldOverrideUrlLoading(view, url);
-            }
-        });
-        // 腾讯云刷脸兼容性插件
-//        WBH5FaceVerifySDK.getInstance().setWebViewSettings(web_show, getApplicationContext());
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -107,11 +65,88 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
         }
     }
 
+    private void initWebView() {
+        webUri = getIntent().getStringExtra("url");
+        web_show.setWebViewClient(new H5FaceWebViewClient());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            web_show.getSettings().setSafeBrowsingEnabled(false);
+        }
+
+        web_show.setWebChromeClient(new H5FaceWebChromeClient(this));
+
+        // 腾讯云刷脸兼容性插件
+        WBH5FaceVerifySDK.getInstance().setWebViewSettings(web_show, getApplicationContext());
+        processExtraData();
+
+
+
+//        //启用支持javascript
+//        WebSettings settings = web_show.getSettings();
+//        settings.setJavaScriptEnabled(true);
+//        settings.setDomStorageEnabled(true);//打开本地缓存提供JS调用,至关重要
+//        settings.setAllowFileAccess(true);
+//        // 设置允许JS弹窗
+//        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+//        //设置webview的uri
+//        webUri = getIntent().getStringExtra("uri");
+//        if (null != webUri && !"".equals(webUri)) {
+//            web_show.loadUrl(webUri);
+//        } else {
+//            Uri uri = getIntent().getData();
+//            if (uri != null) {
+//                String realNameUrl = uri.getQueryParameter("realnameUrl");
+//                if (!TextUtils.isEmpty(realNameUrl)) {
+//                    try {
+//                        web_show.loadUrl(URLDecoder.decode(realNameUrl, "utf-8"));
+//                    } catch (UnsupportedEncodingException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//        web_show.canGoBack();
+//        web_show.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                Uri uri = Uri.parse(url);
+//                if (uri.toString().contains("alipay")) {
+//                    try {
+//                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                        startActivity(intent);
+//                        return true;
+//                    } catch (Exception e) {
+//                        return false;
+//                    }
+//                }
+//                if (uri.getScheme().equals("js")) {
+//                    if (uri.getAuthority().equals("tsignRealBack")) {
+//                        // 实名认证结束 返回按钮/倒计时返回/暂不认证
+//                        Toast.makeText(AuthenticationWebAct.this, "实名认证结束", Toast.LENGTH_SHORT).show();
+//                        finish();
+//                    }
+//                }
+//                return super.shouldOverrideUrlLoading(view, url);
+//            }
+//        });
+//        // 腾讯云刷脸兼容性插件
+//        WBH5FaceVerifySDK.getInstance().setWebViewSettings(web_show, getApplicationContext());
+//        processExtraData();
+    }
+
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Uri uri = getIntent().getData();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (WBH5FaceVerifySDK.getInstance().receiveH5FaceVerifyResult(requestCode, resultCode, data)) {
+            return;
+        }
+    }
+
+    private void processExtraData() {
+        Intent intent = getIntent();
+        Uri uri = intent.getData();
         if (uri != null) {
+            // 芝麻认证刷脸结束返回获取后续操作页面地址
             String realNameUrl = uri.getQueryParameter("realnameUrl");
             if (!TextUtils.isEmpty(realNameUrl)) {
                 try {
@@ -120,6 +155,107 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
                     e.printStackTrace();
                 }
             }
+
+        } else {
+            String url = intent.getStringExtra("url");
+            String title = intent.getStringExtra("title");
+
+            web_show.loadUrl(url);
         }
+
+    }
+
+    private class H5FaceWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (url == null) {
+                return false;
+            }
+
+            Uri uri = Uri.parse(url);
+            if (uri.getScheme().equals("http") || uri.getScheme().equals("https")) {
+                view.loadUrl(url);
+                return true;
+            } else if (uri.getScheme().equals("js")) {
+
+                if (uri.getAuthority().equals("tsignRealBack")) {
+                    // 实名认证结束 返回按钮/倒计时返回/暂不认证
+                    String serviceId = uri.getQueryParameter("serviceId");
+                    boolean status = uri.getBooleanQueryParameter("status", false);
+                    Toast.makeText(AuthenticationWebAct.this, "实名认证结束 serviceId = " + serviceId + " status = " + status, Toast.LENGTH_LONG).show();
+                    finish();
+                }
+
+                return true;
+            } else {
+                // alipays://platformapi/startapp?appId=20000067&pd=NO&url=https%3A%2F%2Fzmcustprod.zmxy.com.cn%2Fcertify%2Fbegin.htm%3Ftoken%3DZM201811133000000050500431389414
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent);
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+        }
+    }
+
+    public class H5FaceWebChromeClient extends WebChromeClient {
+        private Activity activity;
+
+        public H5FaceWebChromeClient(Activity mActivity) {
+            this.activity = mActivity;
+        }
+
+        @Override
+        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+            return super.onJsPrompt(view, url, message, defaultValue, result);
+        }
+
+        @Override
+        public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
+            return super.onJsConfirm(view, url, message, result);
+        }
+
+        @TargetApi(8)
+        @Override
+        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+            return super.onConsoleMessage(consoleMessage);
+        }
+
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
+            if (WBH5FaceVerifySDK.getInstance().recordVideoForApiBelow21(uploadMsg, acceptType, activity)) {
+                return;
+            }
+
+        }
+
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+            if (WBH5FaceVerifySDK.getInstance().recordVideoForApiBelow21(uploadMsg, acceptType, activity)) {
+                return;
+            }
+        }
+
+        @TargetApi(21)
+        @Override
+        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+            if (WBH5FaceVerifySDK.getInstance().recordVideoForApi21(webView, filePathCallback, activity, fileChooserParams)) {
+                return true;
+            }
+            return true;
+        }
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        processExtraData();
     }
 }

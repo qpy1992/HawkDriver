@@ -2,6 +2,7 @@ package com.bt.smart.truck_broker.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,8 +24,8 @@ public class MyPopChoisePic {
     private PopupWindow popupWindow;
     private Activity mActivity;
     private int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 1001;//相册权限申请码
-    private int SHOT_CODE = 10069;//调用系统相册-选择图片
-    private int IMAGE = 10068;//调用系统相册-选择图片
+    private int SHOT_CODE = 1069;//调用系统相册-选择图片
+    private int IMAGE = 1068;//调用系统相册-选择图片
 
     public MyPopChoisePic(Activity activity) {
         this.mActivity = activity;
@@ -109,7 +110,14 @@ public class MyPopChoisePic {
                     //权限已经被授予，在这里直接写要执行的相应方法即可
                     //调用相机
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    Uri photoUri = Uri.fromFile(new File(filePath)); // 传递路径
+                    Uri photoUri;
+                    if (android.os.Build.VERSION.SDK_INT < 24) {
+                        photoUri = Uri.fromFile(new File(filePath)); // 传递路径
+                    } else {
+                        ContentValues contentValues = new ContentValues(1);
+                        contentValues.put(MediaStore.Images.Media.DATA, new File(filePath).getAbsolutePath());
+                        photoUri = mActivity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                    }
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);// 更改系统默认存储路径
                     mActivity.startActivityForResult(intent, SHOT_CODE);
                     popupWindow.dismiss();

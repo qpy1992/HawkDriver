@@ -1,6 +1,7 @@
 package com.bt.smart.truck_broker.fragment.user;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -57,8 +58,8 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
     private ImageView img_cardB;
     private TextView tv_submit;
 
-    private int SHOT_CODE = 10069;//调用系统相册-选择图片
-    private int IMAGE = 10068;//调用系统相册-选择图片
+    private int SHOT_CODE = 1069;//调用系统相册-选择图片
+    private int IMAGE = 1068;//调用系统相册-选择图片
     private int picWhich;//1是头像、2是身份证正面、3是身份证背面
     private String headPicPath;//头像本地地址
     private String SFZZPicPath;//身份证正面本地地址
@@ -115,15 +116,15 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
                 break;
             case R.id.img_up_head:
                 //选择头像
-                toGetPic(1, headPicPath);
+                toGetPic(1);
                 break;
             case R.id.img_up_cardZ:
                 //选择身份证正面
-                toGetPic(2, SFZZPicPath);
+                toGetPic(2);
                 break;
             case R.id.img_up_cardB:
                 //选择身份证背面
-                toGetPic(3, SFZBPicPath);
+                toGetPic(3);
                 break;
             case R.id.tv_submit:
                 //检测是否正确填写
@@ -209,13 +210,20 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
         GlideLoaderUtil.showImageView(getContext(), imgPath, img);
     }
 
-    private void toGetPic(int which, String cameraPath) {
+    private void toGetPic(int which) {
         picWhich = which;
-        cameraPath = Environment.getExternalStorageDirectory().getPath();//获取SD卡路径
         long photoTime = System.currentTimeMillis();
-        cameraPath = cameraPath + "/temp" + photoTime + ".jpg";//指定路径
         MyPopChoisePic mPopChoisePic = new MyPopChoisePic(getActivity());
-        mPopChoisePic.showChoose(img_up_head, cameraPath);
+        if (1 == picWhich) {
+            headPicPath = Environment.getExternalStorageDirectory().getPath() + "/temp" + photoTime + ".jpg";
+            mPopChoisePic.showChoose(img_up_head, headPicPath);
+        } else if (2 == picWhich) {
+            SFZZPicPath = Environment.getExternalStorageDirectory().getPath() + "/temp" + photoTime + ".jpg";
+            mPopChoisePic.showChoose(img_up_head, SFZZPicPath);
+        } else if (3 == picWhich) {
+            SFZBPicPath = Environment.getExternalStorageDirectory().getPath() + "/temp" + photoTime + ".jpg";
+            mPopChoisePic.showChoose(img_up_head, SFZBPicPath);
+        }
     }
 
     private void checkWriteInfo() {
@@ -335,7 +343,7 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
                         return;
                     }
                     Intent intent = new Intent(getContext(), AuthenticationWebAct.class);
-                    intent.putExtra("uri", webUri);
+                    intent.putExtra("url", webUri);
                     getActivity().startActivityForResult(intent, REQUEST_AUTHENTICA_CODE);
                 }
             }

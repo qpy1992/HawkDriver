@@ -52,7 +52,8 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".activity.homeAct.AuthenticationWebAct"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -64,6 +65,10 @@
                     android:path="/path1"
                     android:port="8080"
                     android:scheme="scheme1" />
+                <data
+                    android:host="app"
+                    android:path="/callback"
+                    android:scheme="tsign" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.userAct.AuthenticationActivity" />

@@ -170,7 +170,7 @@ public class Home_F extends Fragment implements View.OnClickListener {
             return;
         }
         Intent intent = new Intent(getContext(), AuthenticationWebAct.class);
-        intent.putExtra("uri", webUri);
+        intent.putExtra("url", webUri);
         startActivity(intent);
     }
 
