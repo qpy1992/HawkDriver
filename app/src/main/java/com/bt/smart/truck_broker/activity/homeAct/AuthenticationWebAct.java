@@ -34,6 +34,7 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
     private TextView tv_title;
     private WebView web_show;
     private String webUri;
+    private int RESULT_AUTHENTICA_CODE = 10111;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,6 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
         // 腾讯云刷脸兼容性插件
         WBH5FaceVerifySDK.getInstance().setWebViewSettings(web_show, getApplicationContext());
         processExtraData();
-
 
 
 //        //启用支持javascript
@@ -183,6 +183,7 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
                     String serviceId = uri.getQueryParameter("serviceId");
                     boolean status = uri.getBooleanQueryParameter("status", false);
                     Toast.makeText(AuthenticationWebAct.this, "实名认证结束 serviceId = " + serviceId + " status = " + status, Toast.LENGTH_LONG).show();
+                    setResult(RESULT_AUTHENTICA_CODE);
                     finish();
                 }
 

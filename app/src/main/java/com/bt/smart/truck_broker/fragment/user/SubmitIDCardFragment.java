@@ -139,19 +139,12 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         //判断人脸认证信息
         if (REQUEST_AUTHENTICA_CODE == requestCode && RESULT_AUTHENTICA_CODE == resultCode) {
-            if (null != data) {
-                int acthentica = data.getIntExtra("acthentica", 0);
-                if (0 != acthentica) {
-                    //认证通过
-                    //提交个人资料
-                    FragmentTransaction ftt = getFragmentManager().beginTransaction();
-                    personalFt = new PersonalInfoFragment();
-                    ftt.add(R.id.frame, personalFt, "personalFt");
-                    //添加到回退栈
-//                    ftt.addToBackStack(null);
-                    ftt.commit();
-                }
-            }
+            //认证通过
+            //提交个人资料
+            FragmentTransaction ftt = getFragmentManager().beginTransaction();
+            personalFt = new PersonalInfoFragment();
+            ftt.add(R.id.frame, personalFt, "personalFt");
+            ftt.commit();
         }
         //相册返回，获取图片路径
         if (requestCode == IMAGE && resultCode == Activity.RESULT_OK && data != null) {
