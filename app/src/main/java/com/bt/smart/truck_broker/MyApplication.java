@@ -39,6 +39,7 @@ public class MyApplication extends Application {
     public static BigDecimal money;//余额
     public static int userOrderNum;//运单数
     public static boolean needLocationService;//是否需要定位服务
+    public static int markExamine = 0;
 
     @Override
     public void onCreate() {
