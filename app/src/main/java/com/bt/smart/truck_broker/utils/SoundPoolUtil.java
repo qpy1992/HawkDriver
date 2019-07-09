@@ -41,7 +41,7 @@ public class SoundPoolUtil {
             @Override
             public void onLoadComplete(SoundPool soundPool, int i, int i1) {
                 isLoadFinish = true;
-                ToastUtils.showToast(context, "点击音效文件加载完毕.");
+//                ToastUtils.showToast(context, "点击音效文件加载完毕.");
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.bt.smart.truck_broker.servicefile;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.bt.smart.truck_broker.MainActivity;
 import com.bt.smart.truck_broker.R;
@@ -47,16 +49,16 @@ public class GeTuiIntentService extends GTIntentService {
         if (null != payload) {
             content = new String(payload);
         }
-        if ("".equals(content))
+        if ("".equals(content)) {
             return;
+        }
 
         ThreadUtils.runOnMainThread(new Runnable() {
             @Override
             public void run() {
                 ToastUtils.showToast(context, content);
                 //自定义推送通知
-                //显示通知
-                sendNotification(context, content);
+                showNotification(context, content);
             }
         });
     }
@@ -81,33 +83,44 @@ public class GeTuiIntentService extends GTIntentService {
 
     }
 
-    private void sendNotification(Context context, String message) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-        //延时意图
-        /**
-         * 参数2：请求码 大于1
-         */
+    private void showNotification(Context context, String content) {
         markExamine++;
+        //1.获取系统通知的管理者
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //2.初始化一个notification的对象
+        Notification.Builder mBuilder = new Notification.Builder(this);
+        //android 8.0 适配     需要配置 通知渠道NotificationChannel
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel b = new NotificationChannel("1", "新的消息", NotificationManager.IMPORTANCE_MIN);
+            mNotificationManager.createNotificationChannel(b);
+            mBuilder.setChannelId("" + markExamine);
+        }
+        //添加自定义视图
+        RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.notif_gt_layout);
+        mRemoteViews.setTextViewText(R.id.tv_cont, content);
+
         Intent mainIntent = new Intent(context, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent[] intents = {mainIntent};
+        PendingIntent pendingIntent = PendingIntent.getActivities(context, markExamine, intents, PendingIntent.FLAG_UPDATE_CURRENT);
+
         AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         //最大音量
         int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume, 0); //tempVolume:音量绝对值
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        Intent[] intents = {mainIntent};
-        PendingIntent pendingIntent = PendingIntent.getActivities(context, 1, intents, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notification = new Notification.Builder(context)
-                .setAutoCancel(true) //当点击后自动删除
-                .setSmallIcon(R.mipmap.ic_launcher) //必须设置
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-                .setContentTitle("新消息")
-                .setContentText(message)
-                .setContentInfo("")
-                .setContentIntent(pendingIntent)
-                .setPriority(Notification.PRIORITY_MAX)
-                .setSound(uri)
-                .build();
-        notificationManager.notify(markExamine, notification);
+
+        //主要设置setContent参数  其他参数 按需设置
+        mBuilder.setContent(mRemoteViews);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        mBuilder.setOngoing(true);
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+        mBuilder.setAutoCancel(true);
+        mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setSound(uri);
+        mBuilder.setFullScreenIntent(pendingIntent, true);
+        mBuilder.setDefaults(Notification.DEFAULT_ALL);
+        //更新Notification
+        mNotificationManager.notify(markExamine, mBuilder.build());
     }
 }

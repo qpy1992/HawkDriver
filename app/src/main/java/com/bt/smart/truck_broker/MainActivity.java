@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -32,6 +34,7 @@ import com.bt.smart.truck_broker.servicefile.GeTuiIntentService;
 import com.bt.smart.truck_broker.servicefile.GeTuiPushService;
 import com.bt.smart.truck_broker.servicefile.SendLocationService;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
+import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.MyAlertDialogHelper;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.ToastUtils;
@@ -103,6 +106,38 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         setView();
         setData();
+        boolean Jurisdiction = NotificationManagerCompat.from(this).areNotificationsEnabled();
+        if (!Jurisdiction) {
+            MyAlertDialogHelper dialogHelper = new MyAlertDialogHelper();
+            dialogHelper.setDataNoView(this, "提示", "您没有开启通知权限，将收不到推送消息！");
+            dialogHelper.setDialogClicker("确认", "取消", new MyAlertDialogHelper.DialogClickListener() {
+                @Override
+                public void onPositive() {
+                    ToastUtils.showToast(MainActivity.this, "去开启通知权限");
+                    Intent localIntent = new Intent();
+                    localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    if (Build.VERSION.SDK_INT >= 9) {
+                        localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                        localIntent.setData(Uri.fromParts("package", MainActivity.this.getPackageName(), null));
+                    } else if (Build.VERSION.SDK_INT <= 8) {
+                        localIntent.setAction(Intent.ACTION_VIEW);
+
+                        localIntent.setClassName("com.android.settings",
+                                "com.android.settings.InstalledAppDetails");
+
+                        localIntent.putExtra("com.android.settings.ApplicationPkgName",
+                                MainActivity.this.getPackageName());
+                    }
+                    startActivity(localIntent);
+                }
+
+                @Override
+                public void onNegative() {
+
+                }
+            });
+            dialogHelper.show();
+        }
     }
 
     private void setView() {
@@ -246,8 +281,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         }
     }
-
-
 
 
     @Override

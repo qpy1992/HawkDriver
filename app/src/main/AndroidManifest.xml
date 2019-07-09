@@ -16,7 +16,8 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
+    <!-- 浮动通知权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!--//地图包、搜索包需要的基础权限-->
     <!--允许程序获取网络状态-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -34,7 +35,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.userAct.BCardActivity"></activity>
+        <activity android:name=".activity.userAct.BCardActivity"/>
         <activity android:name=".activity.userAct.WithdrawActivity" />
         <activity android:name=".activity.userAct.RechargeActivity" />
         <activity android:name=".activity.userAct.BankCardActivity" />
