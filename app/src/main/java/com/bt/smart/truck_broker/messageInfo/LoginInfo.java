@@ -136,11 +136,20 @@ public class LoginInfo {
             private String idCard2;
             private String driverLicense;
             private String id;
+            private String fcontract;
             /**
              * faccountid : 2626
              */
 
             private String faccountid;
+
+            public String getFcontract() {
+                return fcontract;
+            }
+
+            public void setFcontract(String fcontract) {
+                this.fcontract = fcontract;
+            }
 
             public String getFcarno() {
                 return fcarno;

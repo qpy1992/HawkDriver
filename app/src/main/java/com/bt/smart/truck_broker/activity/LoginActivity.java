@@ -271,6 +271,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     MyApplication.userName = loginInfo.getData().getRegisterDriver().getFname();
                     MyApplication.userPhone = loginInfo.getData().getRegisterDriver().getFmobile();
                     MyApplication.checkStatus = loginInfo.getData().getRegisterDriver().getCheckStatus();
+                    MyApplication.fcontract = loginInfo.getData().getRegisterDriver().getFcontract();
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.userOrderNum = loginInfo.getData().getOrderno();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
@@ -310,6 +311,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     MyApplication.userName = loginInfo.getData().getRegisterDriver().getFname();
                     MyApplication.userPhone = loginInfo.getData().getRegisterDriver().getFmobile();
                     MyApplication.checkStatus = loginInfo.getData().getRegisterDriver().getCheckStatus();
+                    MyApplication.fcontract = loginInfo.getData().getRegisterDriver().getFcontract();
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.userOrderNum = loginInfo.getData().getOrderno();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();

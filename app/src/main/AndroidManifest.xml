@@ -35,12 +35,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.userAct.BCardActivity"/>
+        <activity android:name=".activity.userAct.BCardActivity" />
         <activity android:name=".activity.userAct.WithdrawActivity" />
         <activity android:name=".activity.userAct.RechargeActivity" />
         <activity android:name=".activity.userAct.BankCardActivity" />
         <activity android:name=".activity.userAct.MDetailActivity" />
         <activity android:name=".activity.userAct.MoneyActivity" />
+        <activity android:name=".activity.userAct.SignPlatformActivity" />
         <activity android:name=".activity.FirstActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

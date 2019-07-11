@@ -177,6 +177,7 @@ public class FirstActivity extends Activity implements View.OnClickListener {
                     MyApplication.userName = loginInfo.getData().getRegisterDriver().getFname();
                     MyApplication.userPhone = loginInfo.getData().getRegisterDriver().getFmobile();
                     MyApplication.checkStatus = loginInfo.getData().getRegisterDriver().getCheckStatus();
+                    MyApplication.fcontract = loginInfo.getData().getRegisterDriver().getFcontract();
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
                     MyApplication.faccountid = loginInfo.getData().getRegisterDriver().getFaccountid();

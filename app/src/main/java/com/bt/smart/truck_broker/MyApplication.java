@@ -34,6 +34,7 @@ public class MyApplication extends Application {
     public static String faccountid;
     public static String userToken;
     public static String checkStatus;//审核状态
+    public static String fcontract;//平台签署协议
     public static String userHeadPic;//头像
     public static String userName;
     public static BigDecimal money;//余额

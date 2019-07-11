@@ -45,6 +45,11 @@ public class NetConfig {
     public static String DRIVERGDCONTROLLER = ROOT + "driverGdController";
     public static String PERSONAUTH = ROOT + "eSignController/personAuth";
     public static String REGISTERDRIVERCONTROLLER = ROOT + "registerDriverController/{id}";
+    //平台合同内容
+    public static String CONTENT = ROOT + "eSignController/content";
+    //用户与平台签署合同
+    public static String SIGNWITHPLATFORM = ROOT + "eSignController/signWithPlatform";
+
 
     //获取当天货源信息列表
     public static String ALL_ORDER_LIST = ROOT + "orderController/list1";

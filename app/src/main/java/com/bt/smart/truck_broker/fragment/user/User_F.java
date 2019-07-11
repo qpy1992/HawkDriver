@@ -24,9 +24,11 @@ import com.bt.smart.truck_broker.activity.userAct.AllOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AuthenticationActivity;
 import com.bt.smart.truck_broker.activity.userAct.BCardActivity;
 import com.bt.smart.truck_broker.activity.userAct.MoneyActivity;
+import com.bt.smart.truck_broker.activity.userAct.SignPlatformActivity;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
 import com.bt.smart.truck_broker.utils.GlideLoaderUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
+import com.bt.smart.truck_broker.utils.MyTextUtils;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.SpUtils;
 import com.bt.smart.truck_broker.utils.ToastUtils;
@@ -131,8 +133,13 @@ public class User_F extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_submit:
-                //跳转身份认证界面
-                toSubmitPersonInfo();
+                if ("".equals(MyTextUtils.getTvTextContent(tv_submit))) {
+                    //和平台签署协议
+                    signPlatForm();
+                } else {
+                    //跳转身份认证界面
+                    toSubmitPersonInfo();
+                }
                 break;
             case R.id.linear_money:
                 //跳转余额详情页
@@ -187,6 +194,10 @@ public class User_F extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void signPlatForm() {
+        startActivity(new Intent(getContext(), SignPlatformActivity.class));
+    }
+
     private void checkCheckStatues() {
         if ("1".equals(MyApplication.checkStatus)) {
             tv_isCheck.setText("待审核");
@@ -202,7 +213,12 @@ public class User_F extends Fragment implements View.OnClickListener {
             tv_checked.setVisibility(View.VISIBLE);
             tv_isCheck.setVisibility(View.GONE);
             tv_warn.setVisibility(View.GONE);
-            tv_submit.setVisibility(View.GONE);
+            tv_submit.setVisibility(View.VISIBLE);
+            if (null == MyApplication.fcontract || "".equals(MyApplication.fcontract)) {
+                tv_submit.setText("签署协议");
+            } else {
+                tv_submit.setVisibility(View.GONE);
+            }
         } else {
             tv_isCheck.setText("未认证");
             tv_isCheck.setTextColor(getResources().getColor(R.color.red_30));
@@ -237,6 +253,7 @@ public class User_F extends Fragment implements View.OnClickListener {
                     MyApplication.userName = loginInfo.getData().getRegisterDriver().getFname();
                     MyApplication.userPhone = loginInfo.getData().getRegisterDriver().getFmobile();
                     MyApplication.checkStatus = loginInfo.getData().getRegisterDriver().getCheckStatus();
+                    MyApplication.fcontract = loginInfo.getData().getRegisterDriver().getFcontract();
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.userOrderNum = loginInfo.getData().getOrderno();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
