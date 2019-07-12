@@ -27,10 +27,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+
 import okhttp3.Request;
 
 public class SignPlatformActivity extends BaseActivity implements View.OnClickListener {
     private ImageView img_back;
+    private TextView tv_title;
     private TextView tv_plat;
     private TextView tv_useName;
     private WebView web_rule;
@@ -46,6 +48,7 @@ public class SignPlatformActivity extends BaseActivity implements View.OnClickLi
 
     private void setView() {
         img_back = findViewById(R.id.img_back);
+        tv_title = findViewById(R.id.tv_title);
         tv_plat = findViewById(R.id.tv_plat);
         tv_useName = findViewById(R.id.tv_useName);
         web_rule = findViewById(R.id.web_rule);
@@ -56,6 +59,7 @@ public class SignPlatformActivity extends BaseActivity implements View.OnClickLi
         img_back.setVisibility(View.VISIBLE);
         img_back.setOnClickListener(this);
         bt_sign.setOnClickListener(this);
+        tv_title.setText("签署协议");
         tv_useName.setText(MyApplication.userName);
         //获取协议内容
         getRuleContent();

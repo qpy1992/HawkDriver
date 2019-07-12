@@ -18,11 +18,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.activity.userAct.GetDriveCardPhotoActivity;
 import com.bt.smart.truck_broker.activity.userAct.GetFacePhotoActivity;
 import com.bt.smart.truck_broker.utils.EditTextUtils;
 import com.bt.smart.truck_broker.utils.GlideLoaderUtil;
+import com.bt.smart.truck_broker.utils.MyTextUtils;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 
 /**
@@ -35,19 +37,19 @@ import com.bt.smart.truck_broker.utils.ToastUtils;
  */
 
 public class PersonalInfoFragment extends Fragment implements View.OnClickListener {
-    private View      mRootView;
+    private View mRootView;
     private ImageView img_back;
-    private TextView  tv_title;
-    private ImageView img_up_head;
+    private TextView tv_title;
+    //    private ImageView img_up_head;
     private ImageView img_up_card;
-    private EditText  et_name;
-    private EditText  et_code;
-    private TextView  tv_submit;
+    private TextView tv_name;
+    private TextView tv_code;
+    private TextView tv_submit;
     private int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 10087;//照相权限申请码
-    private int REQUEST_FOR_FACE                   = 10086;
-    private int RESULT_FOR_FACE                    = 10088;
-    private int REQUEST_FOR_CARD                   = 10096;
-    private int RESULT_FOR_CARD                    = 10098;
+    private int REQUEST_FOR_FACE = 10086;
+    private int RESULT_FOR_FACE = 10088;
+    private int REQUEST_FOR_CARD = 10096;
+    private int RESULT_FOR_CARD = 10098;
     private String mImageFaceFileUrl;
     private String mImageCardFileUrl;
     private String testFileUrl;
@@ -63,10 +65,10 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
     private void initView() {
         img_back = mRootView.findViewById(R.id.img_back);
         tv_title = mRootView.findViewById(R.id.tv_title);
-        img_up_head = mRootView.findViewById(R.id.img_up_head);
+//        img_up_head = mRootView.findViewById(R.id.img_up_head);
         img_up_card = mRootView.findViewById(R.id.img_up_card);
-        et_name = mRootView.findViewById(R.id.et_name);
-        et_code = mRootView.findViewById(R.id.et_code);
+        tv_name = mRootView.findViewById(R.id.tv_name);
+        tv_code = mRootView.findViewById(R.id.tv_code);
         tv_submit = mRootView.findViewById(R.id.tv_submit);
     }
 
@@ -74,9 +76,11 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
         img_back.setVisibility(View.VISIBLE);
         tv_title.setText("司机身份认证");
         img_back.setOnClickListener(this);
-        img_up_head.setOnClickListener(this);
+//        img_up_head.setOnClickListener(this);
         img_up_card.setOnClickListener(this);
         tv_submit.setOnClickListener(this);
+        tv_name.setText(MyApplication.userName);
+        tv_code.setText(MyApplication.userSFID);
     }
 
     @Override
@@ -85,10 +89,10 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
             case R.id.img_back:
                 getActivity().finish();
                 break;
-            case R.id.img_up_head:
-                //上传人脸头像,人脸活体检测(暂无)
-                toGetFacePic();
-                break;
+//            case R.id.img_up_head:
+//                //上传人脸头像,人脸活体检测(暂无)
+//                toGetFacePic();
+//                break;
             case R.id.img_up_card:
                 //上传驾驶证
                 toPhotoDriveCard();
@@ -105,7 +109,7 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
         super.onActivityResult(requestCode, resultCode, data);
         if (REQUEST_FOR_FACE == requestCode && resultCode == RESULT_FOR_FACE) {
             mImageFaceFileUrl = data.getStringExtra("face_pic_url");
-            GlideLoaderUtil.showImageView(getContext(), mImageFaceFileUrl, img_up_head);
+//            GlideLoaderUtil.showImageView(getContext(), mImageFaceFileUrl, img_up_head);
         }
         if (REQUEST_FOR_CARD == requestCode && resultCode == RESULT_FOR_CARD) {
             mImageCardFileUrl = data.getStringExtra("card_pic_url");
@@ -126,31 +130,29 @@ public class PersonalInfoFragment extends Fragment implements View.OnClickListen
     }
 
     private void toWriteCarInfo() {
-        //        //测试提交图片
-        //        testUpPic();
-        if (null == mImageFaceFileUrl || "".equals(mImageFaceFileUrl)) {
-            ToastUtils.showToast(getContext(), "未拍摄人脸");
-            return;
-        }
+//        if (null == mImageFaceFileUrl || "".equals(mImageFaceFileUrl)) {
+//            ToastUtils.showToast(getContext(), "未拍摄人脸");
+//            return;
+//        }
         if (null == mImageCardFileUrl || "".equals(mImageCardFileUrl)) {
             ToastUtils.showToast(getContext(), "未拍摄驾驶证");
             return;
         }
-        if (EditTextUtils.isEmpty(et_name, "姓名必须和身份证上相同")) {
-            ToastUtils.showToast(getContext(), "姓名不能为空");
-            return;
-        }
+//        if (MyTextUtils.isTvTextEmpty(tv_name, "--")) {
+//            ToastUtils.showToast(getContext(), "姓名不能为空");
+//            return;
+//        }
 
-        if (EditTextUtils.isEmpty(et_code, "请输入身份证号")) {
-            ToastUtils.showToast(getContext(), "身份证号不能为空");
-            return;
-        }
-        if (18 != EditTextUtils.getContent(et_code).length()) {
-            ToastUtils.showToast(getContext(), "身份证号长度不正确");
-            return;
-        }
+//        if (EditTextUtils.isEmpty(et_code, "请输入身份证号")) {
+//            ToastUtils.showToast(getContext(), "身份证号不能为空");
+//            return;
+//        }
+//        if (18 != EditTextUtils.getContent(et_code).length()) {
+//            ToastUtils.showToast(getContext(), "身份证号长度不正确");
+//            return;
+//        }
         PersonalCarInfoFragment personalCarFt = new PersonalCarInfoFragment();
-        personalCarFt.setSomeInfo(mImageFaceFileUrl, mImageCardFileUrl, EditTextUtils.getContent(et_name), EditTextUtils.getContent(et_code));
+        personalCarFt.setSomeInfo(mImageCardFileUrl, MyTextUtils.getTvTextContent(tv_name), MyTextUtils.getTvTextContent(tv_code));
         FragmentTransaction ftt = getFragmentManager().beginTransaction();
         ftt.add(R.id.frame, personalCarFt, "personalCarFt");
         ftt.addToBackStack("personalCarFt");

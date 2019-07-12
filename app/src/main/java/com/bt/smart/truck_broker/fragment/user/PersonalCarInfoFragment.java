@@ -48,26 +48,24 @@ import okhttp3.Request;
  */
 
 public class PersonalCarInfoFragment extends Fragment implements View.OnClickListener {
-    private View           mRootView;
-    private TextView       tv_title;
-    private ImageView      img_back;
-    private ImageView      img_up_card;
-    private EditText       et_name;
+    private View mRootView;
+    private TextView tv_title;
+    private ImageView img_back;
+    private ImageView img_up_card;
+    private EditText et_name;
     private RelativeLayout rlt_carModel;
     private RelativeLayout rlt_carLength;
-    private TextView       tv_carmodel;
-    private TextView       tv_carlength;
-    private TextView       tv_submit;
-    private String         carno;//车牌号
-    private String         headUrl;//头像照地址
-    private String         driverUrl;//驾驶证地址
-    private String         mImageDrivingCardFileUrl;//行驶证地址
-    private String         personalNo;//身份证号
-    private String         userName;//姓名
+    private TextView tv_carmodel;
+    private TextView tv_carlength;
+    private TextView tv_submit;
+    private String carno;//车牌号
+    private String driverUrl;//驾驶证地址
+    private String mImageDrivingCardFileUrl;//行驶证地址
+    private String personalNo;//身份证号
+    private String userName;//姓名
     private int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 10087;//照相权限申请码
-    private int REQUEST_FOR_DRIVING_CARD           = 10106;
-    private int RESULT_FOR_DRIVING_CARD            = 10108;
-    private String getHeadUrl;//头像网络地址
+    private int REQUEST_FOR_DRIVING_CARD = 10106;
+    private int RESULT_FOR_DRIVING_CARD = 10108;
     private String getDriverUrl;//驾驶证网络地址
     private String getDrivingUrl;//行驶证网络地址
 
@@ -177,15 +175,13 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
 
     private void sendPicList() {
         ProgressDialogUtil.startShow(getContext(), "正在上传...");
-        UpDataPic(headUrl, 1);
-        UpDataPic(driverUrl, 2);
-        UpDataPic(mImageDrivingCardFileUrl, 3);
+        UpDataPic(driverUrl, 1);
+        UpDataPic(mImageDrivingCardFileUrl, 2);
     }
 
     private int times;
 
-    public void setSomeInfo(String img_headUrl, String img_driverUrl, String user_name, String personNo) {
-        headUrl = img_headUrl;
+    public void setSomeInfo(String img_driverUrl, String user_name, String personNo) {
         driverUrl = img_driverUrl;
         userName = user_name;
         personalNo = personNo;
@@ -200,20 +196,17 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
         RequestParamsFM headParam = new RequestParamsFM();
         headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
         RequestParamsFM params = new RequestParamsFM();
-        params.put("folder","Auth");
-        params.put("kind",kind);
-        params.put("type",1);
+        params.put("folder", "Auth");
+        params.put("kind", kind);
+        params.put("type", 1);
         HttpOkhUtils.getInstance().upDateFile(NetConfig.PHOTO, headParam, params, "file", file, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
                 ProgressDialogUtil.hideDialog();
                 if (1 == kind) {
                     times++;
-                    ToastUtils.showToast(getContext(), "头像上传失败");
-                } else if (2 == kind) {
-                    times++;
                     ToastUtils.showToast(getContext(), "驾驶证上传失败");
-                } else if (3 == kind) {
+                } else if (2 == kind) {
                     times++;
                     ToastUtils.showToast(getContext(), "行驶证上传失败");
                 }
@@ -231,19 +224,15 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
                 ToastUtils.showToast(getContext(), upPicInfo.getMessage());
                 if (upPicInfo.isOk()) {
                     if (1 == kind) {
-                        getHeadUrl = upPicInfo.getData();
-                        times++;
-                        ToastUtils.showToast(getContext(), "头像上传成功");
-                    } else if (2 == kind) {
                         getDriverUrl = upPicInfo.getData();
                         times++;
                         ToastUtils.showToast(getContext(), "驾驶证上传成功");
-                    } else if (3 == kind) {
+                    } else if (2 == kind) {
                         getDrivingUrl = upPicInfo.getData();
                         times++;
                         ToastUtils.showToast(getContext(), "行驶证上传成功");
                     }
-                    if (times == 3) {
+                    if (times == 2) {
                         //提交信息
                         sendDriverInfo();
                     }
@@ -261,7 +250,7 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
         params.put("submitMobile", MyApplication.userPhone);
         params.put("name", userName);//姓名
         params.put("idnumber", personalNo);//身份证号
-        params.put("headpic", getHeadUrl);//头像
+        params.put("headpic", MyApplication.userHeadPic);//头像
         params.put("drivingLicence", getDriverUrl);//驾驶证
         params.put("vehicleLicence", getDrivingUrl);//行驶证
         params.put("fcartype", carModel);//车型
@@ -293,7 +282,7 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
         });
     }
 
-    private String carLeng  = "";
+    private String carLeng = "";
     private String carModel = "";
 
     public void setChioceTerm(List<ChioceAdapterContentInfo> lengthData, List<ChioceAdapterContentInfo> modelData) {

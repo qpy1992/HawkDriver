@@ -37,10 +37,12 @@ public class MyApplication extends Application {
     public static String fcontract;//平台签署协议
     public static String userHeadPic;//头像
     public static String userName;
+    public static String userSFID;//身份证
     public static BigDecimal money;//余额
     public static int userOrderNum;//运单数
     public static boolean needLocationService;//是否需要定位服务
     public static int markExamine = 2;
+    public static boolean checkFace;
 
     @Override
     public void onCreate() {

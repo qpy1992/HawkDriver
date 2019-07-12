@@ -106,6 +106,7 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
         img_up_cardZ.setOnClickListener(this);
         img_up_cardB.setOnClickListener(this);
         tv_submit.setOnClickListener(this);
+        MyApplication.checkFace = false;
     }
 
     @Override
@@ -131,6 +132,19 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
                 //然后提交信息
                 checkWriteInfo();
                 break;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MyApplication.checkFace) {
+            //认证通过
+            //提交个人资料
+            FragmentTransaction ftt = getFragmentManager().beginTransaction();
+            personalFt = new PersonalInfoFragment();
+            ftt.add(R.id.frame, personalFt, "personalFt");
+            ftt.commit();
         }
     }
 

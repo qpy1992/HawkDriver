@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bt.smart.truck_broker.BaseActivity;
+import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.util.checkFaceFile.WBH5FaceVerifySDK;
 
@@ -33,7 +34,6 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
     private ImageView img_back;
     private TextView tv_title;
     private WebView web_show;
-    private String webUri;
     private int RESULT_AUTHENTICA_CODE = 10111;
 
     @Override
@@ -67,7 +67,6 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
     }
 
     private void initWebView() {
-        webUri = getIntent().getStringExtra("url");
         web_show.setWebViewClient(new H5FaceWebViewClient());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -79,59 +78,6 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
         // 腾讯云刷脸兼容性插件
         WBH5FaceVerifySDK.getInstance().setWebViewSettings(web_show, getApplicationContext());
         processExtraData();
-
-
-//        //启用支持javascript
-//        WebSettings settings = web_show.getSettings();
-//        settings.setJavaScriptEnabled(true);
-//        settings.setDomStorageEnabled(true);//打开本地缓存提供JS调用,至关重要
-//        settings.setAllowFileAccess(true);
-//        // 设置允许JS弹窗
-//        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-//        //设置webview的uri
-//        webUri = getIntent().getStringExtra("uri");
-//        if (null != webUri && !"".equals(webUri)) {
-//            web_show.loadUrl(webUri);
-//        } else {
-//            Uri uri = getIntent().getData();
-//            if (uri != null) {
-//                String realNameUrl = uri.getQueryParameter("realnameUrl");
-//                if (!TextUtils.isEmpty(realNameUrl)) {
-//                    try {
-//                        web_show.loadUrl(URLDecoder.decode(realNameUrl, "utf-8"));
-//                    } catch (UnsupportedEncodingException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }
-//        web_show.canGoBack();
-//        web_show.setWebViewClient(new WebViewClient() {
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                Uri uri = Uri.parse(url);
-//                if (uri.toString().contains("alipay")) {
-//                    try {
-//                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-//                        startActivity(intent);
-//                        return true;
-//                    } catch (Exception e) {
-//                        return false;
-//                    }
-//                }
-//                if (uri.getScheme().equals("js")) {
-//                    if (uri.getAuthority().equals("tsignRealBack")) {
-//                        // 实名认证结束 返回按钮/倒计时返回/暂不认证
-//                        Toast.makeText(AuthenticationWebAct.this, "实名认证结束", Toast.LENGTH_SHORT).show();
-//                        finish();
-//                    }
-//                }
-//                return super.shouldOverrideUrlLoading(view, url);
-//            }
-//        });
-//        // 腾讯云刷脸兼容性插件
-//        WBH5FaceVerifySDK.getInstance().setWebViewSettings(web_show, getApplicationContext());
-//        processExtraData();
     }
 
     @Override
@@ -183,8 +129,11 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
                     String serviceId = uri.getQueryParameter("serviceId");
                     boolean status = uri.getBooleanQueryParameter("status", false);
                     Toast.makeText(AuthenticationWebAct.this, "实名认证结束 serviceId = " + serviceId + " status = " + status, Toast.LENGTH_LONG).show();
-                    setResult(RESULT_AUTHENTICA_CODE);
-                    finish();
+                    if (status){
+                        MyApplication.checkFace = true;
+                        setResult(RESULT_AUTHENTICA_CODE);
+                        finish();
+                    }
                 }
 
                 return true;

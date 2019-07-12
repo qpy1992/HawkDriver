@@ -251,6 +251,7 @@ public class User_F extends Fragment implements View.OnClickListener {
                     MyApplication.userToken = loginInfo.getData().getToken();
                     MyApplication.userID = loginInfo.getData().getRegisterDriver().getId();
                     MyApplication.userName = loginInfo.getData().getRegisterDriver().getFname();
+                    MyApplication.userSFID = loginInfo.getData().getRegisterDriver().getIdNumber();
                     MyApplication.userPhone = loginInfo.getData().getRegisterDriver().getFmobile();
                     MyApplication.checkStatus = loginInfo.getData().getRegisterDriver().getCheckStatus();
                     MyApplication.fcontract = loginInfo.getData().getRegisterDriver().getFcontract();
