@@ -155,6 +155,8 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
         if (REQUEST_AUTHENTICA_CODE == requestCode && RESULT_AUTHENTICA_CODE == resultCode) {
             //认证通过
             //提交个人资料
+            MyApplication.userName = MyTextUtils.getEditTextContent(et_name);
+            MyApplication.userSFID = MyTextUtils.getEditTextContent(et_code);
             FragmentTransaction ftt = getFragmentManager().beginTransaction();
             personalFt = new PersonalInfoFragment();
             ftt.add(R.id.frame, personalFt, "personalFt");

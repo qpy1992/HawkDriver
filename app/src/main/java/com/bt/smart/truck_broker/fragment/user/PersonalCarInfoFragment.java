@@ -30,6 +30,7 @@ import com.bt.smart.truck_broker.utils.MyFragmentManagerUtil;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.ToastUtils;
+import com.bt.smart.truck_broker.utils.TransInformation;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -83,6 +84,7 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
         tv_title = mRootView.findViewById(R.id.tv_title);
         img_up_card = mRootView.findViewById(R.id.img_up_card);
         et_name = mRootView.findViewById(R.id.et_name);
+        et_name.setTransformationMethod(new TransInformation());
         rlt_carModel = mRootView.findViewById(R.id.rlt_carModel);
         tv_carmodel = mRootView.findViewById(R.id.tv_carmodel);
         rlt_carLength = mRootView.findViewById(R.id.rlt_carLength);
@@ -163,7 +165,7 @@ public class PersonalCarInfoFragment extends Fragment implements View.OnClickLis
     }
 
     private void submitDriveInfo() {
-        carno = String.valueOf(et_name.getText()).trim();
+        carno = String.valueOf(et_name.getText()).trim().toUpperCase();
         if ("".equals(carno) || "请输入车牌号".equals(carno)) {
             ToastUtils.showToast(getContext(), "车牌号不能为空");
             return;
