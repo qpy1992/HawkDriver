@@ -44,13 +44,16 @@ import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.activity.OpenLockActivity;
 import com.bt.smart.truck_broker.activity.SaomiaoUIActivity;
+import com.bt.smart.truck_broker.activity.XieyiActivity;
 import com.bt.smart.truck_broker.activity.samedayAct.ShowMapActivity;
 import com.bt.smart.truck_broker.activity.userAct.GetFacePhotoActivity;
+import com.bt.smart.truck_broker.activity.userAct.RechargeActivity;
 import com.bt.smart.truck_broker.messageInfo.BlueMacInfo;
 import com.bt.smart.truck_broker.messageInfo.ForTXAIFaceInfo;
 import com.bt.smart.truck_broker.messageInfo.OrderDetailInfo;
 import com.bt.smart.truck_broker.messageInfo.TakeOrderResultInfo;
 import com.bt.smart.truck_broker.messageInfo.UpPicInfo;
+import com.bt.smart.truck_broker.messageInfo.WXOrderResultInfo;
 import com.bt.smart.truck_broker.servicefile.SendLocationService;
 import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.EditTextUtils;
@@ -64,6 +67,9 @@ import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.ShowCallUtil;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.google.gson.Gson;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -92,10 +98,10 @@ import okhttp3.Request;
 
 public class OrderDetailFragment extends Fragment implements View.OnClickListener {
     private View mRootView;
-    private ImageView img_back, img_empty, iv_l1, iv_l2, iv_l3, iv_load, iv_r1, iv_rece;
+    private ImageView img_back, img_empty, iv_l1, iv_l2, iv_l3, iv_load, iv_r1, iv_rece, ysxy;
     private LinearLayout ll_load, ll_rece;
     private RelativeLayout rlt_tomap;
-    private TextView tv_title, tv_place, tv_goodsname, tv_carType, tv_name, tv_fhPlace, tv_phone, tv_cont, tv_take, tv_inter;
+    private TextView tv_title, tv_place, tv_goodsname, tv_carType, tv_name, tv_fhPlace, tv_phone, tv_cont, tv_take, tv_inter, tv_company;
     private String orderID;//订单id
     private String mOrder_no;//订单号
     //    private TextView        tv_local;//开始定位按钮
@@ -131,11 +137,13 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private void initView() {
         img_back = mRootView.findViewById(R.id.img_back);
         img_empty = mRootView.findViewById(R.id.img_empty);
+        ysxy = mRootView.findViewById(R.id.ysxy);
         tv_title = mRootView.findViewById(R.id.tv_title);
         tv_place = mRootView.findViewById(R.id.tv_place);
         rlt_tomap = mRootView.findViewById(R.id.rlt_tomap);
         tv_goodsname = mRootView.findViewById(R.id.tv_goodsname);
         tv_carType = mRootView.findViewById(R.id.tv_carType);
+        tv_company = mRootView.findViewById(R.id.tv_company);
         tv_name = mRootView.findViewById(R.id.tv_name);
         tv_fhPlace = mRootView.findViewById(R.id.tv_fhPlace);
         tv_phone = mRootView.findViewById(R.id.tv_phone);
@@ -160,6 +168,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         //获取货源详情
         getOrderDetail();
         img_back.setOnClickListener(this);
+        ysxy.setOnClickListener(this);
         rlt_tomap.setOnClickListener(this);
         tv_cont.setOnClickListener(this);
         tv_take.setOnClickListener(this);
@@ -178,7 +187,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         orderType = getActivity().getIntent().getIntExtra("orderType", -1);
         if (0 == orderType || 1 == orderType) {
             tv_take.setVisibility(View.GONE);
-        } else if (3 == orderType || 4 == orderType || 5 == orderType || 6 == orderType) {
+        }else if(3 == orderType){
+            tv_take.setText("支付押金");
+        }else if (4 == orderType || 5 == orderType || 6 == orderType) {
             tv_take.setText("开锁");
         } else if (2 == orderType) {
             tv_take.setText("签署");
@@ -212,6 +223,11 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             case R.id.img_back:
                 MyFragmentManagerUtil.closeFragmentOnAct(this);
                 break;
+            case R.id.ysxy:
+                Intent xieyi = new Intent(getContext(), XieyiActivity.class);
+                xieyi.putExtra("path",orderDetailInfo.getData().getPdf());
+                getActivity().startActivity(xieyi);
+                break;
             case R.id.rlt_tomap://跳转地图
                 Intent mapIntent = new Intent(getActivity(), ShowMapActivity.class);
                 mapIntent.putExtra("orderLng", orderLng);
@@ -229,6 +245,8 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 } else if ("签署".equals(cont)) {
                     //司机签署协议
                     signOrder();
+                } else if ("支付押金".equals(cont)){
+                    payYj();
                 } else {
                     //弹出自定义的dailog让司机填写报价
                     show2WriteMoney();
@@ -680,6 +698,11 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     tv_goodsname.setText(orderDetailInfo.getData().getGoodsname() + " " + orderDetailInfo.getData().getCartype() + " " + orderDetailInfo.getData().getSh_address());
                     tv_carType.setText(orderDetailInfo.getData().getFh_address());
                     tv_name.setText(orderDetailInfo.getData().getFh_name());
+                    if(orderDetailInfo.getData().getCompanyname()==null){
+                        tv_company.setVisibility(View.GONE);
+                    }else{
+                        tv_company.setText(orderDetailInfo.getData().getCompanyname());
+                    }
                     tv_fhPlace.setText(orderDetailInfo.getData().getFh_address());
                     tv_phone.setText(orderDetailInfo.getData().getFh_telephone());
                     tv_inter.setText(orderDetailInfo.getData().getTime_interval());
@@ -906,6 +929,69 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         return file;
     }
 
+    private void payYj(){
+        RequestParamsFM headParams = new RequestParamsFM();
+        headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        params.put("userid", MyApplication.userID);
+        params.put("ip", "205.168.1.102");
+        params.put("fee", "0.01");
+        params.put("attach", "DDYJ"+orderID);
+        params.setUseJsonStreamer(true);
+        HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.WX, headParams, params, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                ToastUtils.showToast(getContext(), "下单失败");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                if (code != 200) {
+                    ToastUtils.showToast(getContext(), "下单失败");
+                    return;
+                }
+                Log.i("WXRESBODY", resbody);
+                Gson gson = new Gson();
+                WXOrderResultInfo orderResInfo = gson.fromJson(resbody, WXOrderResultInfo.class);
+                String return_code = orderResInfo.getReturn_code();
+                String return_msg = orderResInfo.getReturn_msg();
+                if (return_code.equals("SUCCESS")) {
+                    String appId = orderResInfo.getAppId();
+                    String partnerId = orderResInfo.getPartnerId();
+                    String prepayId = orderResInfo.getPrepayId();
+                    String nonceStr = orderResInfo.getNonceStr();
+                    int timeStamp = orderResInfo.getTimeStamp();
+                    String sign = orderResInfo.getSign();
+                    toWXPay(appId, partnerId, prepayId, nonceStr, timeStamp, sign);
+                }
+//                            ToastUtils.showToast(RechargeActivity.this, return_msg);
+            }
+        });
+    }
+
+    private IWXAPI iwxapi; //微信支付api
+
+    private void toWXPay(final String appId, final String partnerId, final String prepayId, final String nonceStr, final int timeStamp, final String sign) {
+        iwxapi = WXAPIFactory.createWXAPI(getContext(), appId); //初始化微信api
+        iwxapi.registerApp(appId); //注册appid  appid可以在开发平台获取
+        Runnable payRunnable = new Runnable() {  //这里注意要放在子线程
+            @Override
+            public void run() {
+                PayReq request = new PayReq(); //调起微信APP的对象
+                //下面是设置必要的参数，也就是前面说的参数,这几个参数从何而来请看上面说明
+                request.appId = appId;
+                request.partnerId = partnerId;//微信支付分配的商户号
+                request.prepayId = prepayId;//微信返回的支付 交易会话ID
+                request.packageValue = "Sign=WXPay";
+                request.nonceStr = nonceStr;//随机字符串，不长于32位。
+                request.timeStamp = String.valueOf(timeStamp);//时间戳
+                request.sign = sign;//签名
+                iwxapi.sendReq(request);//发送调起微信的请求
+            }
+        };
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
+    }
 
     public void recycleBitmap(Bitmap... bitmaps) {
         if (bitmaps == null) {

@@ -4,8 +4,7 @@
     package="com.bt.smart.truck_broker">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!--允许程序设置内置sd卡的写权限-->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 允许程序设置内置sd卡的写权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
@@ -15,18 +14,14 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- 浮动通知权限 -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <!--//地图包、搜索包需要的基础权限-->
-    <!--允许程序获取网络状态-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--允许程序访问WiFi网络信息-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--允许程序读写手机状态和身份-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 浮动通知权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- //地图包、搜索包需要的基础权限 -->
+    <!-- 允许程序获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许程序读写手机状态和身份 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -35,6 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activity.XieyiActivity"></activity>
         <activity android:name=".activity.userAct.BCardActivity" />
         <activity android:name=".activity.userAct.WithdrawActivity" />
         <activity android:name=".activity.userAct.RechargeActivity" />
@@ -51,11 +47,11 @@
         </activity>
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".MainActivity" />
-        <!--人脸认证-->
+        <activity android:name=".MainActivity" /> <!-- 人脸认证 -->
         <meta-data
             android:name="android.webkit.WebView.EnableSafeBrowsing"
             android:value="true" />
+
         <activity
             android:name=".activity.homeAct.AuthenticationWebAct"
             android:launchMode="standard"
@@ -90,20 +86,15 @@
         <activity android:name=".activity.OpenLockActivity" />
         <activity android:name=".activity.SaomiaoUIActivity" />
 
-        <service android:name=".servicefile.SendLocationService" />
-        <!--个推服务-->
+        <service android:name=".servicefile.SendLocationService" /> <!-- 个推服务 -->
         <service
             android:name=".servicefile.GeTuiPushService"
             android:exported="true"
             android:label="PushService"
             android:process=":pushservice" />
-
         <service
             android:name=".servicefile.GeTuiIntentService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-
-        <!--微信支付activity-->
+            android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- 微信支付activity -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
@@ -125,8 +116,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
-        </provider>
-        <!--高德地图-->
+        </provider> <!-- 高德地图 -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="d3eb4fb17bb70acb7cce8d360dc0ea5d" />

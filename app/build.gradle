@@ -25,9 +25,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [
-                GETUI_APP_ID : "o3MfVIJTs07zbJuUuT03zA",
-                GETUI_APP_KEY : "uJlYudiRLe7SwjzwJDODE4",
-                GETUI_APP_SECRET : "JiY5a5IE6r5jPlkffgdWr8"
+                GETUI_APP_ID    : "o3MfVIJTs07zbJuUuT03zA",
+                GETUI_APP_KEY   : "uJlYudiRLe7SwjzwJDODE4",
+                GETUI_APP_SECRET: "JiY5a5IE6r5jPlkffgdWr8"
         ]
         ndk {
             //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）

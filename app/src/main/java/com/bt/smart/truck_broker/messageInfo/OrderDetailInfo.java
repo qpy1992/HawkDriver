@@ -149,6 +149,7 @@ public class OrderDetailInfo {
         private String               goodsname;
         private String               cartype;
         private String               companyname;
+        private String               pdf;
         private List<OrdergoodsBean> ordergoods;
         /**
          * lng : 116.307806
@@ -525,6 +526,14 @@ public class OrderDetailInfo {
 
         public void setLat(double lat) {
             this.lat = lat;
+        }
+
+        public String getPdf() {
+            return pdf;
+        }
+
+        public void setPdf(String pdf) {
+            this.pdf = pdf;
         }
 
         public static class ZhTimeBean {

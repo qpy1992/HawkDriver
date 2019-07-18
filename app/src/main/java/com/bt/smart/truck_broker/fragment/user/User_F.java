@@ -19,6 +19,7 @@ import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.activity.LoginActivity;
+import com.bt.smart.truck_broker.activity.XieyiActivity;
 import com.bt.smart.truck_broker.activity.userAct.AcceptOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AllOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AuthenticationActivity;
@@ -65,6 +66,7 @@ public class User_F extends Fragment implements View.OnClickListener {
     private RelativeLayout rtv_address;
     private RelativeLayout rtv_phone;
     private RelativeLayout rtv_serv;
+    private RelativeLayout rtv_xieyi;
     private RelativeLayout rtv_about;
     private RelativeLayout rtv_exit;//退出登录
     private RelativeLayout rlt_allOrder;//更多订单
@@ -95,11 +97,12 @@ public class User_F extends Fragment implements View.OnClickListener {
         rtv_address = mRootView.findViewById(R.id.rtv_address);
         rtv_phone = mRootView.findViewById(R.id.rtv_phone);
         rtv_serv = mRootView.findViewById(R.id.rtv_serv);
+        rtv_xieyi = mRootView.findViewById(R.id.rtv_xieyi);
         rtv_about = mRootView.findViewById(R.id.rtv_about);
         rtv_exit = mRootView.findViewById(R.id.rtv_exit);
         rlt_allOrder = mRootView.findViewById(R.id.rlt_allOrder);
         tv_orderNum.setText(MyApplication.userOrderNum + "单");
-        tv_money.setText(MyApplication.money + "元");
+        tv_money.setText(MyApplication.fcardno + "张");
     }
 
     private void initData() {
@@ -115,6 +118,7 @@ public class User_F extends Fragment implements View.OnClickListener {
         rtv_address.setOnClickListener(this);
         rtv_phone.setOnClickListener(this);
         rtv_serv.setOnClickListener(this);
+        rtv_xieyi.setOnClickListener(this);
         rtv_about.setOnClickListener(this);
         rtv_exit.setOnClickListener(this);
         rlt_allOrder.setOnClickListener(this);
@@ -133,7 +137,7 @@ public class User_F extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_submit:
-                if ("".equals(MyTextUtils.getTvTextContent(tv_submit))) {
+                if ("签署协议".equals(MyTextUtils.getTvTextContent(tv_submit))) {
                     //和平台签署协议
                     signPlatForm();
                 } else {
@@ -161,6 +165,9 @@ public class User_F extends Fragment implements View.OnClickListener {
             case R.id.rtv_serv:
                 //电话联系客服
                 contactService();
+                break;
+            case R.id.rtv_xieyi:
+                preview();
                 break;
             case R.id.rtv_about:
                 //关于我们
@@ -259,6 +266,7 @@ public class User_F extends Fragment implements View.OnClickListener {
                     MyApplication.userOrderNum = loginInfo.getData().getOrderno();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
                     MyApplication.faccountid = loginInfo.getData().getRegisterDriver().getFaccountid();
+                    MyApplication.fcardno = loginInfo.getData().getRegisterDriver().getFcardno();
                     //更改界面UI
                     changeUFUI();
                 }
@@ -276,7 +284,7 @@ public class User_F extends Fragment implements View.OnClickListener {
         }
         GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + MyApplication.userHeadPic, R.drawable.iman, R.drawable.iman, img_head);
         tv_orderNum.setText(MyApplication.userOrderNum + "单");
-        tv_money.setText(MyApplication.money + "元");
+        tv_money.setText(MyApplication.fcardno + "张");
     }
 
     private void exitLogin() {
@@ -321,5 +329,15 @@ public class User_F extends Fragment implements View.OnClickListener {
 
     private void aboutUs() {
 
+    }
+
+    private void preview(){
+        if(MyApplication.fcontract==null){
+            signPlatForm();
+        }else {
+            Intent xieyi = new Intent(getContext(), XieyiActivity.class);
+            xieyi.putExtra("path",MyApplication.fcontract);
+            startActivity(xieyi);
+        }
     }
 }

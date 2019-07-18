@@ -122,6 +122,7 @@ public class BCardActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onSuccess(int code, String resbody) {
+                swiperefresh.setRefreshing(false);
                 if (code != 200) {
                     ToastUtils.showToast(BCardActivity.this, "网络错误" + code);
                     return;

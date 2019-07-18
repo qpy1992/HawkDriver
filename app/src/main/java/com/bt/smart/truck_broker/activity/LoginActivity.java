@@ -277,6 +277,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     MyApplication.userOrderNum = loginInfo.getData().getOrderno();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
                     MyApplication.faccountid = loginInfo.getData().getRegisterDriver().getFaccountid();
+                    MyApplication.fcardno = loginInfo.getData().getRegisterDriver().getFcardno();
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 }

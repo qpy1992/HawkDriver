@@ -38,6 +38,7 @@ public class MyApplication extends Application {
     public static String userHeadPic;//头像
     public static String userName;
     public static String userSFID;//身份证
+    public static int fcardno;//银行卡张数
     public static BigDecimal money;//余额
     public static int userOrderNum;//运单数
     public static boolean needLocationService;//是否需要定位服务

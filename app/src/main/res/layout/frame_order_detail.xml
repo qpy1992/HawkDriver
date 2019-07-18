@@ -177,6 +177,7 @@
                         android:src="@drawable/iman"/>
 
                     <LinearLayout
+                        android:id="@+id/ll_xinxi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -219,6 +220,15 @@
                             android:textColor="@color/word_gray"
                             android:textSize="14sp"/>
                     </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ysxy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ysxy"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="100dp"
+                            android:layout_toRightOf="@id/ll_xinxi"/>
                 </RelativeLayout>
 
                 <LinearLayout
