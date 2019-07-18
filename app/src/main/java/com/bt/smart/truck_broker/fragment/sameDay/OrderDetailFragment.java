@@ -937,6 +937,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         params.put("ip", "205.168.1.102");
         params.put("fee", "0.01");
         params.put("attach", "DDYJ"+orderID);
+        params.put("orderno", orderDetailInfo.getData().getOrder_no());
         params.setUseJsonStreamer(true);
         HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.WX, headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override
