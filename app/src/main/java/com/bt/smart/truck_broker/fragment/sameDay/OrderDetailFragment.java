@@ -194,10 +194,10 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         } else if (2 == orderType) {
             tv_take.setText("签署");
         }
-        if (3 == orderType || 4 == orderType || 5 == orderType || 6 == orderType) {
+        if (4 == orderType || 5 == orderType || 6 == orderType) {
             ll_load.setVisibility(View.VISIBLE);
         }
-        if (5 == orderType || 6 == orderType || 8 == orderType || 9 == orderType) {
+        if (4 == orderType || 5 == orderType || 6 == orderType || 8 == orderType || 9 == orderType) {
             ll_rece.setVisibility(View.VISIBLE);
         }
         if (0 == orderType || 1 == orderType || 2 == orderType) {
