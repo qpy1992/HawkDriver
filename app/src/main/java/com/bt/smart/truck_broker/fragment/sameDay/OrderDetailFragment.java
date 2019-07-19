@@ -185,7 +185,10 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         //            tv_take.setVisibility(View.GONE);
         //        }
         orderType = getActivity().getIntent().getIntExtra("orderType", -1);
-        if (0 == orderType || 1 == orderType) {
+        if ( 9 == orderType){
+            tv_cont.setVisibility(View.GONE);
+        }
+        if (0 == orderType || 1 == orderType || 6 == orderType || 7 == orderType || 8 == orderType || 9 == orderType) {
             tv_take.setVisibility(View.GONE);
         }else if(3 == orderType){
             tv_take.setText("支付押金");
@@ -203,6 +206,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         if (0 == orderType || 1 == orderType || 2 == orderType) {
             iv_load.setVisibility(View.GONE);
             iv_rece.setVisibility(View.GONE);
+            ysxy.setVisibility(View.GONE);
         }
         //初始化定时刷新器
         initHandlerPost();

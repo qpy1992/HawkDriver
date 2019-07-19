@@ -135,13 +135,13 @@ public class MyOrders_F extends Fragment {
         orderListFgt6.setType(6);
         fragmentsList.add(orderListFgt6);
         OrderListFragment orderListFgt7 = new OrderListFragment();
-        orderListFgt6.setType(7);
+        orderListFgt7.setType(7);
         fragmentsList.add(orderListFgt7);
         OrderListFragment orderListFgt8 = new OrderListFragment();
-        orderListFgt6.setType(8);
+        orderListFgt8.setType(8);
         fragmentsList.add(orderListFgt8);
         OrderListFragment orderListFgt9 = new OrderListFragment();
-        orderListFgt6.setType(9);
+        orderListFgt9.setType(9);
         fragmentsList.add(orderListFgt9);
         // 创建ViewPager适配器
         myPagerAdapter = new MyPagerAdapter(getFragmentManager());//getChildFragmentManager()
