@@ -53,7 +53,8 @@
                     android:singleLine="true"
                     android:text="南通 如皋 → 南通 海门"
                     android:textColor="@color/word_black"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/tv_interval"

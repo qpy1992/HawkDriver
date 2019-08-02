@@ -40,7 +40,7 @@ public class RecyOrderAdapter extends BaseQuickAdapter<AllOrderListInfo.PageList
     @Override
     protected void convert(BaseViewHolder helper, final AllOrderListInfo.PageListBean item) {
         //        (ImageView) helper.getView(R.id.img_call)
-        helper.setText(R.id.tv_place, item.getFh() + "  →  " + item.getSh());
+        helper.setText(R.id.tv_place, item.getFh().replaceAll("市"," ").replaceAll("区"," ") + "  →  " + item.getSh().replaceAll("市"," ").replaceAll("区"," "));
         helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getCar_type()+"|"+item.getCar_length());
         helper.setText(R.id.tv_loadtime, "装货时间：" + item.getZh_time().substring(0,10)+item.getZhperiod().substring(0,2));
         helper.setText(R.id.tv_xhtime, "卸货时间：" + item.getXh_time().substring(0,10)+item.getXhperiod().substring(0,2));

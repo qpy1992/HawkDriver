@@ -191,9 +191,6 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         //解决数据加载完成后, 没有停留在顶部的问题
         rec_order.setFocusable(false);
         rec_order.setNestedScrollingEnabled(false);
-        for(AllOrderListInfo.PageListBean bean:mData){
-            bean.setHeadpic_bit(CommonUtil.getBitmap(NetConfig.IMG_HEAD+bean.getFheadpic()));
-        }
         orderAdapter = new RecyOrderAdapter(R.layout.adpter_sameday_order, getContext(), mData);
         rec_order.setAdapter(orderAdapter);
         orderAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
