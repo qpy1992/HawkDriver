@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/linear_item"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/white"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linear_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
@@ -16,12 +17,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
+        <android.support.v7.widget.CardView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="8dp"
+            app:cardCornerRadius="25dp">
+        <ImageView
+            android:id="@+id/iv_man"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             android:src="@drawable/iman"/>
+        </android.support.v7.widget.CardView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,6 +117,16 @@
                         android:textSize="12sp"/>
 
                     <TextView
+                        android:id="@+id/tv_xhtime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:singleLine="true"
+                        android:text="卸货时间：2019-01-09 12:20"
+                        android:textColor="@color/vm_black_87"
+                        android:textSize="12sp"/>
+
+                    <TextView
                         android:id="@+id/tv_mark"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -182,13 +200,27 @@
 
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/img_call"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="8dp"
-                    android:src="@drawable/icon_phone"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/zhengche"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="3dp"/>
+
+                    <ImageView
+                        android:id="@+id/img_call"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:src="@drawable/icon_phone"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

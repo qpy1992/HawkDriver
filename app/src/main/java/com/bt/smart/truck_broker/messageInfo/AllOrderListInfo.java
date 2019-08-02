@@ -1,5 +1,7 @@
 package com.bt.smart.truck_broker.messageInfo;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 /**
@@ -85,8 +87,10 @@ public class AllOrderListInfo {
         private String id;
         private String fh;
         private String sh;
-        private String faddtime;
         private String zh_time;
+        private String xh_time;
+        private String zhperiod;
+        private String xhperiod;
         private String fnote;
         private String goodsName;
         private String fhName;
@@ -95,6 +99,11 @@ public class AllOrderListInfo {
         private String lat;
         private String lng;
         private String distance;
+        private String is_box;
+        private String fheadpic;
+        private String car_type;
+        private String car_length;
+        private Bitmap headpic_bit;
 
         public String getId() {
             return id;
@@ -120,12 +129,44 @@ public class AllOrderListInfo {
             this.sh = sh;
         }
 
-        public String getFaddtime() {
-            return faddtime;
+        public String getXh_time() {
+            return xh_time;
         }
 
-        public void setFaddtime(String faddtime) {
-            this.faddtime = faddtime;
+        public void setXh_time(String xh_time) {
+            this.xh_time = xh_time;
+        }
+
+        public String getZhperiod() {
+            return zhperiod;
+        }
+
+        public void setZhperiod(String zhperiod) {
+            this.zhperiod = zhperiod;
+        }
+
+        public String getXhperiod() {
+            return xhperiod;
+        }
+
+        public void setXhperiod(String xhperiod) {
+            this.xhperiod = xhperiod;
+        }
+
+        public String getIs_box() {
+            return is_box;
+        }
+
+        public void setIs_box(String is_box) {
+            this.is_box = is_box;
+        }
+
+        public String getFheadpic() {
+            return fheadpic;
+        }
+
+        public void setFheadpic(String fheadpic) {
+            this.fheadpic = fheadpic;
         }
 
         public String getZh_time() {
@@ -198,6 +239,30 @@ public class AllOrderListInfo {
 
         public void setDistance(String distance) {
             this.distance = distance;
+        }
+
+        public String getCar_type() {
+            return car_type;
+        }
+
+        public void setCar_type(String car_type) {
+            this.car_type = car_type;
+        }
+
+        public String getCar_length() {
+            return car_length;
+        }
+
+        public void setCar_length(String car_length) {
+            this.car_length = car_length;
+        }
+
+        public Bitmap getHeadpic_bit() {
+            return headpic_bit;
+        }
+
+        public void setHeadpic_bit(Bitmap headpic_bit) {
+            this.headpic_bit = headpic_bit;
         }
     }
 }

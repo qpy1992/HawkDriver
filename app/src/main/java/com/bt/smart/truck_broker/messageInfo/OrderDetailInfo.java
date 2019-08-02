@@ -16,16 +16,16 @@ public class OrderDetailInfo {
     /**
      * message : 成功
      * size : 0
-     * data : {"id":"2c90b4e368eede110168eedf279a0000","fstatus":"0","fh_name":"赵三","fh_telephone":"18234567890","fh_address":"南通","sh_name":"李四","sh_telephone":"18234567890","sh_address":"上海","sh_area":"","car_type":"2c90b4e368db82ef0168db8d8e9a0004","zh_time":{"date":15,"hours":9,"seconds":34,"month":1,"timezoneOffset":-480,"year":119,"minutes":56,"time":1550195794000,"day":5},"goods_name":"4d2881f66850132a01685014c6e40007","fh":"2392","sh":"3262","fcheck":"0","fmain_id":"yingsu0028","fsub_id":"","is_fapiao":"0","fweight":34,"ffee":1234,"is_appoint":"0","appoint_id":"","order_no":"2019021500609093396","fmax_fee":9456,"is_box":"0","box_no":"1","origin":"广东省惠州市惠阳区","destination":"甘肃省嘉峪关市市辖区","origin_province_id":"20","origin_city_id":"242","origin_area_id":"2392","destination_province_id":"29","destination_city_id":"337","destination_area_id":"3262","ordergoods":[{"id":"2c90b4e368eede110168eedf27bd0001","goodsName":"上装","goodsSpace":11,"goodsWeight":12,"orderId":"2c90b4e368eede110168eedf279a0000"},{"id":"2c90b4e368eede110168eedf27bd0002","goodsName":"下装","goodsSpace":21,"goodsWeight":22,"orderId":"2c90b4e368eede110168eedf279a0000"}]}
-     * respCode : 0
+     * data : {"id":"2c9084dd6b649386016b64a31ee20001","fstatus":"8","fh_name":"张三","fh_telephone":"13776931992","fh_address":"城银路555弄","sh_name":"宋金华","sh_telephone":"15901643801","sh_address":"龙信广场","sh_area":"","car_type":"2c90b4e368db82ef0168db8d8e9a0004","zh_time":{"date":17,"hours":0,"seconds":0,"month":5,"timezoneOffset":-480,"year":119,"minutes":0,"time":1560700800000,"day":1},"goods_name":"4d2881f66850132a01685013f0100001","fh":"1170","sh":"1242","fcheck":"0","fmain_id":"yingsu0053","fsub_id":"","is_fapiao":null,"fweight":100,"ffee":1,"is_appoint":"0","appoint_id":"","order_no":"2019061700425124969","fmax_fee":86000,"is_box":"0","box_no":"","foil_card":500,"floadpics":"upload/files/order/2c9084dd6b649386016b64a31ee20001LOAD0.png,upload/files/order/2c9084dd6b649386016b64a31ee20001LOAD1.png","floadtime":"2019-06-17 17:12:45","frecepics":"upload/files/order/2c9084dd6b649386016b64a31ee20001RECE.png","frecetime":"2019-06-17 17:22:58","frece":1,"ftype":0,"faddtime":"2019-06-17 16:52:20","fnote":null,"lng":121.355888,"lat":31.320421,"pdf":null,"origin":"上海市宝山区","destination":"南通市海门市","origin_province_id":"10","origin_city_id":"35","origin_area_id":"1170","destination_province_id":"11","destination_city_id":"114","destination_area_id":"1242","companyname":"上海柏田信息科技有限公司","goodsname":"普货","cartype":"2吨车型","ordergoods":[{"id":"2c9084dd6b649386016b64a31ee20002","orderId":"2c9084dd6b649386016b64a31ee20001","goodsName":"床单","goodsSpace":10,"goodsWeight":100}],"time_interval":"11天前"}
      * ok : true
+     * respCode : 0
      */
 
     private String message;
-    private int      size;
+    private int size;
     private DataBean data;
-    private String   respCode;
-    private boolean  ok;
+    private boolean ok;
+    private String respCode;
 
     public String getMessage() {
         return message;
@@ -51,14 +51,6 @@ public class OrderDetailInfo {
         this.data = data;
     }
 
-    public String getRespCode() {
-        return respCode;
-    }
-
-    public void setRespCode(String respCode) {
-        this.respCode = respCode;
-    }
-
     public boolean isOk() {
         return ok;
     }
@@ -67,130 +59,124 @@ public class OrderDetailInfo {
         this.ok = ok;
     }
 
+    public String getRespCode() {
+        return respCode;
+    }
+
+    public void setRespCode(String respCode) {
+        this.respCode = respCode;
+    }
+
     public static class DataBean {
         /**
-         * id : 2c90b4e368eede110168eedf279a0000
-         * fstatus : 0
-         * fh_name : 赵三
-         * fh_telephone : 18234567890
-         * fh_address : 南通
-         * sh_name : 李四
-         * sh_telephone : 18234567890
-         * sh_address : 上海
+         * id : 2c9084dd6b649386016b64a31ee20001
+         * fstatus : 8
+         * fh_name : 张三
+         * fh_telephone : 13776931992
+         * fh_address : 城银路555弄
+         * sh_name : 宋金华
+         * sh_telephone : 15901643801
+         * sh_address : 龙信广场
          * sh_area :
          * car_type : 2c90b4e368db82ef0168db8d8e9a0004
-         * zh_time : {"date":15,"hours":9,"seconds":34,"month":1,"timezoneOffset":-480,"year":119,"minutes":56,"time":1550195794000,"day":5}
-         * goods_name : 4d2881f66850132a01685014c6e40007
-         * fh : 2392
-         * sh : 3262
+         * zh_time : {"date":17,"hours":0,"seconds":0,"month":5,"timezoneOffset":-480,"year":119,"minutes":0,"time":1560700800000,"day":1}
+         * goods_name : 4d2881f66850132a01685013f0100001
+         * fh : 1170
+         * sh : 1242
          * fcheck : 0
-         * fmain_id : yingsu0028
+         * fmain_id : yingsu0053
          * fsub_id :
-         * is_fapiao : 0
-         * fweight : 34
-         * ffee : 1234
+         * is_fapiao : null
+         * fweight : 100
+         * ffee : 1
          * is_appoint : 0
          * appoint_id :
-         * order_no : 2019021500609093396
-         * fmax_fee : 9456
+         * order_no : 2019061700425124969
+         * fmax_fee : 86000
          * is_box : 0
-         * box_no : 1
-         * origin : 广东省惠州市惠阳区
-         * destination : 甘肃省嘉峪关市市辖区
-         * origin_province_id : 20
-         * origin_city_id : 242
-         * origin_area_id : 2392
-         * destination_province_id : 29
-         * destination_city_id : 337
-         * destination_area_id : 3262
-         * ordergoods : [{"id":"2c90b4e368eede110168eedf27bd0001","goodsName":"上装","goodsSpace":11,"goodsWeight":12,"orderId":"2c90b4e368eede110168eedf279a0000"},{"id":"2c90b4e368eede110168eedf27bd0002","goodsName":"下装","goodsSpace":21,"goodsWeight":22,"orderId":"2c90b4e368eede110168eedf279a0000"}]
+         * box_no :
+         * foil_card : 500
+         * floadpics : upload/files/order/2c9084dd6b649386016b64a31ee20001LOAD0.png,upload/files/order/2c9084dd6b649386016b64a31ee20001LOAD1.png
+         * floadtime : 2019-06-17 17:12:45
+         * frecepics : upload/files/order/2c9084dd6b649386016b64a31ee20001RECE.png
+         * frecetime : 2019-06-17 17:22:58
+         * frece : 1
+         * ftype : 0
+         * faddtime : 2019-06-17 16:52:20
+         * fnote : null
+         * lng : 121.355888
+         * lat : 31.320421
+         * pdf : null
+         * origin : 上海市宝山区
+         * destination : 南通市海门市
+         * origin_province_id : 10
+         * origin_city_id : 35
+         * origin_area_id : 1170
+         * destination_province_id : 11
+         * destination_city_id : 114
+         * destination_area_id : 1242
+         * companyname : 上海柏田信息科技有限公司
+         * goodsname : 普货
+         * cartype : 2吨车型
+         * ordergoods : [{"id":"2c9084dd6b649386016b64a31ee20002","orderId":"2c9084dd6b649386016b64a31ee20001","goodsName":"床单","goodsSpace":10,"goodsWeight":100}]
+         * time_interval : 11天前
          */
 
         private String id;
-        private String               fstatus;
-        private String               fh_name;
-        private String               fh_telephone;
-        private String               fh_address;
-        private String               sh_name;
-        private String               sh_telephone;
-        private String               sh_address;
-        private String               sh_area;
-        private String               car_type;
-        private ZhTimeBean           zh_time;
-        private String               goods_name;
-        private String               fh;
-        private String               sh;
-        private String               fcheck;
-        private String               fmain_id;
-        private String               fsub_id;
-        private String               is_fapiao;
-        private int                  fweight;
-        private int                  ffee;
-        private String               is_appoint;
-        private String               appoint_id;
-        private String               order_no;
-        private int                  fmax_fee;
-        private String               is_box;
-        private String               box_no;
-        private String               origin;
-        private String               destination;
-        private String               origin_province_id;
-        private String               origin_city_id;
-        private String               origin_area_id;
-        private String               destination_province_id;
-        private String               destination_city_id;
-        private String               destination_area_id;
-        private String               floadpics;
-        private String               floadtime;
-        private String               frecepics;
-        private String               frecetime;
-        private String               frece;
-        private String               time_interval;
-        private String               goodsname;
-        private String               cartype;
-        private String               companyname;
-        private String               pdf;
-        private List<OrdergoodsBean> ordergoods;
-        /**
-         * lng : 116.307806
-         * lat : 40.133894
-         */
-
+        private String fstatus;
+        private String fh_name;
+        private String fh_telephone;
+        private String fh_address;
+        private String sh_name;
+        private String sh_telephone;
+        private String sh_address;
+        private String sh_area;
+        private String car_type;
+        private String zh_time;
+        private String goods_name;
+        private String fh;
+        private String sh;
+        private String fcheck;
+        private String fmain_id;
+        private String fsub_id;
+        private Object is_fapiao;
+        private int fweight;
+        private int ffee;
+        private String is_appoint;
+        private String appoint_id;
+        private String order_no;
+        private int fmax_fee;
+        private String is_box;
+        private String box_no;
+        private int foil_card;
+        private String floadpics;
+        private String floadtime;
+        private String frecepics;
+        private String frecetime;
+        private int frece;
+        private int ftype;
+        private String faddtime;
+        private Object fnote;
         private double lng;
         private double lat;
-
-
-        public String getCompanyname() {
-            return companyname;
-        }
-
-        public void setCompanyname(String companyname) {
-            this.companyname = companyname;
-        }
-
-        public String getGoodsname() {
-            return goodsname;
-        }
-
-        public void setGoodsname(String goodsname) {
-            this.goodsname = goodsname;
-        }
-
-        public String getCartype() {
-            return cartype;
-        }
-
-        public void setCartype(String cartype) {
-            this.cartype = cartype;
-        }
-
-        public String getTime_interval() {
-            return time_interval;
-        }
-
-        public void setTime_interval(String time_interval) {
-            this.time_interval = time_interval;
-        }
+        private Object pdf;
+        private String dstatus;
+        private String xh_time;
+        private String zhperiod;
+        private String xhperiod;
+        private String origin;
+        private String destination;
+        private String origin_province_id;
+        private String origin_city_id;
+        private String origin_area_id;
+        private String destination_province_id;
+        private String destination_city_id;
+        private String destination_area_id;
+        private String companyname;
+        private String goodsname;
+        private String car_length;
+        private String time_interval;
+        private List<OrdergoodsBean> ordergoods;
 
         public String getId() {
             return id;
@@ -272,11 +258,11 @@ public class OrderDetailInfo {
             this.car_type = car_type;
         }
 
-        public ZhTimeBean getZh_time() {
+        public String getZh_time() {
             return zh_time;
         }
 
-        public void setZh_time(ZhTimeBean zh_time) {
+        public void setZh_time(String zh_time) {
             this.zh_time = zh_time;
         }
 
@@ -328,11 +314,11 @@ public class OrderDetailInfo {
             this.fsub_id = fsub_id;
         }
 
-        public String getIs_fapiao() {
+        public Object getIs_fapiao() {
             return is_fapiao;
         }
 
-        public void setIs_fapiao(String is_fapiao) {
+        public void setIs_fapiao(Object is_fapiao) {
             this.is_fapiao = is_fapiao;
         }
 
@@ -400,6 +386,102 @@ public class OrderDetailInfo {
             this.box_no = box_no;
         }
 
+        public int getFoil_card() {
+            return foil_card;
+        }
+
+        public void setFoil_card(int foil_card) {
+            this.foil_card = foil_card;
+        }
+
+        public String getFloadpics() {
+            return floadpics;
+        }
+
+        public void setFloadpics(String floadpics) {
+            this.floadpics = floadpics;
+        }
+
+        public String getFloadtime() {
+            return floadtime;
+        }
+
+        public void setFloadtime(String floadtime) {
+            this.floadtime = floadtime;
+        }
+
+        public String getFrecepics() {
+            return frecepics;
+        }
+
+        public void setFrecepics(String frecepics) {
+            this.frecepics = frecepics;
+        }
+
+        public String getFrecetime() {
+            return frecetime;
+        }
+
+        public void setFrecetime(String frecetime) {
+            this.frecetime = frecetime;
+        }
+
+        public int getFrece() {
+            return frece;
+        }
+
+        public void setFrece(int frece) {
+            this.frece = frece;
+        }
+
+        public int getFtype() {
+            return ftype;
+        }
+
+        public void setFtype(int ftype) {
+            this.ftype = ftype;
+        }
+
+        public String getFaddtime() {
+            return faddtime;
+        }
+
+        public void setFaddtime(String faddtime) {
+            this.faddtime = faddtime;
+        }
+
+        public Object getFnote() {
+            return fnote;
+        }
+
+        public void setFnote(Object fnote) {
+            this.fnote = fnote;
+        }
+
+        public double getLng() {
+            return lng;
+        }
+
+        public void setLng(double lng) {
+            this.lng = lng;
+        }
+
+        public double getLat() {
+            return lat;
+        }
+
+        public void setLat(double lat) {
+            this.lat = lat;
+        }
+
+        public Object getPdf() {
+            return pdf;
+        }
+
+        public void setPdf(Object pdf) {
+            this.pdf = pdf;
+        }
+
         public String getOrigin() {
             return origin;
         }
@@ -464,44 +546,68 @@ public class OrderDetailInfo {
             this.destination_area_id = destination_area_id;
         }
 
-        public String getFloadpics() {
-            return floadpics;
+        public String getCompanyname() {
+            return companyname;
         }
 
-        public void setFloadpics(String floadpics) {
-            this.floadpics = floadpics;
+        public void setCompanyname(String companyname) {
+            this.companyname = companyname;
         }
 
-        public String getFloadtime() {
-            return floadtime;
+        public String getGoodsname() {
+            return goodsname;
         }
 
-        public void setFloadtime(String floadtime) {
-            this.floadtime = floadtime;
+        public void setGoodsname(String goodsname) {
+            this.goodsname = goodsname;
         }
 
-        public String getFrecepics() {
-            return frecepics;
+        public String getCar_length() {
+            return car_length;
         }
 
-        public void setFrecepics(String frecepics) {
-            this.frecepics = frecepics;
+        public void setCar_length(String car_length) {
+            this.car_length = car_length;
         }
 
-        public String getFrecetime() {
-            return frecetime;
+        public String getTime_interval() {
+            return time_interval;
         }
 
-        public void setFrecetime(String frecetime) {
-            this.frecetime = frecetime;
+        public void setTime_interval(String time_interval) {
+            this.time_interval = time_interval;
         }
 
-        public String getFrece() {
-            return frece;
+        public String getDstatus() {
+            return dstatus;
         }
 
-        public void setFrece(String frece) {
-            this.frece = frece;
+        public void setDstatus(String dstatus) {
+            this.dstatus = dstatus;
+        }
+
+        public String getXh_time() {
+            return xh_time;
+        }
+
+        public void setXh_time(String xh_time) {
+            this.xh_time = xh_time;
+        }
+
+        public String getZhperiod() {
+            return zhperiod;
+        }
+
+        public void setZhperiod(String zhperiod) {
+            this.zhperiod = zhperiod;
+        }
+
+        public String getXhperiod() {
+            return xhperiod;
+        }
+
+        public void setXhperiod(String xhperiod) {
+            this.xhperiod = xhperiod;
         }
 
         public List<OrdergoodsBean> getOrdergoods() {
@@ -512,140 +618,20 @@ public class OrderDetailInfo {
             this.ordergoods = ordergoods;
         }
 
-        public double getLng() {
-            return lng;
-        }
-
-        public void setLng(double lng) {
-            this.lng = lng;
-        }
-
-        public double getLat() {
-            return lat;
-        }
-
-        public void setLat(double lat) {
-            this.lat = lat;
-        }
-
-        public String getPdf() {
-            return pdf;
-        }
-
-        public void setPdf(String pdf) {
-            this.pdf = pdf;
-        }
-
-        public static class ZhTimeBean {
-            /**
-             * date : 15
-             * hours : 9
-             * seconds : 34
-             * month : 1
-             * timezoneOffset : -480
-             * year : 119
-             * minutes : 56
-             * time : 1550195794000
-             * day : 5
-             */
-
-            private int date;
-            private int  hours;
-            private int  seconds;
-            private int  month;
-            private int  timezoneOffset;
-            private int  year;
-            private int  minutes;
-            private long time;
-            private int  day;
-
-            public int getDate() {
-                return date;
-            }
-
-            public void setDate(int date) {
-                this.date = date;
-            }
-
-            public int getHours() {
-                return hours;
-            }
-
-            public void setHours(int hours) {
-                this.hours = hours;
-            }
-
-            public int getSeconds() {
-                return seconds;
-            }
-
-            public void setSeconds(int seconds) {
-                this.seconds = seconds;
-            }
-
-            public int getMonth() {
-                return month;
-            }
-
-            public void setMonth(int month) {
-                this.month = month;
-            }
-
-            public int getTimezoneOffset() {
-                return timezoneOffset;
-            }
-
-            public void setTimezoneOffset(int timezoneOffset) {
-                this.timezoneOffset = timezoneOffset;
-            }
-
-            public int getYear() {
-                return year;
-            }
-
-            public void setYear(int year) {
-                this.year = year;
-            }
-
-            public int getMinutes() {
-                return minutes;
-            }
-
-            public void setMinutes(int minutes) {
-                this.minutes = minutes;
-            }
-
-            public long getTime() {
-                return time;
-            }
-
-            public void setTime(long time) {
-                this.time = time;
-            }
-
-            public int getDay() {
-                return day;
-            }
-
-            public void setDay(int day) {
-                this.day = day;
-            }
-        }
-
         public static class OrdergoodsBean {
             /**
-             * id : 2c90b4e368eede110168eedf27bd0001
-             * goodsName : 上装
-             * goodsSpace : 11
-             * goodsWeight : 12
-             * orderId : 2c90b4e368eede110168eedf279a0000
+             * id : 2c9084dd6b649386016b64a31ee20002
+             * orderId : 2c9084dd6b649386016b64a31ee20001
+             * goodsName : 床单
+             * goodsSpace : 10
+             * goodsWeight : 100
              */
 
             private String id;
-            private String goodsName;
-            private int    goodsSpace;
-            private int    goodsWeight;
             private String orderId;
+            private String goodsName;
+            private int goodsSpace;
+            private int goodsWeight;
 
             public String getId() {
                 return id;
@@ -653,6 +639,14 @@ public class OrderDetailInfo {
 
             public void setId(String id) {
                 this.id = id;
+            }
+
+            public String getOrderId() {
+                return orderId;
+            }
+
+            public void setOrderId(String orderId) {
+                this.orderId = orderId;
             }
 
             public String getGoodsName() {
@@ -677,14 +671,6 @@ public class OrderDetailInfo {
 
             public void setGoodsWeight(int goodsWeight) {
                 this.goodsWeight = goodsWeight;
-            }
-
-            public String getOrderId() {
-                return orderId;
-            }
-
-            public void setOrderId(String orderId) {
-                this.orderId = orderId;
             }
         }
     }

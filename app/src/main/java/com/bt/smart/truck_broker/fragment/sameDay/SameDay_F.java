@@ -28,6 +28,7 @@ import com.bt.smart.truck_broker.adapter.RecyPlaceAdapter;
 import com.bt.smart.truck_broker.messageInfo.AllOrderListInfo;
 import com.bt.smart.truck_broker.messageInfo.ChioceAdapterContentInfo;
 import com.bt.smart.truck_broker.messageInfo.ShengDataInfo;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.LocationUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialogHelper;
@@ -190,6 +191,9 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         //解决数据加载完成后, 没有停留在顶部的问题
         rec_order.setFocusable(false);
         rec_order.setNestedScrollingEnabled(false);
+        for(AllOrderListInfo.PageListBean bean:mData){
+            bean.setHeadpic_bit(CommonUtil.getBitmap(NetConfig.IMG_HEAD+bean.getFheadpic()));
+        }
         orderAdapter = new RecyOrderAdapter(R.layout.adpter_sameday_order, getContext(), mData);
         rec_order.setAdapter(orderAdapter);
         orderAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -331,7 +335,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         RequestParamsFM headParam = new RequestParamsFM();
         headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
         RequestParamsFM params = new RequestParamsFM();
-        params.put("pid", "1");
+        params.put("pid", "100000");
         HttpOkhUtils.getInstance().doGetWithHeadParams(NetConfig.REGIONSELECT, headParam, params, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
@@ -359,7 +363,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                     }
                     for (ShengDataInfo.DataBean bean : mSHEData) {
                         ChioceAdapterContentInfo contentInfo = new ChioceAdapterContentInfo();
-                        contentInfo.setCont(bean.getName());
+                        contentInfo.setCont(bean.getFname());
                         contentInfo.setId(bean.getId());
                         mDataPopEd.add(contentInfo);
                     }
@@ -445,7 +449,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                             //添加上一级省数据
                             for (ShengDataInfo.DataBean bean : mSHEData) {
                                 ChioceAdapterContentInfo contentInfo = new ChioceAdapterContentInfo();
-                                contentInfo.setCont(bean.getName());
+                                contentInfo.setCont(bean.getFname());
                                 contentInfo.setId(bean.getId());
                                 mDataPopEd.add(contentInfo);
                             }
@@ -455,7 +459,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                             //添加上一级城市数据
                             for (ShengDataInfo.DataBean bean : mSHIData) {
                                 ChioceAdapterContentInfo contentInfo = new ChioceAdapterContentInfo();
-                                contentInfo.setCont(bean.getName());
+                                contentInfo.setCont(bean.getFname());
                                 contentInfo.setId(bean.getId());
                                 mDataPopEd.add(contentInfo);
                             }
@@ -507,7 +511,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                     }
                     for (ShengDataInfo.DataBean bean : mSHIData) {
                         ChioceAdapterContentInfo contentInfo = new ChioceAdapterContentInfo();
-                        contentInfo.setCont(bean.getName());
+                        contentInfo.setCont(bean.getFname());
                         contentInfo.setId(bean.getId());
                         mDataPopEd.add(contentInfo);
                     }
@@ -550,7 +554,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                     }
                     for (ShengDataInfo.DataBean bean : mQUData) {
                         ChioceAdapterContentInfo contentInfo = new ChioceAdapterContentInfo();
-                        contentInfo.setCont(bean.getName());
+                        contentInfo.setCont(bean.getFname());
                         contentInfo.setId(bean.getId());
                         mDataPopEd.add(contentInfo);
                     }

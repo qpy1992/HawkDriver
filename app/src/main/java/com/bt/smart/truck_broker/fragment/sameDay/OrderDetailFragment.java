@@ -229,7 +229,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.ysxy:
                 Intent xieyi = new Intent(getContext(), XieyiActivity.class);
-                xieyi.putExtra("path",orderDetailInfo.getData().getPdf());
+                xieyi.putExtra("path",orderDetailInfo.getData().getPdf()+"");
                 getActivity().startActivity(xieyi);
                 break;
             case R.id.rlt_tomap://跳转地图
@@ -699,7 +699,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     tv_place.setText(orderDetailInfo.getData().getOrigin() + "  →  " + orderDetailInfo.getData().getDestination());
                     orderLng = orderDetailInfo.getData().getLng();
                     orderLat = orderDetailInfo.getData().getLat();
-                    tv_goodsname.setText(orderDetailInfo.getData().getGoodsname() + " " + orderDetailInfo.getData().getCartype() + " " + orderDetailInfo.getData().getSh_address());
+                    tv_goodsname.setText(orderDetailInfo.getData().getGoodsname() + " " + orderDetailInfo.getData().getCar_type() + "|" + orderDetailInfo.getData().getCar_length());
                     tv_carType.setText(orderDetailInfo.getData().getFh_address());
                     tv_name.setText(orderDetailInfo.getData().getFh_name());
                     if(orderDetailInfo.getData().getCompanyname()==null){

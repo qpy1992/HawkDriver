@@ -120,7 +120,7 @@ public class SignOrderFragment extends Fragment implements View.OnClickListener 
     private void setData() {
         tv_orderNum.setText(orderDetailInfo.getData().getOrder_no());
         tv_place.setText(orderDetailInfo.getData().getOrigin() + "  →  " + orderDetailInfo.getData().getDestination());
-        tv_goodsname.setText(orderDetailInfo.getData().getGoodsname() + " " + orderDetailInfo.getData().getCartype() + " " + orderDetailInfo.getData().getSh_address());
+        tv_goodsname.setText(orderDetailInfo.getData().getGoodsname() + " " + orderDetailInfo.getData().getCar_type() + " " + orderDetailInfo.getData().getCar_length());
         tv_fhTime.setText("装货时间：" + orderDetailInfo.getData().getZh_time());
         tv_carType.setText(orderDetailInfo.getData().getFh_address());
         tv_hzName.setText("货主：" + orderDetailInfo.getData().getFh_name());

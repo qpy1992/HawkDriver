@@ -65,7 +65,8 @@ public class ShengDataInfo {
          */
 
         private String id;
-        private String name;
+        private String fname;
+        private String flevel;
         private String pid;
 
         public String getId() {
@@ -76,12 +77,12 @@ public class ShengDataInfo {
             this.id = id;
         }
 
-        public String getName() {
-            return name;
+        public String getFname() {
+            return fname;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public void setFname(String fname) {
+            this.fname = fname;
         }
 
         public String getPid() {

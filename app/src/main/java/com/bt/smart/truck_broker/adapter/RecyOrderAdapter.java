@@ -1,13 +1,17 @@
 package com.bt.smart.truck_broker.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bt.smart.truck_broker.MyApplication;
+import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.messageInfo.AllOrderListInfo;
+import com.bt.smart.truck_broker.utils.CommonUtil;
+import com.bt.smart.truck_broker.utils.GlideLoaderUtil;
 import com.bt.smart.truck_broker.utils.MyAlertDialogHelper;
 import com.bt.smart.truck_broker.utils.ShowCallUtil;
 import com.bt.smart.truck_broker.utils.ToastUtils;
@@ -37,9 +41,9 @@ public class RecyOrderAdapter extends BaseQuickAdapter<AllOrderListInfo.PageList
     protected void convert(BaseViewHolder helper, final AllOrderListInfo.PageListBean item) {
         //        (ImageView) helper.getView(R.id.img_call)
         helper.setText(R.id.tv_place, item.getFh() + "  →  " + item.getSh());
-        helper.setText(R.id.tv_goodsname, item.getGoodsName());
-
-        helper.setText(R.id.tv_loadtime, "装货时间：" + item.getZh_time());
+        helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getCar_type()+"|"+item.getCar_length());
+        helper.setText(R.id.tv_loadtime, "装货时间：" + item.getZh_time().substring(0,10)+item.getZhperiod().substring(0,2));
+        helper.setText(R.id.tv_xhtime, "卸货时间：" + item.getXh_time().substring(0,10)+item.getXhperiod().substring(0,2));
         helper.setText(R.id.tv_name, item.getFhName());
         helper.setText(R.id.tv_interval, item.getTime_interval());
         helper.setText(R.id.tv_mark, item.getFnote());
@@ -48,7 +52,7 @@ public class RecyOrderAdapter extends BaseQuickAdapter<AllOrderListInfo.PageList
         }else {
             helper.setText(R.id.tv_distance, "约" + item.getDistance()+"km");
         }
-        ImageView img_call = (ImageView) helper.getView(R.id.img_call);
+        ImageView img_call = helper.getView(R.id.img_call);
         img_call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,6 +65,14 @@ public class RecyOrderAdapter extends BaseQuickAdapter<AllOrderListInfo.PageList
                 ShowCallUtil.showCallDialog(mContext, item.getFhTele());
             }
         });
+        ImageView iv_man = helper.getView(R.id.iv_man);
+        GlideLoaderUtil.showImgWithIcon(mContext, NetConfig.IMG_HEAD + item.getFheadpic(), R.drawable.iman, R.drawable.iman, iv_man);
+        ImageView iv_type = helper.getView(R.id.iv_type);
+        if(item.getIs_box().equals("0")){
+            iv_type.setImageResource(R.drawable.pinche);
+        }else{
+            iv_type.setImageResource(R.drawable.zhengche);
+        }
     }
 
     private void showCheckWarning() {
