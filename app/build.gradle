@@ -74,4 +74,5 @@ dependencies {
     implementation 'com.amap.api:search:latest.integration'
     //个推
     implementation 'com.getui:sdk:2.13.2.0'
+    implementation 'com.karumi:dexter:5.0.0'
 }

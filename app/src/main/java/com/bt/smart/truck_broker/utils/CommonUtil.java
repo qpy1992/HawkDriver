@@ -149,4 +149,13 @@ public class CommonUtil {
         }
         return bm;
     }
+
+    /**
+     * 去掉市区县
+     * @param str
+     * @return
+     */
+    public static String replace(String str){
+        return str.replaceAll("市"," ").replaceAll("区"," ").replaceAll("县"," ");
+    }
 }

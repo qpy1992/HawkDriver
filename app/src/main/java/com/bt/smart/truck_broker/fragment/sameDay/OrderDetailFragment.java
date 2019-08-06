@@ -98,10 +98,12 @@ import okhttp3.Request;
 
 public class OrderDetailFragment extends Fragment implements View.OnClickListener {
     private View mRootView;
-    private ImageView img_back, img_empty, iv_l1, iv_l2, iv_l3, iv_load, iv_r1, iv_rece, ysxy;
+    private ImageView img_back, img_empty, iv_l1, iv_l2, iv_l3, iv_load, iv_r1, iv_rece, ysxy, img_member;
     private LinearLayout ll_load, ll_rece;
     private RelativeLayout rlt_tomap;
-    private TextView tv_title, tv_place, tv_goodsname, tv_carType, tv_name, tv_fhPlace, tv_phone, tv_cont, tv_take, tv_inter, tv_company;
+    private TextView tv_title, tv_place, tv_goodsname, tv_zhadd, tv_name, tv_fhPlace,
+            tv_phone, tv_cont, tv_take, tv_inter, tv_company, tv_fhTime, tv_xhTime,
+            tv_xhadd, tv_detail_distance;
     private String orderID;//订单id
     private String mOrder_no;//订单号
     //    private TextView        tv_local;//开始定位按钮
@@ -137,15 +139,20 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private void initView() {
         img_back = mRootView.findViewById(R.id.img_back);
         img_empty = mRootView.findViewById(R.id.img_empty);
+        img_member = mRootView.findViewById(R.id.img_member);
         ysxy = mRootView.findViewById(R.id.ysxy);
         tv_title = mRootView.findViewById(R.id.tv_title);
         tv_place = mRootView.findViewById(R.id.tv_place);
         rlt_tomap = mRootView.findViewById(R.id.rlt_tomap);
         tv_goodsname = mRootView.findViewById(R.id.tv_goodsname);
-        tv_carType = mRootView.findViewById(R.id.tv_carType);
+        tv_zhadd = mRootView.findViewById(R.id.tv_zhadd);
+        tv_xhadd = mRootView.findViewById(R.id.tv_xhadd);
+        tv_detail_distance = mRootView.findViewById(R.id.tv_detail_distance);
         tv_company = mRootView.findViewById(R.id.tv_company);
         tv_name = mRootView.findViewById(R.id.tv_name);
         tv_fhPlace = mRootView.findViewById(R.id.tv_fhPlace);
+        tv_fhTime = mRootView.findViewById(R.id.tv_fhTime);
+        tv_xhTime = mRootView.findViewById(R.id.tv_xhTime);
         tv_phone = mRootView.findViewById(R.id.tv_phone);
         tv_cont = mRootView.findViewById(R.id.tv_cont);
         tv_take = mRootView.findViewById(R.id.tv_take);
@@ -696,20 +703,29 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 if (orderDetailInfo.isOk()) {
                     img_empty.setVisibility(View.GONE);
                     mOrder_no = orderDetailInfo.getData().getOrder_no();
-                    tv_place.setText(orderDetailInfo.getData().getOrigin() + "  →  " + orderDetailInfo.getData().getDestination());
+                    tv_place.setText(CommonUtil.replace(orderDetailInfo.getData().getOrigin()) + "  →  " + CommonUtil.replace(orderDetailInfo.getData().getDestination()));
                     orderLng = orderDetailInfo.getData().getLng();
                     orderLat = orderDetailInfo.getData().getLat();
                     tv_goodsname.setText(orderDetailInfo.getData().getGoodsname() + " " + orderDetailInfo.getData().getCar_type() + "|" + orderDetailInfo.getData().getCar_length());
-                    tv_carType.setText(orderDetailInfo.getData().getFh_address());
-                    tv_name.setText(orderDetailInfo.getData().getFh_name());
+                    tv_zhadd.setText("详细地址："+orderDetailInfo.getData().getFh_address());
+                    tv_name.setText(orderDetailInfo.getData().getCompanylxr());
                     if(orderDetailInfo.getData().getCompanyname()==null){
                         tv_company.setVisibility(View.GONE);
                     }else{
                         tv_company.setText(orderDetailInfo.getData().getCompanyname());
                     }
-                    tv_fhPlace.setText(orderDetailInfo.getData().getFh_address());
-                    tv_phone.setText(orderDetailInfo.getData().getFh_telephone());
+                    if(orderDetailInfo.getData().getFaddress()==null){
+                        tv_fhPlace.setVisibility(View.GONE);
+                    }else{
+                        tv_fhPlace.setText(orderDetailInfo.getData().getFaddress());
+                    }
+                    tv_phone.setText(orderDetailInfo.getData().getFmobile());
+                    tv_fhTime.setText("装货时间："+orderDetailInfo.getData().getZh_time().substring(0,10)+" "+orderDetailInfo.getData().getZhperiod().substring(0,2));
+                    tv_xhTime.setText("卸货时间："+orderDetailInfo.getData().getXh_time().substring(0,10)+" "+orderDetailInfo.getData().getXhperiod().substring(0,2));
+                    tv_xhadd.setText("详细地址："+orderDetailInfo.getData().getSh_address());
+                    tv_detail_distance.setText("最短里程约"+orderDetailInfo.getData().getDistance()+"km");
                     tv_inter.setText(orderDetailInfo.getData().getTime_interval());
+                    GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD+orderDetailInfo.getData().getFheadpic(), R.drawable.iman, R.drawable.iman, img_member);
                     String getloadUrl = orderDetailInfo.getData().getFloadpics();
                     String getreceUrl = orderDetailInfo.getData().getFrecepics();
                     if (CommonUtil.isNotEmpty(getloadUrl)) {

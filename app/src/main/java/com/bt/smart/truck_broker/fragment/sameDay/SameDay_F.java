@@ -78,6 +78,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
     private int mOrderSize;//总条目
     private int mSumPageSize;//总共页数
     private int mWhichPage;//获取哪页数据
+    private String fh,sh;
     private static String TAG = "SameDay_F";
     private double lat,lng;
 
@@ -274,7 +275,12 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
         String finalUrl;
         finalUrl = NetConfig.ALL_ORDER_LIST + "/" + no + "/" + size + "/" + lat + "/" + lng;
-        HttpOkhUtils.getInstance().doGetWithOnlyHeader(finalUrl, headParams, new HttpOkhUtils.HttpCallBack() {
+        RequestParamsFM params = new RequestParamsFM();
+        if(CommonUtil.isNotEmpty(fh)&&CommonUtil.isNotEmpty(sh)){
+            params.put("fh", fh);
+            params.put("sh", sh);
+        }
+        HttpOkhUtils.getInstance().doGetWithHeadParams(finalUrl, headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
                 swiperefresh.setRefreshing(false);
@@ -418,18 +424,16 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                             //获取省份对应城市
                             getCityBySheng(id, tv_back, recyPlaceAdapter);
                             stCityLevel++;
-                        } else if (stCityLevel == 1) {
-                            //获取城市对应的区
-                            getTownByCity(id, tv_back, recyPlaceAdapter);
-                            stCityLevel++;
-                        } else {
+                        }  else {
                             if (kind == 0) {
                                 //将选择的起点填写
                                 tv_start.setText(mDataPopEd.get(position).getCont());
+                                fh = mDataPopEd.get(position).getId();
                                 openHelper.dismiss();
                             } else {
                                 //将选择的目的地填写
                                 tv_end.setText(mDataPopEd.get(position).getCont());
+                                sh = mDataPopEd.get(position).getId();
                                 openHelper.dismiss();
                             }
                         }
@@ -445,16 +449,6 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                             mDataPopEd.clear();
                             //添加上一级省数据
                             for (ShengDataInfo.DataBean bean : mSHEData) {
-                                ChioceAdapterContentInfo contentInfo = new ChioceAdapterContentInfo();
-                                contentInfo.setCont(bean.getFname());
-                                contentInfo.setId(bean.getId());
-                                mDataPopEd.add(contentInfo);
-                            }
-                            recyPlaceAdapter.notifyDataSetChanged();
-                        } else if (stCityLevel == 1) {
-                            mDataPopEd.clear();
-                            //添加上一级城市数据
-                            for (ShengDataInfo.DataBean bean : mSHIData) {
                                 ChioceAdapterContentInfo contentInfo = new ChioceAdapterContentInfo();
                                 contentInfo.setCont(bean.getFname());
                                 contentInfo.setId(bean.getId());
@@ -562,7 +556,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
     }
 
     private void screenAllTerm() {
-
+        getOrderList(1,10,lat,lng);
     }
 
     private int scDownY;

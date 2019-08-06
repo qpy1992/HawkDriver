@@ -176,6 +176,11 @@ public class OrderDetailInfo {
         private String goodsname;
         private String car_length;
         private String time_interval;
+        private String distance;
+        private String fheadpic;
+        private String companylxr;
+        private String fmobile;
+        private String faddress;
         private List<OrdergoodsBean> ordergoods;
 
         public String getId() {
@@ -608,6 +613,46 @@ public class OrderDetailInfo {
 
         public void setXhperiod(String xhperiod) {
             this.xhperiod = xhperiod;
+        }
+
+        public String getDistance() {
+            return distance;
+        }
+
+        public void setDistance(String distance) {
+            this.distance = distance;
+        }
+
+        public String getFheadpic() {
+            return fheadpic;
+        }
+
+        public void setFheadpic(String fheadpic) {
+            this.fheadpic = fheadpic;
+        }
+
+        public String getCompanylxr() {
+            return companylxr;
+        }
+
+        public void setCompanylxr(String companylxr) {
+            this.companylxr = companylxr;
+        }
+
+        public String getFmobile() {
+            return fmobile;
+        }
+
+        public void setFmobile(String fmobile) {
+            this.fmobile = fmobile;
+        }
+
+        public String getFaddress() {
+            return faddress;
+        }
+
+        public void setFaddress(String faddress) {
+            this.faddress = faddress;
         }
 
         public List<OrdergoodsBean> getOrdergoods() {

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bt.smart.truck_broker.MainActivity;
 import com.bt.smart.truck_broker.MyApplication;
@@ -27,8 +28,14 @@ import com.bt.smart.truck_broker.utils.SpUtils;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.igexin.sdk.PushManager;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Request;
 
@@ -46,6 +53,14 @@ public class FirstActivity extends Activity implements View.OnClickListener {
     private TextView tv_old;
     private int MY_PERMISSIONS_REQUEST_LOCATION = 10086;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 1001;//申请照相机权限结果
+    static final String[] PERMISSIONS = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_PHONE_STATE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +78,21 @@ public class FirstActivity extends Activity implements View.OnClickListener {
     private void getView() {
         tv_new = (TextView) findViewById(R.id.tv_new);
         tv_old = (TextView) findViewById(R.id.tv_old);
-        if (ActivityCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(FirstActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_LOCATION);
-        }
-        if (ActivityCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            //权限还没有授予，需要在这里写申请权限的代码
-            ActivityCompat.requestPermissions(FirstActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                    MY_PERMISSIONS_REQUEST_CALL_PHONE2);
-        }
+//        if (ActivityCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+//                ActivityCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(FirstActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+//                    MY_PERMISSIONS_REQUEST_LOCATION);
+//        }
+//        if (ActivityCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.CAMERA)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            //权限还没有授予，需要在这里写申请权限的代码
+//            ActivityCompat.requestPermissions(FirstActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+//                    MY_PERMISSIONS_REQUEST_CALL_PHONE2);
+//        }
+//        if(!isGetPermission()){
+//            requestPermission();
+//        }
+        initPermissions();
     }
 
     private void setData() {
@@ -87,6 +106,25 @@ public class FirstActivity extends Activity implements View.OnClickListener {
             //直接登录
             loginToService(name, psd);
         }
+    }
+
+    private void initPermissions() {
+        Dexter.withActivity(this).withPermissions(PERMISSIONS)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()){
+                            Toast.makeText(getApplication(),"权限获取成功！",Toast.LENGTH_LONG).show();
+                        }else{
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    }
+                }).check();
     }
 
     // DemoPushService.class 自定义服务名称, 核心服务
@@ -103,10 +141,6 @@ public class FirstActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (!isGetPermission()) {
-            requestPermission();
-            return;
-        }
         switch (view.getId()) {
             case R.id.tv_new:
                 //跳转注册界面

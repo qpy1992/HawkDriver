@@ -125,7 +125,8 @@
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_marginLeft="5dp"
-                    android:src="@drawable/icon_down"/>
+                    android:src="@drawable/icon_down"
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
