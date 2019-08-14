@@ -63,7 +63,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="**分钟前"
+                    android:text="约***km"
                     android:textColor="@color/word_gray"
                     android:textSize="12sp"/>
             </LinearLayout>
@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:singleLine="true"
-                    android:text="13米 平板/高低板 28吨"
+                    android:text="设备  2.00吨  5m³ 平板|1.8米"
                     android:textColor="@color/vm_black_87"
                     android:textSize="14sp"/>
 
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="约***km装货"
+                    android:text="20分钟前"
                     android:textColor="@color/word_gray"
                     android:textSize="12sp"/>
             </LinearLayout>
@@ -106,6 +106,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:singleLine="true"
+                        android:text="运价：10000元"
+                        android:textColor="@color/vm_black_87"
+                        android:textSize="12sp"/>
 
                     <TextView
                         android:id="@+id/tv_loadtime"
@@ -137,7 +146,7 @@
                         android:textColor="@color/vm_black_87"
                         android:textSize="12sp"/>
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
@@ -159,15 +168,15 @@
                             android:text="李三"
                             android:textColor="@color/word_gray"
                             android:textSize="12sp"/>
-                    </LinearLayout>
+                    </LinearLayout>-->
 
-                    <TextView
+                    <!--<TextView
                         android:id="@+id/tv_talk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="评价少于3条"
                         android:textColor="@color/word_gray"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp"/>-->
                     <!--<LinearLayout-->
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="wrap_content"-->
@@ -211,7 +220,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/zhengche"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity="center"
                         android:layout_marginTop="3dp"/>
 
                     <ImageView
@@ -219,7 +228,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="3dp"
                         android:src="@drawable/icon_phone"/>
                 </LinearLayout>
             </LinearLayout>
