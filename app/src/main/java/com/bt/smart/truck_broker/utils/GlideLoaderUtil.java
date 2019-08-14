@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.ImageView;
 import com.bt.smart.truck_broker.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 /**
  * @创建者 AndyYan
@@ -40,6 +41,7 @@ public class GlideLoaderUtil {
                     .placeholder(beforeID)//图片加载出来前，显示的图片
                     .error(errorID)// 设置错误图片
                     .crossFade()// 设置淡入淡出效果，默认300ms，可以传参
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(imgeview);
         }
     }

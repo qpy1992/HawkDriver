@@ -12,14 +12,15 @@ package com.bt.smart.truck_broker;
 public class NetConfig {
     //服务器总地址
 //    public static String ROOT = "http://116.62.171.244:8082/yingsu/rest/";
-    public static String ROOT = "http://120.27.3.205/rest/";
-//    public static String ROOT = "http://172.16.52.63/rest/";
+//    public static String ROOT = "http://120.27.3.205/rest/";
+    public static String ROOT = "http://172.16.52.63/rest/";
     //    public static String ROOT = "http://2o1b417794.51mypc.cn:39437/rest/";
     //图片地址
-    public static String IMG_HEAD = "http://120.27.3.205/";
-//    public static String IMG_HEAD = "http://172.16.52.63/yingsu/";
+//    public static String IMG_HEAD = "http://120.27.3.205/";
+    public static String IMG_HEAD = "http://172.16.52.63/";
 //    public static String IMG_HEAD = "http://205.168.1.100/yingsu_war_exploded/";
 
+    public static String HEAD = "X-AUTH-TOKEN";
 
     //获取最新版本apk信息
     public static String GETNEWAPPVERSION = ROOT + "getNewAppVersion";
@@ -104,4 +105,6 @@ public class NetConfig {
     //获取认证uri
     public static String URI = ROOT + "eSignController/uri";
 
+    //更换头像
+    public static String UPDATEHEADPIC = ROOT + "zRegisterController/updateHeadPic";
 }

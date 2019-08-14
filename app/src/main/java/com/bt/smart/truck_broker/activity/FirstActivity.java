@@ -216,6 +216,7 @@ public class FirstActivity extends Activity implements View.OnClickListener {
                     MyApplication.userHeadPic = loginInfo.getData().getRegisterDriver().getFphoto();
                     MyApplication.money = loginInfo.getData().getRegisterDriver().getFaccount();
                     MyApplication.faccountid = loginInfo.getData().getRegisterDriver().getFaccountid();
+                    MyApplication.fcardno = loginInfo.getData().getRegisterDriver().getFcardno();
                     startActivity(new Intent(FirstActivity.this, MainActivity.class));
                     finish();
                 }

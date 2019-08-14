@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,15 +31,18 @@ import com.bt.smart.truck_broker.activity.userAct.AuthenticationActivity;
 import com.bt.smart.truck_broker.activity.userAct.BCardActivity;
 import com.bt.smart.truck_broker.activity.userAct.MoneyActivity;
 import com.bt.smart.truck_broker.activity.userAct.SignPlatformActivity;
+import com.bt.smart.truck_broker.messageInfo.CommenInfo;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
 import com.bt.smart.truck_broker.utils.GlideLoaderUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
+import com.bt.smart.truck_broker.utils.MyPopChoisePic;
 import com.bt.smart.truck_broker.utils.MyTextUtils;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.SpUtils;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.Request;
@@ -50,6 +58,7 @@ import okhttp3.Request;
  */
 
 public class User_F extends Fragment implements View.OnClickListener {
+    private static String TAG = "User_F";
     private View mRootView;
     private TextView tv_title;
     private SwipeRefreshLayout swiperefresh;
@@ -72,6 +81,9 @@ public class User_F extends Fragment implements View.OnClickListener {
     private RelativeLayout rlt_allOrder;//更多订单
     private int REQUEST_MONEY_CODE = 10015;
     private int RESULT_MONEY_CODE = 10016;
+    private int SHOT_CODE = 1069;//调用系统相机-拍摄照片
+    private int IMAGE = 1068;//调用系统相册-选择图片
+    private String headPicPath;//头像文件本地路径
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,6 +124,7 @@ public class User_F extends Fragment implements View.OnClickListener {
         } else {
             tv_phone.setText(MyApplication.userName);
         }
+        img_head.setOnClickListener(this);
         tv_submit.setOnClickListener(this);
         linear_money.setOnClickListener(this);
         linear_order.setOnClickListener(this);
@@ -122,7 +135,7 @@ public class User_F extends Fragment implements View.OnClickListener {
         rtv_about.setOnClickListener(this);
         rtv_exit.setOnClickListener(this);
         rlt_allOrder.setOnClickListener(this);
-        GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + MyApplication.userHeadPic, R.drawable.iman, R.drawable.iman, img_head);
+        showImage(img_head,NetConfig.IMG_HEAD + MyApplication.userHeadPic);
         swiperefresh.setColorSchemeColors(getResources().getColor(R.color.blue_icon), getResources().getColor(R.color.yellow_40), getResources().getColor(R.color.red_160));
         swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -136,6 +149,9 @@ public class User_F extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.img_head:
+                changeHeadPic();
+                break;
             case R.id.tv_submit:
                 if ("签署协议".equals(MyTextUtils.getTvTextContent(tv_submit))) {
                     //和平台签署协议
@@ -198,6 +214,26 @@ public class User_F extends Fragment implements View.OnClickListener {
         if (REQUEST_MONEY_CODE == requestCode && RESULT_MONEY_CODE == resultCode) {
             //重新登录下获取最新的认证状态
             getNewCheckStatue();
+        }
+        //相册返回，获取图片路径
+        if (requestCode == IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            Cursor c = getActivity().getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            headPicPath = c.getString(columnIndex);
+            showImage(img_head, headPicPath);
+            updateHeadPic(headPicPath);
+        }
+        //获取拍摄的图片
+        if (requestCode == SHOT_CODE && resultCode == Activity.RESULT_OK) {
+            if (null == headPicPath || "".equals(headPicPath)) {
+                ToastUtils.showToast(getContext(), "未获取到照片");
+                return;
+            }
+            showImage(img_head, headPicPath);
+            updateHeadPic(headPicPath);
         }
     }
 
@@ -282,7 +318,7 @@ public class User_F extends Fragment implements View.OnClickListener {
         } else {
             tv_phone.setText(MyApplication.userName);
         }
-        GlideLoaderUtil.showImgWithIcon(getContext(), NetConfig.IMG_HEAD + MyApplication.userHeadPic, R.drawable.iman, R.drawable.iman, img_head);
+        showImage(img_head, NetConfig.IMG_HEAD + MyApplication.userHeadPic);
         tv_orderNum.setText(MyApplication.userOrderNum + "单");
         tv_money.setText(MyApplication.fcardno + "张");
     }
@@ -339,5 +375,45 @@ public class User_F extends Fragment implements View.OnClickListener {
             xieyi.putExtra("path",MyApplication.fcontract);
             startActivity(xieyi);
         }
+    }
+
+    protected void changeHeadPic(){
+        long photoTime = System.currentTimeMillis();
+        MyPopChoisePic mPopChoisePic = new MyPopChoisePic(getActivity());
+        headPicPath = Environment.getExternalStorageDirectory().getPath() + "/temp" + photoTime + ".jpg";
+        mPopChoisePic.showChoose(img_head, headPicPath);
+    }
+
+    //加载图片
+    private void showImage(ImageView img, String imgPath) {
+        GlideLoaderUtil.showImgWithIcon(getContext(), imgPath, R.drawable.iman, R.drawable.iman, img);
+    }
+
+    protected void updateHeadPic(String path){
+        File file = new File(path);
+        if (!file.exists()) {
+            ToastUtils.showToast(getContext(), "相片读取失败");
+            return;
+        }
+        RequestParamsFM headparam = new RequestParamsFM();
+        headparam.put(NetConfig.HEAD,MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        params.put("headpicPath",MyApplication.userHeadPic);
+        HttpOkhUtils.getInstance().upDateFile(NetConfig.UPDATEHEADPIC, headparam, params,"file",file, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                Log.i(TAG,"网络错误！");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                if (200 != code) {
+                    ToastUtils.showToast(getContext(), "网络错误" + code);
+                    return;
+                }
+                CommenInfo commenInfo = new Gson().fromJson(resbody,CommenInfo.class);
+                ToastUtils.showToast(getContext(),commenInfo.getData()+"");
+            }
+        });
     }
 }
