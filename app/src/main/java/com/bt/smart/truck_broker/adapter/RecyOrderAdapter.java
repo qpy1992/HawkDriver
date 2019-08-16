@@ -43,11 +43,14 @@ public class RecyOrderAdapter extends BaseQuickAdapter<AllOrderListInfo.PageList
         helper.setText(R.id.tv_place, CommonUtil.replace(item.getFh()) + "  →  " + CommonUtil.replace(item.getSh()));
         if(item.getWeight().equals("0")&&item.getSpace().equals("0")){
             helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getCar_type()+"|"+item.getCar_length());
-        }else if(!item.getWeight().equals("0")&&item.getSpace().equals("0")){
+        }
+        if(!item.getWeight().equals("0")&&item.getSpace().equals("0")){
             helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getWeight()+"吨 "+item.getCar_type()+"|"+item.getCar_length());
-        }else if(item.getWeight().equals("0")&&!item.getSpace().equals("0")){
+        }
+        if(item.getWeight().equals("0")&&!item.getSpace().equals("0")){
             helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getSpace()+"m³ "+item.getCar_type()+"|"+item.getCar_length());
-        }else {
+        }
+        if(!item.getWeight().equals("0")&&!item.getSpace().equals("0")){
             helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getWeight()+"吨 "+item.getSpace()+"m³ "+ "" + item.getCar_type() + "|" + item.getCar_length());
         }
         if(item.getFfee().equals("0.00")){
