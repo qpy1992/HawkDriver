@@ -117,14 +117,14 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         initStartPlace();
 
         //获取订单列表信息
-        getOrderList(1, 10, lat, lng);
+        getOrderList(1, 10);
 
         swiperefresh.setColorSchemeColors(getResources().getColor(R.color.blue_icon), getResources().getColor(R.color.yellow_40), getResources().getColor(R.color.red_160));
         swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 //获取订单列表信息
-                getOrderList(1, 10, lat, lng);
+                getOrderList(1, 10);
             }
         });
         //设置rec_order滑动事件
@@ -169,7 +169,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (REQUEST_FOR_TAKE_ORDER == requestCode && RESULT_TAKE_ORDER == resultCode) {
             //刷新界面
-            getOrderList(1, 10, lat, lng);
+            getOrderList(1, 10);
         }
     }
 
@@ -269,12 +269,12 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void getOrderList(int no, int size, double lat, double lng) {
+    private void getOrderList(int no, int size) {
         swiperefresh.setRefreshing(true);
         RequestParamsFM headParams = new RequestParamsFM();
         headParams.put("X-AUTH-TOKEN", MyApplication.userToken);
         String finalUrl;
-        finalUrl = NetConfig.ALL_ORDER_LIST + "/" + no + "/" + size + "/" + lat + "/" + lng;
+        finalUrl = NetConfig.ALL_ORDER_LIST + "/" + no + "/" + size;
         RequestParamsFM params = new RequestParamsFM();
         if(CommonUtil.isNotEmpty(fh)&&CommonUtil.isNotEmpty(sh)){
             params.put("fh", fh);
@@ -556,7 +556,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
     }
 
     private void screenAllTerm() {
-        getOrderList(1,10,lat,lng);
+        getOrderList(1,10);
     }
 
     private int scDownY;

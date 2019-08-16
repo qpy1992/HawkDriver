@@ -18,6 +18,7 @@ import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -39,9 +40,21 @@ public class RecyOrderAdapter extends BaseQuickAdapter<AllOrderListInfo.PageList
 
     @Override
     protected void convert(BaseViewHolder helper, final AllOrderListInfo.PageListBean item) {
-        //        (ImageView) helper.getView(R.id.img_call)
-        helper.setText(R.id.tv_place, item.getFh().replaceAll("市"," ").replaceAll("区"," ").replaceAll("县"," ") + "  →  " + item.getSh().replaceAll("市"," ").replaceAll("区"," ").replaceAll("县"," "));
-        helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getCar_type()+"|"+item.getCar_length());
+        helper.setText(R.id.tv_place, CommonUtil.replace(item.getFh()) + "  →  " + CommonUtil.replace(item.getSh()));
+        if(item.getWeight().equals("0")&&item.getSpace().equals("0")){
+            helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getCar_type()+"|"+item.getCar_length());
+        }else if(!item.getWeight().equals("0")&&item.getSpace().equals("0")){
+            helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getWeight()+"吨 "+item.getCar_type()+"|"+item.getCar_length());
+        }else if(item.getWeight().equals("0")&&!item.getSpace().equals("0")){
+            helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getSpace()+"m³ "+item.getCar_type()+"|"+item.getCar_length());
+        }else {
+            helper.setText(R.id.tv_goodsname, item.getGoodsName()+" "+item.getWeight()+"吨 "+item.getSpace()+"m³ "+ "" + item.getCar_type() + "|" + item.getCar_length());
+        }
+        if(item.getFfee().equals("0.00")){
+            helper.setText(R.id.tv_ffee,"价格面议");
+        }else{
+            helper.setText(R.id.tv_ffee,"报价："+item.getFfee()+"元");
+        }
         helper.setText(R.id.tv_loadtime, "装货时间：" + item.getZh_time().substring(0,10)+" "+item.getZhperiod().substring(0,2));
         helper.setText(R.id.tv_xhtime, "卸货时间：" + item.getXh_time().substring(0,10)+" "+item.getXhperiod().substring(0,2));
         helper.setText(R.id.tv_name, item.getFhName());

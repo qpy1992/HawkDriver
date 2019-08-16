@@ -83,7 +83,6 @@ public class AllOrderListInfo {
          * lng : 120.8237474
          * distance : 22
          */
-
         private String id;
         private String fh;
         private String sh;
@@ -96,14 +95,14 @@ public class AllOrderListInfo {
         private String fhName;
         private String fhTele;
         private String time_interval;
-        private String lat;
-        private String lng;
         private String distance;
         private String is_box;
         private String fheadpic;
         private String car_type;
         private String car_length;
-        private Bitmap headpic_bit;
+        private String weight;
+        private String space;
+        private String ffee;
 
         public String getId() {
             return id;
@@ -217,22 +216,6 @@ public class AllOrderListInfo {
             this.time_interval = time_interval;
         }
 
-        public String getLat() {
-            return lat;
-        }
-
-        public void setLat(String lat) {
-            this.lat = lat;
-        }
-
-        public String getLng() {
-            return lng;
-        }
-
-        public void setLng(String lng) {
-            this.lng = lng;
-        }
-
         public String getDistance() {
             return distance;
         }
@@ -257,12 +240,28 @@ public class AllOrderListInfo {
             this.car_length = car_length;
         }
 
-        public Bitmap getHeadpic_bit() {
-            return headpic_bit;
+        public String getWeight() {
+            return weight;
         }
 
-        public void setHeadpic_bit(Bitmap headpic_bit) {
-            this.headpic_bit = headpic_bit;
+        public void setWeight(String weight) {
+            this.weight = weight;
+        }
+
+        public String getSpace() {
+            return space;
+        }
+
+        public void setSpace(String space) {
+            this.space = space;
+        }
+
+        public String getFfee() {
+            return ffee;
+        }
+
+        public void setFfee(String ffee) {
+            this.ffee = ffee;
         }
     }
 }

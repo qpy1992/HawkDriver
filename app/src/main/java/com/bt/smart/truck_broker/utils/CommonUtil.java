@@ -156,6 +156,14 @@ public class CommonUtil {
      * @return
      */
     public static String replace(String str){
-        return str.replaceAll("市"," ").replaceAll("区"," ").replaceAll("县"," ");
+        if(str.contains("自治")||str.length()<=2||str.contains("新区")){
+            if(str.equals("清新区")){
+                return "清新";
+            }else{
+                return str.replaceAll("新区","");
+            }
+        }else{
+            return str.replaceAll("市"," ").replaceAll("区"," ").replaceAll("县"," ");
+        }
     }
 }

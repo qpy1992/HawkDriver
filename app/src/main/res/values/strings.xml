@@ -12,4 +12,6 @@
     <string name="m_dialog_ok">确定</string>
     <string name="m_dialog_cancel">取消</string>
     <string name="m_LOADING">Loading...</string>
+    <string name="rating">评级：</string>
+    <string name="rat">评价</string>
 </resources>
