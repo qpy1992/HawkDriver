@@ -107,4 +107,8 @@ public class NetConfig {
 
     //更换头像
     public static String UPDATEHEADPIC = ROOT + "zRegisterController/updateHeadPic";
+
+    public static String TSTYPE = ROOT + "typeController/tstype";
+
+    public static String COMMENTS = ROOT + "commentController";
 }

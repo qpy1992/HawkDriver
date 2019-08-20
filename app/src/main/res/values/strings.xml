@@ -14,4 +14,8 @@
     <string name="m_LOADING">Loading...</string>
     <string name="rating">评级：</string>
     <string name="rat">评价</string>
+    <string name="biaoqian">标签：</string>
+    <string name="comments">请输入评价，不超过200字：</string>
+    <string name="submit">提交</string>
+    <string name="niming">匿名评价</string>
 </resources>

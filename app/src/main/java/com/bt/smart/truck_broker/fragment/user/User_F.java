@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import com.bt.smart.truck_broker.activity.userAct.AcceptOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AllOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AuthenticationActivity;
 import com.bt.smart.truck_broker.activity.userAct.BCardActivity;
+import com.bt.smart.truck_broker.activity.userAct.CommentActivity;
 import com.bt.smart.truck_broker.activity.userAct.MoneyActivity;
 import com.bt.smart.truck_broker.activity.userAct.SignPlatformActivity;
 import com.bt.smart.truck_broker.messageInfo.CommenInfo;
@@ -63,22 +65,9 @@ public class User_F extends Fragment implements View.OnClickListener {
     private TextView tv_title;
     private SwipeRefreshLayout swiperefresh;
     private ImageView img_head;//头像
-    private TextView tv_phone;
-    private TextView tv_isCheck;//认证进度
-    private TextView tv_checked;//已认证
-    private TextView tv_warn;//未通过认证前提示
-    private TextView tv_submit;//认证
-    private TextView tv_money;//余额
-    private LinearLayout linear_money;
-    private LinearLayout linear_order;
-    private TextView tv_orderNum;//运单数
-    private RelativeLayout rtv_address;
-    private RelativeLayout rtv_phone;
-    private RelativeLayout rtv_serv;
-    private RelativeLayout rtv_xieyi;
-    private RelativeLayout rtv_about;
-    private RelativeLayout rtv_exit;//退出登录
-    private RelativeLayout rlt_allOrder;//更多订单
+    private TextView tv_phone,tv_isCheck,tv_checked,tv_warn,tv_submit,tv_money,tv_orderNum;
+    private LinearLayout linear_money,linear_order,linear_speek;
+    private RelativeLayout rtv_address,rtv_phone,rtv_serv,rtv_xieyi,rtv_about,rtv_exit,rlt_allOrder;//更多订单
     private int REQUEST_MONEY_CODE = 10015;
     private int RESULT_MONEY_CODE = 10016;
     private int SHOT_CODE = 1069;//调用系统相机-拍摄照片
@@ -104,6 +93,7 @@ public class User_F extends Fragment implements View.OnClickListener {
         tv_submit = mRootView.findViewById(R.id.tv_submit);
         tv_orderNum = mRootView.findViewById(R.id.tv_orderNum);
         linear_money = mRootView.findViewById(R.id.linear_money);
+        linear_speek = mRootView.findViewById(R.id.linear_speek);
         tv_money = mRootView.findViewById(R.id.tv_money);
         linear_order = mRootView.findViewById(R.id.linear_order);
         rtv_address = mRootView.findViewById(R.id.rtv_address);
@@ -135,6 +125,7 @@ public class User_F extends Fragment implements View.OnClickListener {
         rtv_about.setOnClickListener(this);
         rtv_exit.setOnClickListener(this);
         rlt_allOrder.setOnClickListener(this);
+        linear_speek.setOnClickListener(this);
         showImage(img_head,NetConfig.IMG_HEAD + MyApplication.userHeadPic);
         swiperefresh.setColorSchemeColors(getResources().getColor(R.color.blue_icon), getResources().getColor(R.color.yellow_40), getResources().getColor(R.color.red_160));
         swiperefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -196,6 +187,10 @@ public class User_F extends Fragment implements View.OnClickListener {
             case R.id.rlt_allOrder://跳转订单分类界面
                 Intent intentAllOrder = new Intent(getContext(), AllOrderListActivity.class);
                 startActivity(intentAllOrder);
+                break;
+            case R.id.linear_speek:
+                Intent intent1 = new Intent(getContext(), CommentActivity.class);
+                startActivity(intent1);
                 break;
         }
     }
