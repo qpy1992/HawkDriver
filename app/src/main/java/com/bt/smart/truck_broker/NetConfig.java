@@ -12,12 +12,12 @@ package com.bt.smart.truck_broker;
 public class NetConfig {
     //服务器总地址
 //    public static String ROOT = "http://116.62.171.244:8082/yingsu/rest/";
-//    public static String ROOT = "http://120.27.3.205/rest/";
-    public static String ROOT = "http://172.16.52.63/rest/";
+    public static String ROOT = "http://120.27.3.205/rest/";
+//    public static String ROOT = "http://172.16.52.63/rest/";
     //    public static String ROOT = "http://2o1b417794.51mypc.cn:39437/rest/";
     //图片地址
-//    public static String IMG_HEAD = "http://120.27.3.205/";
-    public static String IMG_HEAD = "http://172.16.52.63/";
+    public static String IMG_HEAD = "http://120.27.3.205/";
+//    public static String IMG_HEAD = "http://172.16.52.63/";
 //    public static String IMG_HEAD = "http://205.168.1.100/yingsu_war_exploded/";
 
     public static String HEAD = "X-AUTH-TOKEN";
@@ -49,7 +49,7 @@ public class NetConfig {
     public static String PERSONAUTH = ROOT + "eSignController/personAuth";
     public static String REGISTERDRIVERCONTROLLER = ROOT + "registerDriverController/{id}";
     //平台合同内容
-    public static String CONTENT = ROOT + "eSignController/content";
+    public static String CONTENT = ROOT + "tokens/content";
     //用户与平台签署合同
     public static String SIGNWITHPLATFORM = ROOT + "eSignController/signWithPlatform";
 
@@ -111,4 +111,7 @@ public class NetConfig {
     public static String TSTYPE = ROOT + "typeController/tstype";
 
     public static String COMMENTS = ROOT + "commentController";
+
+    //检查更新
+    public static String CHECKUPDATE = ROOT + "versionController/checkUpdate";
 }

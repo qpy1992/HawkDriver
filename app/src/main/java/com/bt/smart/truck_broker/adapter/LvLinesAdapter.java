@@ -12,6 +12,7 @@ import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.fragment.home.Home_F;
 import com.bt.smart.truck_broker.messageInfo.CommenInfo;
 import com.bt.smart.truck_broker.messageInfo.SearchDriverLinesInfo;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
@@ -66,6 +67,7 @@ public class LvLinesAdapter extends BaseAdapter {
             view = View.inflate(mContext, R.layout.adapter_personal_lines, null);
             viewholder.tv_place = view.findViewById(R.id.tv_place);
             viewholder.tv_explain = view.findViewById(R.id.tv_explain);
+            viewholder.tv_addtime = view.findViewById(R.id.tv_addtime);
             viewholder.tv_del = view.findViewById(R.id.tv_del);
             view.setTag(viewholder);
         } else {
@@ -73,18 +75,21 @@ public class LvLinesAdapter extends BaseAdapter {
         }
         String oriLine = mList.get(i).getOrigin1();
         String desLine = mList.get(i).getDestination1();
-        if (null != mList.get(i).getOrigin2() && !"".equals(mList.get(i).getOrigin2())) {
+        if (CommonUtil.isNotEmpty(mList.get(i).getOrigin2())) {
             oriLine = oriLine + "/" + mList.get(i).getOrigin2();
-        } else if (null != mList.get(i).getOrigin3() && !"".equals(mList.get(i).getOrigin3())) {
+        }
+        if (CommonUtil.isNotEmpty(mList.get(i).getOrigin3())) {
             oriLine = oriLine + "/" + mList.get(i).getOrigin3();
         }
-        if (null != mList.get(i).getDestination2() && !"".equals(mList.get(i).getDestination2())) {
+        if (CommonUtil.isNotEmpty(mList.get(i).getDestination2())) {
             desLine = desLine + "/" + mList.get(i).getDestination2();
-        } else if (null != mList.get(i).getDestination3() && !"".equals(mList.get(i).getDestination3())) {
+        }
+        if (CommonUtil.isNotEmpty(mList.get(i).getDestination3())) {
             desLine = desLine + "/" + mList.get(i).getDestination3();
         }
         viewholder.tv_place.setText(oriLine + "  →  " + desLine);
         viewholder.tv_explain.setText(mList.get(i).getCar_long() + "  /  " + mList.get(i).getCar_type());
+        viewholder.tv_addtime.setText("发布时间："+mList.get(i).getAdd_date());
         if (mList.get(i).isCanDel()) {
             viewholder.tv_del.setVisibility(View.VISIBLE);
         } else {
@@ -135,6 +140,6 @@ public class LvLinesAdapter extends BaseAdapter {
     }
 
     private class MyViewHolder {
-        TextView tv_del, tv_explain, tv_place;
+        TextView tv_del, tv_explain, tv_place, tv_addtime;
     }
 }

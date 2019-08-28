@@ -110,7 +110,7 @@ public class SignPlatformActivity extends BaseActivity implements View.OnClickLi
         RequestParamsFM headParam = new RequestParamsFM();
         headParam.put("X-AUTH-TOKEN", MyApplication.userToken);
         ProgressDialogUtil.startShow(this, "正在获取协议内容");
-        HttpOkhUtils.getInstance().doGetWithOnlyHeader(NetConfig.CONTENT, headParam, new HttpOkhUtils.HttpCallBack() {
+        HttpOkhUtils.getInstance().doGetWithOnlyHeader(NetConfig.CONTENT+"/A0001", headParam, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
                 ProgressDialogUtil.hideDialog();

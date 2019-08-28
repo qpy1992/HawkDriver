@@ -195,29 +195,29 @@ public class Home_F extends Fragment implements View.OnClickListener {
         mData = new ArrayList();
         linesAdapter = new LvLinesAdapter(getContext(), mData, this);
         lv_line.setAdapter(linesAdapter);
-        lv_line.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //跳转线路查找货源列表
-                Intent intent = new Intent(getContext(), FindByLinesActivity.class);
-                intent.putExtra("lineID", mData.get(i).getId());
-                oriLine = mData.get(i).getOrigin1();
-                desLine = mData.get(i).getDestination1();
-                if (null != mData.get(i).getOrigin2() && !"".equals(mData.get(i).getOrigin2())) {
-                    oriLine = oriLine + "/" + mData.get(i).getOrigin2();
-                } else if (null != mData.get(i).getOrigin3() && !"".equals(mData.get(i).getOrigin3())) {
-                    oriLine = oriLine + "/" + mData.get(i).getOrigin3();
-                }
-                if (null != mData.get(i).getDestination2() && !"".equals(mData.get(i).getDestination2())) {
-                    desLine = desLine + "/" + mData.get(i).getDestination2();
-                } else if (null != mData.get(i).getDestination3() && !"".equals(mData.get(i).getDestination3())) {
-                    desLine = desLine + "/" + mData.get(i).getDestination3();
-                }
-                intent.putExtra("lineName", oriLine + "  →  " + desLine);
-                intent.putExtra("lineModel", mData.get(i).getCar_long() + "  →  " + mData.get(i).getCar_type());
-                startActivity(intent);
-            }
-        });
+//        lv_line.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                //跳转线路查找货源列表
+//                Intent intent = new Intent(getContext(), FindByLinesActivity.class);
+//                intent.putExtra("lineID", mData.get(i).getId());
+//                oriLine = mData.get(i).getOrigin1();
+//                desLine = mData.get(i).getDestination1();
+//                if (null != mData.get(i).getOrigin2() && !"".equals(mData.get(i).getOrigin2())) {
+//                    oriLine = oriLine + "/" + mData.get(i).getOrigin2();
+//                } else if (null != mData.get(i).getOrigin3() && !"".equals(mData.get(i).getOrigin3())) {
+//                    oriLine = oriLine + "/" + mData.get(i).getOrigin3();
+//                }
+//                if (null != mData.get(i).getDestination2() && !"".equals(mData.get(i).getDestination2())) {
+//                    desLine = desLine + "/" + mData.get(i).getDestination2();
+//                } else if (null != mData.get(i).getDestination3() && !"".equals(mData.get(i).getDestination3())) {
+//                    desLine = desLine + "/" + mData.get(i).getDestination3();
+//                }
+//                intent.putExtra("lineName", oriLine + "  →  " + desLine);
+//                intent.putExtra("lineModel", mData.get(i).getCar_long() + "  →  " + mData.get(i).getCar_type());
+//                startActivity(intent);
+//            }
+//        });
         linear_lines.setVisibility(View.GONE);
         //获取个人线路
         getPersonalLines();

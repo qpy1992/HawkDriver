@@ -217,20 +217,22 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/iv_type"
+                    <TextView
+                        android:id="@+id/tv_kepin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/zhengche"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="3dp"/>
+                        android:text="@string/kepin"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/green"
+                        android:visibility="invisible"
+                        android:textStyle="bold"/>
 
                     <ImageView
                         android:id="@+id/img_call"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="20dp"
                         android:src="@drawable/icon_phone"/>
                 </LinearLayout>
             </LinearLayout>

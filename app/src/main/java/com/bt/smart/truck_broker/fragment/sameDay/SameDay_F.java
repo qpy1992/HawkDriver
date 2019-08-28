@@ -556,6 +556,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
     }
 
     private void screenAllTerm() {
+
         getOrderList(1,10);
     }
 

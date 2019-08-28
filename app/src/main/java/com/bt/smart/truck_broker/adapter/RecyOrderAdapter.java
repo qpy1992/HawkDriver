@@ -83,11 +83,9 @@ public class RecyOrderAdapter extends BaseQuickAdapter<AllOrderListInfo.PageList
         });
         ImageView iv_man = helper.getView(R.id.iv_man);
         GlideLoaderUtil.showImgWithIcon(mContext, NetConfig.IMG_HEAD + item.getFheadpic(), R.drawable.iman, R.drawable.iman, iv_man);
-        ImageView iv_type = helper.getView(R.id.iv_type);
+        TextView tv_kepin = helper.getView(R.id.tv_kepin);
         if(item.getIs_box().equals("0")){
-            iv_type.setImageResource(R.drawable.pinche);
-        }else{
-            iv_type.setImageResource(R.drawable.zhengche);
+            tv_kepin.setVisibility(View.VISIBLE);
         }
     }
 

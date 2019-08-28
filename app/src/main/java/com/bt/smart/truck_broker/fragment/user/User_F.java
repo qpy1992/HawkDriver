@@ -37,6 +37,7 @@ import com.bt.smart.truck_broker.messageInfo.CommenInfo;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
 import com.bt.smart.truck_broker.utils.GlideLoaderUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
+import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.MyPopChoisePic;
 import com.bt.smart.truck_broker.utils.MyTextUtils;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
@@ -359,12 +360,14 @@ public class User_F extends Fragment implements View.OnClickListener {
     }
 
     private void aboutUs() {
-
+        String content = "“鹰卡联盟”是上海鹰速物流有限公司（WWW.YINGSU56.COM）运用雄厚的技术研发实力和对物流运作模式的深刻理解而研发的用于整合市场上车货资源的货运交易平台。平台主要为车主和货主之间搭建诚信便利的交易通道、促使货运交易达成、圆满完成运输任务。平台致力于为交易双方实现对订单、运输过程、结算等全程的可视化规范化管理，提升综合服务能力，推进物流供给侧结构性改革，相应国家绿色节能减排的号召，促进物流各方的降本增效。";
+        MyAlertDialog dialog  = new MyAlertDialog(getContext()).setContentText(content);
+        dialog.show();
     }
 
     private void preview(){
         if(MyApplication.fcontract==null){
-            signPlatForm();
+            ToastUtils.showToast(getContext(),"尚未签署协议或账号信息未刷新，请下拉刷新");
         }else {
             Intent xieyi = new Intent(getContext(), XieyiActivity.class);
             xieyi.putExtra("path",MyApplication.fcontract);

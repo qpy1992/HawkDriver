@@ -29,10 +29,12 @@ import com.bt.smart.truck_broker.fragment.home.Home_F;
 import com.bt.smart.truck_broker.fragment.sameDay.SameDay_F;
 import com.bt.smart.truck_broker.fragment.mineOrders.MyOrders_F;
 import com.bt.smart.truck_broker.fragment.user.User_F;
+import com.bt.smart.truck_broker.messageInfo.ApkInfo;
 import com.bt.smart.truck_broker.messageInfo.NewApkInfo;
 import com.bt.smart.truck_broker.servicefile.GeTuiIntentService;
 import com.bt.smart.truck_broker.servicefile.GeTuiPushService;
 import com.bt.smart.truck_broker.servicefile.SendLocationService;
+import com.bt.smart.truck_broker.util.UpApkDataFile.UpdateAppUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.MyAlertDialogHelper;
@@ -150,7 +152,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tv_menu_2 = findViewById(R.id.tv_menu_2);
         tv_menu_3 = findViewById(R.id.tv_menu_3);
         //获取最新的版本
-        //        getNewApkInfo();
+                getNewApkInfo();
         // 需要检查权限,否则编译报错。
         if (Build.VERSION.SDK_INT >= 23 &&
                 ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -356,37 +358,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void getNewApkInfo() {
-        HttpOkhUtils.getInstance().doGet(NetConfig.GETNEWAPPVERSION, new HttpOkhUtils.HttpCallBack() {
+        RequestParamsFM headparam = new RequestParamsFM();
+        headparam.put(NetConfig.HEAD,MyApplication.userToken);
+        HttpOkhUtils.getInstance().doGetWithOnlyHeader(NetConfig.CHECKUPDATE + "/1", headparam, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
-
+                Log.i(TAG,"网络错误!");
             }
 
             @Override
             public void onSuccess(int code, String resbody) {
-                Gson gson = new Gson();
-                //                NewApkInfo newApkInfo = gson.fromJson(resbody, NewApkInfo.class);
-                //                if (1 == newApkInfo.getCode()) {
-                //                    int appVersionCode = getAppVersionCode(FirstActivity.this);
-                //                    if (null != newApkInfo.getNewAppVersion()) {
-                //                        if (appVersionCode < newApkInfo.getNewAppVersion().getId()) {
-                //                            //弹出dailog，提示用户是否下载
-                //                            showDialogToDown(newApkInfo);
-                //                        }
-                //                    }
-                //                }
+                if(code!=200){
+                    Log.i(TAG,"网络错误!");
+                    return;
+                }
+                ApkInfo info = new Gson().fromJson(resbody,ApkInfo.class);
+                if(getAppVersionCode(MainActivity.this)<info.getData().getVersionCode()){
+                    showDialogToDown(info);
+                }
             }
         });
     }
 
-    private void showDialogToDown(NewApkInfo newApkInfo) {
-        //        MyApplication.loadUrl = NetConfig.IMG_HEAD_IP + newApkInfo.getNewAppVersion().getApk_file();
-        //        UpdateAppUtil.from(this)
-        //                .serverVersionCode(newApkInfo.getNewAppVersion().getId())  //服务器versionCode
-        //                .serverVersionName(newApkInfo.getNewAppVersion().getShow_code()) //服务器versionName
-        //                .apkPath(MyApplication.loadUrl) //最新apk下载地址
-        //                .updateInfo(newApkInfo.getNewAppVersion().getChange_message())
-        //                .update();
+    private void showDialogToDown(ApkInfo apkInfo) {
+        MyApplication.loadUrl = NetConfig.IMG_HEAD + apkInfo.getData().getApkPath();
+        UpdateAppUtil.from(this)
+                .serverVersionCode(apkInfo.getData().getVersionCode())  //服务器versionCode
+                .serverVersionName(apkInfo.getData().getVersionName()) //服务器versionName
+                .apkPath(MyApplication.loadUrl) //最新apk下载地址
+                .updateInfo(apkInfo.getData().getApkInfo())
+                .update();
     }
 
     //获取当前版本号
