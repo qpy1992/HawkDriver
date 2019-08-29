@@ -1,6 +1,7 @@
 package com.bt.smart.truck_broker.fragment.sameDay;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -586,7 +588,9 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View view) {
                 if(SoftKeyboardUtils.isSoftShowing(getActivity())){
-                    SoftKeyboardUtils.hideSystemSoftKeyboard(getActivity());
+                    ((InputMethodManager) MyApplication.application.getSystemService(
+                            Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(et_weight_begin.getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
                 }
                 weight_begin = et_weight_begin.getText().toString();
                 weight_end = et_weight_end.getText().toString();
@@ -608,6 +612,11 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
                 tv_end.setText("终点");
                 getOrderList(1,10);
                 dialog.dismiss();
+                if(SoftKeyboardUtils.isSoftShowing(getActivity())){
+                    ((InputMethodManager) MyApplication.application.getSystemService(
+                            Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(et_weight_begin.getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                }
             }
         });
     }
