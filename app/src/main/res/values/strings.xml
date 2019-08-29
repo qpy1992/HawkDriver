@@ -19,4 +19,6 @@
     <string name="submit">提交</string>
     <string name="niming">匿名评价</string>
     <string name="kepin">可拼</string>
+    <string name="search">搜索</string>
+    <string name="reset">重置</string>
 </resources>

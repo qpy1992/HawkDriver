@@ -1,5 +1,6 @@
 package com.bt.smart.truck_broker.fragment.sameDay;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -36,6 +39,7 @@ import com.bt.smart.truck_broker.utils.MyAnimationUtils;
 import com.bt.smart.truck_broker.utils.PopupOpenHelper;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
+import com.bt.smart.truck_broker.utils.SoftKeyboardUtils;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
@@ -78,7 +82,7 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
     private int mOrderSize;//总条目
     private int mSumPageSize;//总共页数
     private int mWhichPage;//获取哪页数据
-    private String fh,sh;
+    private String fh,sh,weight_begin,weight_end,vol_begin,vol_end;
     private static String TAG = "SameDay_F";
     private double lat,lng;
 
@@ -279,6 +283,14 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
         if(CommonUtil.isNotEmpty(fh)&&CommonUtil.isNotEmpty(sh)){
             params.put("fh", fh);
             params.put("sh", sh);
+        }
+        if(CommonUtil.isNotEmpty(weight_begin)&&CommonUtil.isNotEmpty(weight_end)){
+            params.put("weight_begin",weight_begin);
+            params.put("weight_end",weight_end);
+        }
+        if(CommonUtil.isNotEmpty(vol_begin)&&CommonUtil.isNotEmpty(vol_end)){
+            params.put("vol_begin",vol_begin);
+            params.put("vol_end",vol_end);
         }
         HttpOkhUtils.getInstance().doGetWithHeadParams(finalUrl, headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override
@@ -556,8 +568,48 @@ public class SameDay_F extends Fragment implements View.OnClickListener {
     }
 
     private void screenAllTerm() {
-
-        getOrderList(1,10);
+        //添加筛选条件
+        final View v = getLayoutInflater().inflate(R.layout.dialog_shaixuan, null);
+        final EditText et_weight_begin = v.findViewById(R.id.et_weight_begin);
+        final EditText et_weight_end = v.findViewById(R.id.et_weight_end);
+        final EditText et_vol_begin = v.findViewById(R.id.et_vol_begin);
+        final EditText et_vol_end = v.findViewById(R.id.et_vol_end);
+        et_weight_begin.setText(weight_begin);
+        et_weight_end.setText(weight_end);
+        et_vol_begin.setText(vol_begin);
+        et_vol_end.setText(vol_end);
+        final Button btn_search = v.findViewById(R.id.btn_search);
+        final Button btn_reset = v.findViewById(R.id.btn_reset);
+        final AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setView(v).show();
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(SoftKeyboardUtils.isSoftShowing(getActivity())){
+                    SoftKeyboardUtils.hideSystemSoftKeyboard(getActivity());
+                }
+                weight_begin = et_weight_begin.getText().toString();
+                weight_end = et_weight_end.getText().toString();
+                vol_begin = et_vol_begin.getText().toString();
+                vol_end = et_vol_end.getText().toString();
+                getOrderList(1,10);
+                dialog.dismiss();
+            }
+        });
+        btn_reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fh="";sh="";weight_begin="";weight_end="";vol_begin="";vol_end="";
+                et_weight_begin.setText("");
+                et_weight_end.setText("");
+                et_vol_begin.setText("");
+                et_vol_end.setText("");
+                tv_start.setText("起点");
+                tv_end.setText("终点");
+                getOrderList(1,10);
+                dialog.dismiss();
+            }
+        });
     }
 
     private int scDownY;
