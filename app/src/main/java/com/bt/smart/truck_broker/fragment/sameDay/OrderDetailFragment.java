@@ -215,6 +215,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             iv_rece.setVisibility(View.GONE);
             ysxy.setVisibility(View.GONE);
         }
+        if (-1 == orderType){
+            ysxy.setVisibility(View.GONE);
+        }
         //初始化定时刷新器
         initHandlerPost();
 //        loadpics(orderDetailInfo.getData().getFstatus(),orderDetailInfo.getData().getFloadpics());

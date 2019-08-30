@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -22,6 +24,7 @@ import com.bt.smart.truck_broker.adapter.RecyPlaceAdapter;
 import com.bt.smart.truck_broker.messageInfo.AddDriverLinesInfo;
 import com.bt.smart.truck_broker.messageInfo.ChioceAdapterContentInfo;
 import com.bt.smart.truck_broker.messageInfo.ShengDataInfo;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.PopupOpenHelper;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
@@ -60,6 +63,9 @@ public class SetLinesAddressFragment extends Fragment implements View.OnClickLis
     private List<ChioceAdapterContentInfo> mDataEd;
     private RecyPlaceAdapter               placeAdapter;
     private RecyPlaceAdapter               placeEdAdapter;
+    private CheckBox cb_pc,cb_zc;
+    private EditText et_kweight,et_kvolume;
+    private int ftype = 0;
     private int Result_FOR_SELECT_LINES = 10067;//设置线路响应值
 
     @Override
@@ -80,22 +86,41 @@ public class SetLinesAddressFragment extends Fragment implements View.OnClickLis
         rlt_car_model = mRootView.findViewById(R.id.rlt_car_model);
         tv_choice_model = mRootView.findViewById(R.id.tv_choice_model);
         tv_submit = mRootView.findViewById(R.id.tv_submit);
+        cb_pc = mRootView.findViewById(R.id.cb_pc);
+        cb_pc.setChecked(true);
+        cb_zc = mRootView.findViewById(R.id.cb_zc);
+        et_kweight = mRootView.findViewById(R.id.et_kweight);
+        et_kvolume = mRootView.findViewById(R.id.et_kvolume);
     }
 
     private void initData() {
         img_back.setVisibility(View.VISIBLE);
         tv_title.setText("添加常用路线");
-
         //初始化起点线路
         initStartPlace();
         //初始化目的地
         initEndPlace();
-
         img_back.setOnClickListener(this);
         linear_cf00.setOnClickListener(this);
         linear_md00.setOnClickListener(this);
         rlt_car_model.setOnClickListener(this);
         tv_submit.setOnClickListener(this);
+        cb_pc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cb_pc.setChecked(true);
+                cb_zc.setChecked(false);
+                ftype = 0;
+            }
+        });
+        cb_zc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cb_zc.setChecked(true);
+                cb_pc.setChecked(false);
+                ftype = 1;
+            }
+        });
     }
 
     @Override
@@ -116,6 +141,10 @@ public class SetLinesAddressFragment extends Fragment implements View.OnClickLis
                 break;
             case R.id.tv_submit:
                 //提交线路
+                if(!CommonUtil.isNotEmpty(et_kweight.getText().toString())){
+                    ToastUtils.showToast(getContext(),"可装重量不能为空！");
+                    return;
+                }
                 sendDriverLine();
                 break;
         }
@@ -246,6 +275,11 @@ public class SetLinesAddressFragment extends Fragment implements View.OnClickLis
         params.put("destination1", destination1);
         params.put("destination2", destination2);
         params.put("destination3", destination3);
+        params.put("ftype",ftype);
+        params.put("fweight",et_kweight.getText().toString());
+        if(CommonUtil.isNotEmpty(et_kvolume.getText().toString())){
+            params.put("fvolume",et_kvolume.getText().toString());
+        }
         params.setUseJsonStreamer(true);
         HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.DRIVERJOURNEYCONTROLLER, headParams, params, new HttpOkhUtils.HttpCallBack() {
             @Override

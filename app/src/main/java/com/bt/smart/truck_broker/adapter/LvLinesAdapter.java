@@ -69,6 +69,9 @@ public class LvLinesAdapter extends BaseAdapter {
             viewholder.tv_explain = view.findViewById(R.id.tv_explain);
             viewholder.tv_addtime = view.findViewById(R.id.tv_addtime);
             viewholder.tv_del = view.findViewById(R.id.tv_del);
+            viewholder.tv_ftype = view.findViewById(R.id.tv_ftype);
+            viewholder.tv_fweight = view.findViewById(R.id.tv_fweight);
+            viewholder.tv_fvolume = view.findViewById(R.id.tv_fvolume);
             view.setTag(viewholder);
         } else {
             viewholder = (MyViewHolder) view.getTag();
@@ -102,7 +105,18 @@ public class LvLinesAdapter extends BaseAdapter {
                 deletLines(i);
             }
         });
-
+        if(mList.get(i).getFtype()==0){
+            viewholder.tv_ftype.setText("拼车");
+            viewholder.tv_ftype.setTextColor(mContext.getResources().getColor(R.color.green));
+        }else{
+            viewholder.tv_ftype.setText("整车");
+            viewholder.tv_ftype.setTextColor(mContext.getResources().getColor(R.color.orange));
+        }
+        viewholder.tv_fweight.setText("可装重量："+mList.get(i).getFweight()+"吨");
+        if(CommonUtil.isNotEmpty(mList.get(i).getFvolume())){
+            viewholder.tv_fvolume.setText("可装体积："+mList.get(i).getFvolume()+"m³");
+            viewholder.tv_fvolume.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
@@ -140,6 +154,6 @@ public class LvLinesAdapter extends BaseAdapter {
     }
 
     private class MyViewHolder {
-        TextView tv_del, tv_explain, tv_place, tv_addtime;
+        TextView tv_del, tv_explain, tv_place, tv_addtime, tv_ftype, tv_fweight, tv_fvolume;
     }
 }

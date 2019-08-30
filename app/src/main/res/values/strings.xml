@@ -21,4 +21,13 @@
     <string name="kepin">可拼</string>
     <string name="search">搜索</string>
     <string name="reset">重置</string>
+    <string name="ftype">类型：</string>
+    <string name="pin">拼车</string>
+    <string name="zheng">整车</string>
+    <string name="kweight">可装重量:</string>
+    <string name="weiwarn">请输入可装重量</string>
+    <string name="kvolume">可装体积:</string>
+    <string name="volwarn">请输入可装体积</string>
+    <string name="ton">吨</string>
+    <string name="cubic">m³</string>
 </resources>

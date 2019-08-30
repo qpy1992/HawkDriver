@@ -83,6 +83,10 @@ public class SearchDriverLinesInfo {
         private Object destination3;
         private String origin2;
         private Object origin3;
+        private int ftype;
+        private String fweight;
+        private String fvolume;
+
         /**
          * canDel : false
          */
@@ -183,6 +187,30 @@ public class SearchDriverLinesInfo {
 
         public void setCanDel(boolean canDel) {
             this.canDel = canDel;
+        }
+
+        public int getFtype() {
+            return ftype;
+        }
+
+        public void setFtype(int ftype) {
+            this.ftype = ftype;
+        }
+
+        public String getFweight() {
+            return fweight;
+        }
+
+        public void setFweight(String fweight) {
+            this.fweight = fweight;
+        }
+
+        public String getFvolume() {
+            return fvolume;
+        }
+
+        public void setFvolume(String fvolume) {
+            this.fvolume = fvolume;
         }
     }
 }
