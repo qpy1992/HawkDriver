@@ -63,8 +63,8 @@ public class SetLinesAddressFragment extends Fragment implements View.OnClickLis
     private List<ChioceAdapterContentInfo> mDataEd;
     private RecyPlaceAdapter               placeAdapter;
     private RecyPlaceAdapter               placeEdAdapter;
-    private CheckBox cb_pc,cb_zc;
-    private EditText et_kweight,et_kvolume;
+    private CheckBox                       cb_pc,cb_zc;
+    private EditText                       et_kweight,et_kvolume;
     private int ftype = 0;
     private int Result_FOR_SELECT_LINES = 10067;//设置线路响应值
 
@@ -208,7 +208,7 @@ public class SetLinesAddressFragment extends Fragment implements View.OnClickLis
                 }
                 Gson gson = new Gson();
                 ShengDataInfo shengDataInfo = gson.fromJson(resbody, ShengDataInfo.class);
-                ToastUtils.showToast(getContext(), shengDataInfo.getMessage());
+//                ToastUtils.showToast(getContext(), shengDataInfo.getMessage());
                 if (shengDataInfo.isOk()) {
                     mSHEData.clear();
                     mSHEData.addAll(shengDataInfo.getData());
