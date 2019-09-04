@@ -23,6 +23,7 @@ import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
 import com.bt.smart.truck_broker.messageInfo.SMSInfo;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
@@ -75,6 +76,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void getView() {
         img_back = (ImageView) findViewById(R.id.img_back);
         tv_yzmlogin = (TextView) findViewById(R.id.tv_yzmlogin);
+        tv_yzmlogin.setVisibility(View.GONE);
         tv_gcode = (TextView) findViewById(R.id.tv_gcode);
         et_code = (EditText) findViewById(R.id.et_code);
         edit_num = (EditText) findViewById(R.id.edit_num);
@@ -234,6 +236,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     loginToService(phone, psd);
                     // startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
+                break;
+            case R.id.tv_seragree:
+                CommonUtil.showProtocol(LoginActivity.this,0);
+                break;
+            case R.id.tv_pripolicy:
+                CommonUtil.showProtocol(LoginActivity.this,1);
                 break;
         }
     }

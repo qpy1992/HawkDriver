@@ -36,7 +36,7 @@ public class NetConfig {
     //修改密码(记得原密码)
     public static String BACKFPASSWORD = ROOT + "backFpassword";
     //修改密码(忘记原密码)
-    public static String BACKFPASSWORDBYMOBILE = ROOT + "backFpasswordByMobile";
+    public static String CHANGPASS = ROOT + "tokens/changePass";
     //用户登录
     public static String LOGINURL = ROOT + "tokens/registerdriver";
     //验证码登录

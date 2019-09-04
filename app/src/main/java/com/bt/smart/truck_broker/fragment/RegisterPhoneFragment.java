@@ -1,9 +1,14 @@
 package com.bt.smart.truck_broker.fragment;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +20,14 @@ import android.widget.TextView;
 import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.activity.LoginActivity;
+import com.bt.smart.truck_broker.messageInfo.CommenInfo;
 import com.bt.smart.truck_broker.messageInfo.CommonInfo;
 import com.bt.smart.truck_broker.messageInfo.RegisterInfo;
+import com.bt.smart.truck_broker.messageInfo.RuleContentInfo;
 import com.bt.smart.truck_broker.messageInfo.SMSInfo;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
+import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -45,9 +54,11 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
     private TextView  tv_gcode;//点击获取验证码
     private EditText  et_code;//填写验证码
     private EditText  et_psd;//填写密码
+    private EditText  et_psd_repeat;//确认密码
     private CheckBox  cb_agree;//是否同意协议
     private TextView  tv_submit;//确认提交
-
+    private TextView tv_seragree;//服务协议
+    private TextView tv_pripolicy;//隐私政策
     private String  mPhone;
     private String  vCode;//记录获取的验证码
     private String  mKind;//记录哪个页面跳转过来的。fgt是忘记密码，rgs是注册
@@ -69,9 +80,23 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
         et_phone = mRootView.findViewById(R.id.et_phone);
         et_code = mRootView.findViewById(R.id.et_code);
         et_psd = mRootView.findViewById(R.id.et_psd);
+        et_psd_repeat = mRootView.findViewById(R.id.et_psd_repeat);
         cb_agree = mRootView.findViewById(R.id.cb_agree);
         tv_gcode = mRootView.findViewById(R.id.tv_gcode);
         tv_submit = mRootView.findViewById(R.id.tv_submit);
+        tv_seragree = mRootView.findViewById(R.id.tv_seragree);
+        tv_pripolicy = mRootView.findViewById(R.id.tv_pripolicy);
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        StyleSpan styleSpan_B = new StyleSpan(Typeface.BOLD);
+        SpannableString spannableString = new SpannableString(getResources().getString(R.string.fwxy));
+        spannableString.setSpan(underlineSpan, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(styleSpan_B, 0, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv_seragree.setText(spannableString);
+
+        SpannableString spannableString2 = new SpannableString(getResources().getString(R.string.yszc));
+        spannableString2.setSpan(underlineSpan, 0, spannableString2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString2.setSpan(styleSpan_B, 0, spannableString2.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv_pripolicy.setText(spannableString2);
     }
 
     private void initData() {
@@ -84,6 +109,8 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
         }
         tv_gcode.setOnClickListener(this);
         tv_submit.setOnClickListener(this);
+        tv_seragree.setOnClickListener(this);
+        tv_pripolicy.setOnClickListener(this);
         handler = new Handler();
     }
 
@@ -109,6 +136,10 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.tv_submit:
                 String newPhone = String.valueOf(et_phone.getText()).trim();
+                if(!CommonUtil.isChinaPhoneLegal(newPhone)){
+                    ToastUtils.showToast(getContext(),"手机号有误请重新输入");
+                    return;
+                }
                 if (null == mPhone) {
                     ToastUtils.showToast(getContext(), "请获取验证码");
                     return;
@@ -119,6 +150,7 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
                 }
                 String wrtcode = String.valueOf(et_code.getText()).trim();
                 String wrtpsd = String.valueOf(et_psd.getText()).trim();
+                String psdrepeat = String.valueOf(et_psd_repeat.getText()).trim();
                 if ("".equals(wrtcode) || "请输入验证码".equals(wrtcode)) {
                     ToastUtils.showToast(getContext(), "请输入验证码");
                     return;
@@ -131,11 +163,25 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
                     ToastUtils.showToast(getContext(), "请设置密码");
                     return;
                 }
+                if("".equals(psdrepeat) || "请确认密码".equals(psdrepeat)){
+                    ToastUtils.showToast(getContext(), "请确认密码");
+                    return;
+                }
+                if(!wrtpsd.equals(psdrepeat)){
+                    ToastUtils.showToast(getContext(),"两次输入的密码不一致，请重新输入后提交");
+                    return;
+                }
                 if ("fgt".equals(mKind)) {//修改密码
                     changePsd(mPhone, wrtpsd);
                 } else {//注册
                     registMember(mPhone, wrtpsd);
                 }
+                break;
+            case R.id.tv_seragree:
+                CommonUtil.showProtocol(getContext(),0);
+                break;
+            case R.id.tv_pripolicy:
+                CommonUtil.showProtocol(getContext(),1);
                 break;
         }
     }
@@ -170,9 +216,9 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
 
     private void changePsd(String phone, String wrtpsd) {
         RequestParamsFM params = new RequestParamsFM();
-        params.put("mobile", phone);
-        params.put("fpasswordNew", wrtpsd);
-        HttpOkhUtils.getInstance().doPost(NetConfig.BACKFPASSWORDBYMOBILE, params, new HttpOkhUtils.HttpCallBack() {
+        params.put("fmobile", phone);
+        params.put("password", wrtpsd);
+        HttpOkhUtils.getInstance().doPost(NetConfig.CHANGPASS, params, new HttpOkhUtils.HttpCallBack() {
             @Override
             public void onError(Request request, IOException e) {
                 ToastUtils.showToast(getContext(), "网络错误");
@@ -185,9 +231,9 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
                     return;
                 }
                 Gson gson = new Gson();
-                CommonInfo sendSMSInfo = gson.fromJson(resbody, CommonInfo.class);
-                ToastUtils.showToast(getContext(), sendSMSInfo.getMessage());
-                if (1 == sendSMSInfo.getCode()) {
+                CommenInfo info = gson.fromJson(resbody, CommenInfo.class);
+                ToastUtils.showToast(getContext(), info.getData().toString());
+                if (info.isOk()) {
                     startActivity(new Intent(getContext(), LoginActivity.class));
                     isFinish = true;
                     getActivity().finish();

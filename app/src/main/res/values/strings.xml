@@ -9,6 +9,10 @@
     <string name="m_default_progressbar">Default Progressbar:</string>
 
     <string name="m_dialog_default_title">Here\'s a message!</string>
+    <string name="agree">我同意&#160;</string>
+    <string name="fwxy">服务协议</string>
+    <string name="and">&#160;与&#160;</string>
+    <string name="yszc">隐私政策</string>
     <string name="m_dialog_ok">确定</string>
     <string name="m_dialog_cancel">取消</string>
     <string name="m_LOADING">Loading...</string>

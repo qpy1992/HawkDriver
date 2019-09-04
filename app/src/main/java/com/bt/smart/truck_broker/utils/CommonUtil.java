@@ -1,5 +1,6 @@
 package com.bt.smart.truck_broker.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Editable;
@@ -8,11 +9,27 @@ import android.text.Selection;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
+import com.bt.smart.truck_broker.NetConfig;
+import com.bt.smart.truck_broker.R;
+import com.bt.smart.truck_broker.messageInfo.RuleContentInfo;
+import com.google.gson.Gson;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Whitelist;
+
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import okhttp3.Request;
 
 public class CommonUtil {
     /**
@@ -165,5 +182,64 @@ public class CommonUtil {
         }else{
             return str.replaceAll("市"," ").replaceAll("区"," ").replaceAll("县"," ");
         }
+    }
+
+    public static String toPlainText(final String html) {
+        if (html == null) {
+            return "";
+        }
+        final Document document = Jsoup.parse(html);
+        final Document.OutputSettings outputSettings = new Document.OutputSettings().prettyPrint(false);
+        document.outputSettings(outputSettings);
+        document.select("br").append("\\n");
+        document.select("p").prepend("\\n");
+        document.select("p").append("\\n");
+        final String newHtml = document.html().replaceAll("\\\\n", "\n");
+        final String plainText = Jsoup.clean(newHtml, "", Whitelist.none(), outputSettings);
+        final String result = StringEscapeUtils.unescapeHtml3(plainText.trim());
+        return result;
+    }
+
+    public static void showProtocol(final Context context, final int type){
+        String end = "";
+        if(type==0){
+            end = "A0002";
+        }else{
+            end = "A0003";
+        }
+        HttpOkhUtils.getInstance().doGet(NetConfig.CONTENT+"/"+end, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                ToastUtils.showToast(context, "网络错误");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                if (200 != code) {
+                    ToastUtils.showToast(context, "网络错误" + code);
+                    return;
+                }
+                Gson gson = new Gson();
+                RuleContentInfo ruleContentInfo = gson.fromJson(resbody, RuleContentInfo.class);
+                if (ruleContentInfo.isOk()) {
+                    String title = "";
+                    if (type==0){
+                        title = context.getResources().getString(R.string.fwxy);
+                    }else{
+                        title = context.getResources().getString(R.string.yszc);
+                    }
+                    new MyAlertDialog(context)
+                            .setTitleText(title)
+                            .setContentText(CommonUtil.toPlainText(ruleContentInfo.getData().getFcontent())).show();
+                }
+            }
+        });
+    }
+
+    public static boolean isChinaPhoneLegal(String str) throws PatternSyntaxException {
+        String regExp = "^((13[0-9])|(15[^4])|(166)|(17[0-8])|(18[0-9])|(19[8-9])|(147,145))\\d{8}$";
+        Pattern p = Pattern.compile(regExp);
+        Matcher m = p.matcher(str);
+        return m.matches();
     }
 }
