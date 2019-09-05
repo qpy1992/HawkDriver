@@ -163,6 +163,10 @@ public class RegisterPhoneFragment extends Fragment implements View.OnClickListe
                     ToastUtils.showToast(getContext(), "请设置密码");
                     return;
                 }
+                if(wrtpsd.length()<6){
+                    ToastUtils.showToast(getContext(),"密码至少6位");
+                    return;
+                }
                 if("".equals(psdrepeat) || "请确认密码".equals(psdrepeat)){
                     ToastUtils.showToast(getContext(), "请确认密码");
                     return;

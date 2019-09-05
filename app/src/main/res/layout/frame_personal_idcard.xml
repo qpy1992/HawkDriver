@@ -194,7 +194,7 @@
                     android:layout_height="80dp"
                     android:layout_marginLeft="10dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/up_drive" />
+                    android:src="@drawable/up_front" />
 
                 <RelativeLayout
                     android:id="@+id/rlt_carZ"
@@ -207,7 +207,7 @@
                         android:layout_width="80dp"
                         android:layout_height="50dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/up_drivecard_demo" />
+                        android:src="@drawable/up_idcard_z" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -256,7 +256,7 @@
                     android:layout_height="80dp"
                     android:layout_marginLeft="10dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/up_drive" />
+                    android:src="@drawable/up_back" />
 
                 <RelativeLayout
                     android:id="@+id/rlt_carB"
@@ -269,7 +269,7 @@
                         android:layout_width="80dp"
                         android:layout_height="50dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/up_drivecard_demo" />
+                        android:src="@drawable/up_idcard_b" />
 
                     <TextView
                         android:layout_width="wrap_content"
