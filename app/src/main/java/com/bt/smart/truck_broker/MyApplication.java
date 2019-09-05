@@ -32,6 +32,7 @@ public class MyApplication extends Application {
     public static String userID;
     public static String userPhone;
     public static String faccountid;
+    public static String paccountid;
     public static String userToken;
     public static String loadUrl;
     public static String checkStatus;//审核状态

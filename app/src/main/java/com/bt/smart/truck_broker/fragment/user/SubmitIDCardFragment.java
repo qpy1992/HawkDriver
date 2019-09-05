@@ -26,6 +26,7 @@ import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.activity.homeAct.AuthenticationWebAct;
 import com.bt.smart.truck_broker.messageInfo.AuthInfo;
 import com.bt.smart.truck_broker.messageInfo.UpPicInfo;
+import com.bt.smart.truck_broker.utils.CheckIDCardRule;
 import com.bt.smart.truck_broker.utils.GlideLoaderUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyPopChoisePic;
@@ -240,9 +241,13 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
             ToastUtils.showToast(getContext(), "名称不能为空");
             return;
         }
-
         if (MyTextUtils.isEditTextEmpty(et_code, "请输入证件号")) {
             ToastUtils.showToast(getContext(), "证件号不能为空");
+            return;
+        }
+        CheckIDCardRule regex = new CheckIDCardRule(et_code.getText().toString(), null);
+        if(!regex.validate()){
+            ToastUtils.showToast(getContext(),"身份证号码有误");
             return;
         }
         //先提交图片，在提交信息
@@ -345,8 +350,9 @@ public class SubmitIDCardFragment extends Fragment implements View.OnClickListen
                 AuthInfo authInfo = gson.fromJson(resbody, AuthInfo.class);
                 ToastUtils.showToast(getContext(), authInfo.getMessage());
                 if (authInfo.isOk()) {
+                    MyApplication.paccountid = authInfo.getData().getPaccountid();
                     //先跳转支付宝人脸认证
-                    String webUri = authInfo.getData().toString();
+                    String webUri = authInfo.getData().getPersonalUrl();
                     if (null == webUri || "".equals(webUri)) {
                         ToastUtils.showToast(getContext(), "未获取到个人认证信息");
                         return;

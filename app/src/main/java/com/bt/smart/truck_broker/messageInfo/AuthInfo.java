@@ -12,7 +12,7 @@ public class AuthInfo {
 
     private String message;
     private int size;
-    private Object data;
+    private DataBean data;
     private String respCode;
     private boolean ok;
 
@@ -32,11 +32,12 @@ public class AuthInfo {
         this.size = size;
     }
 
-    public Object getData() {
+
+    public DataBean getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(DataBean data) {
         this.data = data;
     }
 
@@ -54,5 +55,26 @@ public class AuthInfo {
 
     public void setOk(boolean ok) {
         this.ok = ok;
+    }
+
+    public class DataBean{
+        String paccountid;
+        String personalUrl;
+
+        public String getPaccountid() {
+            return paccountid;
+        }
+
+        public void setPaccountid(String paccountid) {
+            this.paccountid = paccountid;
+        }
+
+        public String getPersonalUrl() {
+            return personalUrl;
+        }
+
+        public void setPersonalUrl(String personalUrl) {
+            this.personalUrl = personalUrl;
+        }
     }
 }

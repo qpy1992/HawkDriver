@@ -141,6 +141,10 @@ public class SetLinesAddressFragment extends Fragment implements View.OnClickLis
                 break;
             case R.id.tv_submit:
                 //提交线路
+                if(!CommonUtil.isNotEmpty(carLeng)&&!CommonUtil.isNotEmpty(carModel)){
+                    ToastUtils.showToast(getContext(),"请选择车长和车型");
+                    return;
+                }
                 if(!CommonUtil.isNotEmpty(et_kweight.getText().toString())){
                     ToastUtils.showToast(getContext(),"可装重量不能为空！");
                     return;

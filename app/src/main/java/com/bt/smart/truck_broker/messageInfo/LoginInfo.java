@@ -138,6 +138,8 @@ public class LoginInfo {
             private String id;
             private String fcontract;
             private int fcardno;
+            private String paccountid;
+            private int    checkface;
             /**
              * faccountid : 2626
              */
@@ -326,6 +328,22 @@ public class LoginInfo {
 
             public void setFcardno(int fcardno) {
                 this.fcardno = fcardno;
+            }
+
+            public String getPaccountid() {
+                return paccountid;
+            }
+
+            public void setPaccountid(String paccountid) {
+                this.paccountid = paccountid;
+            }
+
+            public int getCheckface() {
+                return checkface;
+            }
+
+            public void setCheckface(int checkface) {
+                this.checkface = checkface;
             }
         }
     }

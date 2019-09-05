@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsPromptResult;
@@ -24,17 +25,26 @@ import android.widget.Toast;
 
 import com.bt.smart.truck_broker.BaseActivity;
 import com.bt.smart.truck_broker.MyApplication;
+import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
+import com.bt.smart.truck_broker.messageInfo.CommenInfo;
 import com.bt.smart.truck_broker.util.checkFaceFile.WBH5FaceVerifySDK;
+import com.bt.smart.truck_broker.utils.HttpOkhUtils;
+import com.bt.smart.truck_broker.utils.RequestParamsFM;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+
+import okhttp3.Request;
 
 public class AuthenticationWebAct extends BaseActivity implements View.OnClickListener {
     private ImageView img_back;
     private TextView tv_title;
     private WebView web_show;
     private int RESULT_AUTHENTICA_CODE = 10111;
+    private static String TAG = "AuthenticationWebAct";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +142,7 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
                     if (status){
                         MyApplication.checkFace = true;
                         setResult(RESULT_AUTHENTICA_CODE);
+                        refresh();
                         finish();
                     }
                 }
@@ -207,5 +218,31 @@ public class AuthenticationWebAct extends BaseActivity implements View.OnClickLi
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         processExtraData();
+    }
+
+    protected void refresh(){
+        RequestParamsFM headParam = new RequestParamsFM();
+        headParam.put(NetConfig.HEAD,MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        String sql = "update z_register set checkface=1 where id='"+MyApplication.userID+"'";
+        params.put("sql",sql);
+        HttpOkhUtils.getInstance().doGetWithHeadParams(NetConfig.EXECUTESQL, headParam, params, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                Log.i(TAG,"网络错误");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                if(code!=200){
+                    Log.i(TAG,"网络错误");
+                    return;
+                }
+                CommenInfo info = new Gson().fromJson(resbody,CommenInfo.class);
+                if(info.isOk()){
+                    Log.i(TAG,"人脸状态更新成功");
+                }
+            }
+        });
     }
 }

@@ -114,4 +114,8 @@ public class NetConfig {
 
     //检查更新
     public static String CHECKUPDATE = ROOT + "versionController/checkUpdate";
+
+    public static String CHECKFACE = ROOT + "eSignController/CheckFace";
+
+    public static String EXECUTESQL= ROOT + "driverOrderController/executeSql";
 }

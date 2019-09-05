@@ -26,6 +26,7 @@ import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.activity.LoginActivity;
 import com.bt.smart.truck_broker.activity.XieyiActivity;
+import com.bt.smart.truck_broker.activity.homeAct.AuthenticationWebAct;
 import com.bt.smart.truck_broker.activity.userAct.AcceptOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AllOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AuthenticationActivity;
@@ -35,6 +36,7 @@ import com.bt.smart.truck_broker.activity.userAct.MoneyActivity;
 import com.bt.smart.truck_broker.activity.userAct.SignPlatformActivity;
 import com.bt.smart.truck_broker.messageInfo.CommenInfo;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.GlideLoaderUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialog;
@@ -71,6 +73,7 @@ public class User_F extends Fragment implements View.OnClickListener {
     private RelativeLayout rtv_address,rtv_phone,rtv_serv,rtv_xieyi,rtv_about,rtv_exit,rlt_allOrder;//更多订单
     private int REQUEST_MONEY_CODE = 10015;
     private int RESULT_MONEY_CODE = 10016;
+    private int REQUEST_AUTHENTICA_CODE = 10110;//跳转人脸认证协议码
     private int SHOT_CODE = 1069;//调用系统相机-拍摄照片
     private int IMAGE = 1068;//调用系统相册-选择图片
     private String headPicPath;//头像文件本地路径
@@ -148,9 +151,12 @@ public class User_F extends Fragment implements View.OnClickListener {
                 if ("签署协议".equals(MyTextUtils.getTvTextContent(tv_submit))) {
                     //和平台签署协议
                     signPlatForm();
-                } else {
+                } else if("立即提交".equals(MyTextUtils.getTvTextContent(tv_submit))){
                     //跳转身份认证界面
                     toSubmitPersonInfo();
+                } else if("人脸认证".equals(MyTextUtils.getTvTextContent(tv_submit))){
+                    //跳转身份认证界面
+                    toCheckFace();
                 }
                 break;
             case R.id.linear_money:
@@ -249,6 +255,13 @@ public class User_F extends Fragment implements View.OnClickListener {
             tv_warn.setText("您提交的认证信息被驳回，具体失败原因，我们会通过短信通知您。");
             tv_submit.setVisibility(View.VISIBLE);
         } else if ("3".equals(MyApplication.checkStatus)) {//审核通过
+            if(!MyApplication.checkFace){
+                tv_isCheck.setText("未人脸认证");
+                tv_isCheck.setTextColor(getResources().getColor(R.color.red_30));
+                tv_submit.setVisibility(View.VISIBLE);
+                tv_submit.setText("人脸认证");
+                return;
+            }
             tv_checked.setVisibility(View.VISIBLE);
             tv_isCheck.setVisibility(View.GONE);
             tv_warn.setVisibility(View.GONE);
@@ -411,6 +424,40 @@ public class User_F extends Fragment implements View.OnClickListener {
                 }
                 CommenInfo commenInfo = new Gson().fromJson(resbody,CommenInfo.class);
                 ToastUtils.showToast(getContext(),commenInfo.getData()+"");
+            }
+        });
+    }
+
+    protected void toCheckFace(){
+        RequestParamsFM headParam = new RequestParamsFM();
+        headParam.put(NetConfig.HEAD,MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        params.put("paccountid",MyApplication.paccountid);
+        params.put("type",0);
+        HttpOkhUtils.getInstance().doPostWithHeader(NetConfig.CHECKFACE, headParam, params, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                Log.i(TAG,"网络错误");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                if(code!=200){
+                    Log.i(TAG,"网络错误");
+                    return;
+                }
+                Log.i(TAG,resbody);
+                CommenInfo info = new Gson().fromJson(resbody,CommenInfo.class);
+                String webUri = info.getData().toString();
+                if (CommonUtil.isNotEmpty(webUri)) {
+                    Intent intent = new Intent(getContext(), AuthenticationWebAct.class);
+                    intent.putExtra("url", webUri);
+                    getActivity().startActivityForResult(intent, REQUEST_AUTHENTICA_CODE);
+                }else {
+                    ToastUtils.showToast(getContext(), "未获取到个人认证信息");
+                    return;
+                }
+
             }
         });
     }
