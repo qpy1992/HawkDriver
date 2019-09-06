@@ -34,4 +34,6 @@
     <string name="volwarn">请输入可装体积</string>
     <string name="ton">吨</string>
     <string name="cubic">m³</string>
+    <string name="version">©HawkDriver1.0.0</string>
+    <string name="aboutus">关于我们</string>
 </resources>

@@ -35,6 +35,7 @@ import com.bt.smart.truck_broker.servicefile.GeTuiIntentService;
 import com.bt.smart.truck_broker.servicefile.GeTuiPushService;
 import com.bt.smart.truck_broker.servicefile.SendLocationService;
 import com.bt.smart.truck_broker.util.UpApkDataFile.UpdateAppUtil;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.MyAlertDialog;
 import com.bt.smart.truck_broker.utils.MyAlertDialogHelper;
@@ -357,52 +358,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private void getNewApkInfo() {
-        RequestParamsFM headparam = new RequestParamsFM();
-        headparam.put(NetConfig.HEAD,MyApplication.userToken);
-        HttpOkhUtils.getInstance().doGetWithOnlyHeader(NetConfig.CHECKUPDATE + "/1", headparam, new HttpOkhUtils.HttpCallBack() {
-            @Override
-            public void onError(Request request, IOException e) {
-                Log.i(TAG,"网络错误!");
-            }
-
-            @Override
-            public void onSuccess(int code, String resbody) {
-                if(code!=200){
-                    Log.i(TAG,"网络错误!");
-                    return;
-                }
-                ApkInfo info = new Gson().fromJson(resbody,ApkInfo.class);
-                if(getAppVersionCode(MainActivity.this)<info.getData().getVersionCode()){
-                    showDialogToDown(info);
-                }
-            }
-        });
-    }
-
-    private void showDialogToDown(ApkInfo apkInfo) {
-        MyApplication.loadUrl = NetConfig.IMG_HEAD + apkInfo.getData().getApkPath();
-        UpdateAppUtil.from(this)
-                .serverVersionCode(apkInfo.getData().getVersionCode())  //服务器versionCode
-                .serverVersionName(apkInfo.getData().getVersionName()) //服务器versionName
-                .apkPath(MyApplication.loadUrl) //最新apk下载地址
-                .updateInfo(apkInfo.getData().getApkInfo())
-                .update();
-    }
-
-    //获取当前版本号
-    private int getAppVersionCode(Context context) {
-        int versionCode = 0;
-        try {
-            PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-            versionCode = packageInfo.versionCode;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return versionCode;
-    }
-
     private void changeTVColor(int item) {
         for (int i = 0; i < tv_menu.size(); i++) {
             if (i == item) {
@@ -484,5 +439,51 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         ft.show(fragment);
         ft.commitAllowingStateLoss();
+    }
+
+    protected void getNewApkInfo() {
+        RequestParamsFM headparam = new RequestParamsFM();
+        headparam.put(NetConfig.HEAD,MyApplication.userToken);
+        HttpOkhUtils.getInstance().doGetWithOnlyHeader(NetConfig.CHECKUPDATE + "/1", headparam, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                Log.i(TAG,"网络错误!");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                if(code!=200){
+                    Log.i(TAG,"网络错误!");
+                    return;
+                }
+                ApkInfo info = new Gson().fromJson(resbody,ApkInfo.class);
+                if(getAppVersionCode(MainActivity.this)<info.getData().getVersionCode()){
+                    showDialogToDown(info);
+                }
+            }
+        });
+    }
+
+    //获取当前版本号
+    protected int getAppVersionCode(Context context) {
+        int versionCode = 0;
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            versionCode = packageInfo.versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return versionCode;
+    }
+
+    protected void showDialogToDown(ApkInfo apkInfo) {
+        MyApplication.loadUrl = NetConfig.IMG_HEAD + apkInfo.getData().getApkPath();
+        UpdateAppUtil.from(this)
+                .serverVersionCode(apkInfo.getData().getVersionCode())  //服务器versionCode
+                .serverVersionName(apkInfo.getData().getVersionName()) //服务器versionName
+                .apkPath(MyApplication.loadUrl) //最新apk下载地址
+                .updateInfo(apkInfo.getData().getApkInfo())
+                .update();
     }
 }

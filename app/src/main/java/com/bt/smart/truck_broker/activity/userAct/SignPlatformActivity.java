@@ -15,6 +15,7 @@ import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.messageInfo.RuleContentInfo;
 import com.bt.smart.truck_broker.messageInfo.SignInfo;
+import com.bt.smart.truck_broker.utils.CommonUtil;
 import com.bt.smart.truck_broker.utils.HttpOkhUtils;
 import com.bt.smart.truck_broker.utils.ProgressDialogUtil;
 import com.bt.smart.truck_broker.utils.RequestParamsFM;
@@ -137,7 +138,7 @@ public class SignPlatformActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void showRule(String content) {
-        web_rule.loadDataWithBaseURL("", getNewContent(content), "text/html", "utf-8", "");
+        web_rule.loadDataWithBaseURL("", CommonUtil.getNewContent(content), "text/html", "utf-8", "");
         WebSettings settings = web_rule.getSettings();
         settings.setJavaScriptEnabled(true);
         web_rule.setWebViewClient(new WebViewClient() {
@@ -147,14 +148,5 @@ public class SignPlatformActivity extends BaseActivity implements View.OnClickLi
                 return true;
             }
         });
-    }
-
-    private String getNewContent(String htmltext) {
-        Document doc = Jsoup.parse(htmltext);
-        Elements elements = doc.getElementsByTag("img");
-        for (Element element : elements) {
-            element.attr("width", "100%").attr("height", "auto");
-        }
-        return doc.toString();
     }
 }
