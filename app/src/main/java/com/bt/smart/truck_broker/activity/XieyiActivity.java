@@ -7,7 +7,6 @@ import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
 import com.bt.smart.truck_broker.util.DownloadUtil;
