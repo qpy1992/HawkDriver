@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.Transformation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +34,7 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
     private Animation mSuccessBowAnim;
     private TextView mTitleTextView;
     private TextView mContentTextView;
+    private EditText mContentEditText;
     private String mTitleText;
     private String mContentText;
     private boolean mShowCancel;
@@ -66,6 +68,7 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
     public static final int WARNING_TYPE_2 = 6;
     public static final int CUSTOM_IMAGE_TYPE = 4;
     public static final int PROGRESS_TYPE = 5;
+    public static final int EDITTEXT_TYPE = 8;
     private LinearLayout mlayout_dialog;
 
     public static interface OnSweetClickListener {
@@ -148,6 +151,7 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
         mlayout_dialog = findViewById(R.id.layout_dialog_def);
         mTitleTextView = (TextView)findViewById(R.id.title_text);
         mContentTextView = (TextView)findViewById(R.id.content_text);
+        mContentEditText = findViewById(R.id.et_content);
         mErrorFrame = (FrameLayout)findViewById(R.id.error_frame);
         mErrorX = (ImageView)mErrorFrame.findViewById(R.id.error_x);
         mSuccessFrame = (FrameLayout)findViewById(R.id.success_frame);
@@ -251,8 +255,8 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
                     mProgressFrame.setVisibility(View.VISIBLE);
                     mConfirmButton.setVisibility(View.GONE);
                     break;
-
-
+                case EDITTEXT_TYPE:
+                    mContentEditText.setVisibility(View.VISIBLE);
             }
             if (!fromCreate) {
                 playAnimation();
@@ -297,6 +301,10 @@ public class MyAlertDialog extends Dialog implements View.OnClickListener {
 
     public String getContentText () {
         return mContentText;
+    }
+
+    public String getEditTextContext(){
+        return mContentEditText.getText().toString();
     }
 
     public MyAlertDialog setContentText (String text) {

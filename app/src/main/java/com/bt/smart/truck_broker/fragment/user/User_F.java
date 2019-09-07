@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.bt.smart.truck_broker.MyApplication;
 import com.bt.smart.truck_broker.NetConfig;
 import com.bt.smart.truck_broker.R;
@@ -33,7 +31,6 @@ import com.bt.smart.truck_broker.activity.userAct.AllOrderListActivity;
 import com.bt.smart.truck_broker.activity.userAct.AuthenticationActivity;
 import com.bt.smart.truck_broker.activity.userAct.BCardActivity;
 import com.bt.smart.truck_broker.activity.userAct.CommentActivity;
-import com.bt.smart.truck_broker.activity.userAct.MoneyActivity;
 import com.bt.smart.truck_broker.activity.userAct.SignPlatformActivity;
 import com.bt.smart.truck_broker.messageInfo.CommenInfo;
 import com.bt.smart.truck_broker.messageInfo.LoginInfo;
@@ -47,10 +44,8 @@ import com.bt.smart.truck_broker.utils.RequestParamsFM;
 import com.bt.smart.truck_broker.utils.SpUtils;
 import com.bt.smart.truck_broker.utils.ToastUtils;
 import com.google.gson.Gson;
-
 import java.io.File;
 import java.io.IOException;
-
 import okhttp3.Request;
 
 
@@ -366,7 +361,42 @@ public class User_F extends Fragment implements View.OnClickListener {
     }
 
     private void changePhone() {
+        final MyAlertDialog dialog = new MyAlertDialog(getContext());
+        dialog.setTitleText("请先验证密码")
+        .showCancelButton(true)
+        .setConfirmClickListener(new MyAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(MyAlertDialog sweetAlertDialog) {
+                validatePass(dialog.getEditTextContext());
+                dialog.dismiss();
+            }
+        })
+        .show();
+    }
 
+    protected void validatePass(String text){
+        RequestParamsFM headParam = new RequestParamsFM();
+        headParam.put(NetConfig.HEAD,MyApplication.userToken);
+        RequestParamsFM params = new RequestParamsFM();
+        params.put("fmobile",MyApplication.userPhone);
+        params.put("fpassword",text);
+        HttpOkhUtils.getInstance().doGetWithHeadParams(NetConfig.VALIDATEPASS, headParam, params, new HttpOkhUtils.HttpCallBack() {
+            @Override
+            public void onError(Request request, IOException e) {
+                Log.i(TAG,"网络错误");
+            }
+
+            @Override
+            public void onSuccess(int code, String resbody) {
+                if(code!=200){
+                    Log.i(TAG,"网络错误");
+                }
+                CommenInfo info = new Gson().fromJson(resbody,CommenInfo.class);
+                if(info.isOk()){
+                    startActivity(new Intent());
+                }
+            }
+        });
     }
 
     private void contactService() {

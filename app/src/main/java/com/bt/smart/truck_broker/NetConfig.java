@@ -118,4 +118,6 @@ public class NetConfig {
     public static String CHECKFACE = ROOT + "eSignController/CheckFace";
 
     public static String EXECUTESQL= ROOT + "driverOrderController/executeSql";
+
+    public static String VALIDATEPASS = ROOT + "";
 }
