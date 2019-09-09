@@ -224,6 +224,10 @@ public class Home_F extends Fragment implements View.OnClickListener {
     }
 
     private void createDriverLine() {
+        if(!MyApplication.checkStatus.equals("0")){
+            ToastUtils.showToast(getContext(),"尚未完成认证！");
+            return;
+        }
         //跳转添加路线界面
         Intent intent = new Intent(getContext(), SelectPlaceAndCarActivity.class);
         startActivityForResult(intent, REQUEST_FOR_SELECT_LINES);

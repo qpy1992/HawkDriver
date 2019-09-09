@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -49,6 +50,7 @@ import okhttp3.Request;
  */
 
 public class FirstActivity extends Activity implements View.OnClickListener {
+    private static String TAG = "FirstActivity";
     private TextView tv_new;
     private TextView tv_old;
     private int MY_PERMISSIONS_REQUEST_LOCATION = 10086;
@@ -114,7 +116,7 @@ public class FirstActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         if (report.areAllPermissionsGranted()){
-                            Toast.makeText(getApplication(),"权限获取成功！",Toast.LENGTH_LONG).show();
+                            Log.i(TAG,"权限获取成功");
                         }else{
                             finish();
                         }

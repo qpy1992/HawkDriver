@@ -7,6 +7,8 @@
     tools:context=".activity.XieyiActivity"
     android:orientation="vertical">
 
+    <include layout="@layout/title_view_img"/>
+
     <WebView
         android:id="@+id/wv"
         android:layout_width="match_parent"

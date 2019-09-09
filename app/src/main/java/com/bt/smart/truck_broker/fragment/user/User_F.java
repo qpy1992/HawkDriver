@@ -361,7 +361,8 @@ public class User_F extends Fragment implements View.OnClickListener {
     }
 
     private void changePhone() {
-        final MyAlertDialog dialog = new MyAlertDialog(getContext());
+        final MyAlertDialog dialog = new MyAlertDialog(getContext(),MyAlertDialog.EDITTEXT_TYPE
+        );
         dialog.setTitleText("请先验证密码")
         .showCancelButton(true)
         .setConfirmClickListener(new MyAlertDialog.OnSweetClickListener() {
@@ -400,7 +401,8 @@ public class User_F extends Fragment implements View.OnClickListener {
     }
 
     private void contactService() {
-
+        new MyAlertDialog(getContext()).setTitleText("客服电话")
+                .setContentText("400-8888-8888").show();
     }
 
     private void aboutUs() {

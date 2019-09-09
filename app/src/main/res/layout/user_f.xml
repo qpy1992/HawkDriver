@@ -301,7 +301,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="10dp"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/img_address"
@@ -339,7 +340,8 @@
                     android:id="@+id/rtv_phone"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/img_phone"
